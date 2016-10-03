@@ -3,11 +3,22 @@ package com.tamfign.main;
 import org.kohsuke.args4j.Option;
 
 public class ServerArguments {
-	@Option(name = "-n", usage = "the name of the server")
+	@Option(required = true, name = "-n", usage = "the name of the server")
 	private String serverId = null;
 
-	@Option(name = "-l", usage = "the path to the configuration of servers")
+	@Option(required = true, name = "-l", usage = "the path to the configuration of servers")
 	private String serverConfigPath = null;
+
+	@Option(required = true, name = "-c", usage = "the path to the cert key of servers")
+	private String certPath = null;
+
+	public String getCertPath() {
+		return certPath;
+	}
+
+	public void setCertPath(String certPath) {
+		this.certPath = certPath;
+	}
 
 	public String getServerId() {
 		return serverId;

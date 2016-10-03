@@ -1,6 +1,5 @@
 package com.tamfign.connection;
 
-import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,7 +39,7 @@ public class ClientConnector extends Connector implements Runnable {
 				System.out.println("All Servers On");
 				try {
 					keepListenPortAndAcceptMultiClient(Configuration.getClientPort());
-				} catch (IOException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 					break;
 				}

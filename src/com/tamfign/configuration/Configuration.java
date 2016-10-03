@@ -18,6 +18,11 @@ public class Configuration {
 
 	private static Configuration _instance = null;
 	private ServerConfig itself = null;
+	private String certPath = null;
+	// TODO hardcode? configurable? cert pass
+	public static final char certPass[] = "123456".toCharArray();
+	// TODO hardcode? configurable? cert alia main pass
+	public static final char certAliaMainPass[] = "123456".toCharArray();
 
 	private Configuration(ServerArguments arguments) throws IOException {
 		ConfigurationHandler configHandler = new ConfigurationHandler();
@@ -33,9 +38,14 @@ public class Configuration {
 
 		getItOwnConfig(arguments.getServerId());
 
-		if (itself == null) {
+		if (itself != null) {
+			itself.setActived(true);
+			itself.setItselft(true);
+		} else {
 			throw new IOException("No matched ServerId");
 		}
+
+		certPath = arguments.getCertPath();
 	}
 
 	private void getItOwnConfig(String serverId) {
@@ -43,6 +53,10 @@ public class Configuration {
 		if (itself == null) {
 			itself = ServerListController.getInstance().get(serverId);
 		}
+	}
+
+	public static String getCertPath() {
+		return _instance.certPath;
 	}
 
 	public static String getServerId() {

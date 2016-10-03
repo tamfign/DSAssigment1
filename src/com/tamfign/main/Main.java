@@ -21,7 +21,7 @@ public class Main {
 			controller = ConnectController.getInstance();
 			controller.run();
 		} catch (CmdLineException e) {
-			System.err.println("Example: java -jar server.jar -n serverid -l servers_conf");
+			System.err.println("Example: java -jar server.jar -n serverid -l servers_conf -c cert_key");
 		} catch (IOException e) {
 			System.err.println(e.getMessage());
 		}

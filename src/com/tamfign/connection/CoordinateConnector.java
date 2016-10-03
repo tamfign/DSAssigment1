@@ -5,6 +5,9 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+
 import com.tamfign.command.CoordinateCmdHandler;
 import com.tamfign.command.Command;
 import com.tamfign.command.ServerServerCmd;
@@ -31,7 +34,7 @@ public class CoordinateConnector extends Connector implements Runnable {
 		try {
 			System.out.println("Start Listening Other Servers");
 			keepListenPortAndAcceptMultiClient(Configuration.getCoordinationPort());
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -46,10 +49,11 @@ public class CoordinateConnector extends Connector implements Runnable {
 
 	public void connectServer(String serverId) {
 		ServerConfig server = ServerListController.getInstance().get(serverId);
-		Socket another = null;
+		SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+		SSLSocket another = null;
 
 		try {
-			another = new Socket(server.getHost(), server.getCoordinationPort());
+			another = (SSLSocket) factory.createSocket(server.getHost(), server.getCoordinationPort());
 			if (another.isConnected()) {
 				addBroadcastList(serverId, another);
 				ServerListController.getInstance().get(serverId).setActived(true);
@@ -76,9 +80,10 @@ public class CoordinateConnector extends Connector implements Runnable {
 	private boolean testConnection(ServerConfig server) {
 		boolean ret = true;
 
-		Socket another = null;
+		SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+		SSLSocket another = null;
 		try {
-			another = new Socket(server.getHost(), server.getCoordinationPort());
+			another = (SSLSocket) factory.createSocket(server.getHost(), server.getCoordinationPort());
 			if (!another.isConnected()) {
 				ret = false;
 			} else {
