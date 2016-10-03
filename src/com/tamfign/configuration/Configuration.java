@@ -1,35 +1,47 @@
 package com.tamfign.configuration;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import org.xml.sax.SAXException;
 
 import com.tamfign.main.ServerArguments;
+import com.tamfign.model.RouterListController;
 import com.tamfign.model.ServerListController;
 
 public class Configuration {
+
 	private static Configuration _instance = null;
 	private ServerConfig itself = null;
 
 	private Configuration(ServerArguments arguments) throws IOException {
-		FileReader reader = new FileReader(arguments.getServerConfigPath());
-		BufferedReader br = new BufferedReader(reader);
+		ConfigurationHandler configHandler = new ConfigurationHandler();
+		SAXParser parser = null;
 
-		String configLine = br.readLine();
-		while (configLine != null) {
-			ServerConfig server = ServerConfig.getInstance(configLine);
-			if (arguments.getServerId() != null && arguments.getServerId().equals(server.getId())) {
-				this.itself = server;
-				server.setActived(true);
-				server.setItselft(true);
-			}
-			ServerListController.getInstance().addServer(server);
-			configLine = br.readLine();
+		try {
+			parser = SAXParserFactory.newInstance().newSAXParser();
+			InputStream is = new FileInputStream(arguments.getServerConfigPath());
+			parser.parse(is, configHandler);
+		} catch (ParserConfigurationException | SAXException e) {
+			e.printStackTrace();
 		}
-		br.close();
+
+		getItOwnConfig(arguments.getServerId());
 
 		if (itself == null) {
 			throw new IOException("No matched ServerId");
+		}
+	}
+
+	private void getItOwnConfig(String serverId) {
+		itself = RouterListController.getInstance().get(serverId);
+		if (itself == null) {
+			itself = ServerListController.getInstance().get(serverId);
 		}
 	}
 

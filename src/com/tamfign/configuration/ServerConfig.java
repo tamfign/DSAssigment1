@@ -1,6 +1,5 @@
 package com.tamfign.configuration;
 
-import java.io.IOException;
 
 public class ServerConfig {
 	private String id = null;
@@ -10,19 +9,20 @@ public class ServerConfig {
 	private boolean isItselft = false;
 	private boolean isActived = false;
 
-	private ServerConfig(String id, String host, String clientPort, String coordinationPort) {
+	public void setId(String id) {
 		this.id = id;
-		this.host = host;
-		this.clientPort = Integer.parseInt(clientPort);
-		this.coordinationPort = Integer.parseInt(coordinationPort);
 	}
 
-	public static ServerConfig getInstance(String configLine) throws IOException {
-		String[] configs = configLine.split("\t");
-		if (configs.length < 4)
-			throw new IOException("Configuration File's Format invalid.");
+	public void setHost(String host) {
+		this.host = host;
+	}
 
-		return new ServerConfig(configs[0], configs[1], configs[2], configs[3]);
+	public void setClientPort(int clientPort) {
+		this.clientPort = clientPort;
+	}
+
+	public void setCoordinationPort(int coordinationPort) {
+		this.coordinationPort = coordinationPort;
 	}
 
 	public boolean isItselft() {
