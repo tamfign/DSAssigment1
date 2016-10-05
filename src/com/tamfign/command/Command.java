@@ -35,6 +35,7 @@ public class Command {
 	protected final static String TYPE_SERVER_ON = "server_on";
 
 	protected final static String P_IDENTITY = "identity";
+	protected final static String P_PWD = "pwd";
 	protected final static String P_SERVER_ID = "serverid";
 	protected final static String P_LOCKED = "locked";
 	protected final static String P_APPROVED = "approved";

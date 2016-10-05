@@ -13,6 +13,8 @@ import com.tamfign.model.ChatRoomListController;
 import com.tamfign.model.Client;
 import com.tamfign.model.ClientListController;
 import com.tamfign.model.ServerListController;
+import com.tamfign.userdata.User;
+import com.tamfign.userdata.UserDataController;
 
 public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 	private final static Pattern r = Pattern.compile("^[a-zA-Z]([a-z]|[A-Z]|[0-9]){2,15}");
@@ -76,10 +78,18 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 		}
 	}
 
+	private boolean isClientAuthorised(Command cmd) {
+		String id = (String) cmd.getObj().get(Command.P_IDENTITY);
+		String pwd = (String) cmd.getObj().get(Command.P_PWD);
+
+		User user = UserDataController.getInstance().getUser(id);
+		return user.verify(pwd);
+	}
+
 	private void handleLockIdentiy(Command cmd) {
 		String id = (String) cmd.getObj().get(Command.P_IDENTITY);
 
-		if (isIdValid(id)) {
+		if (isIdValid(id) && isClientAuthorised(cmd)) {
 			lockIdentity(id, cmd);
 		} else {
 			sendDisapproveIdentity(cmd.getSocket(), id);

@@ -12,6 +12,17 @@ public class ServerArguments {
 	@Option(required = true, name = "-c", usage = "the path to the cert key of servers")
 	private String certPath = null;
 
+	@Option(required = true, name = "-u", usage = "the path of user data")
+	private String userDataPath = null;
+
+	public String getUserDataPath() {
+		return userDataPath;
+	}
+
+	public void setUserDataPath(String userDataPath) {
+		this.userDataPath = userDataPath;
+	}
+
 	public String getCertPath() {
 		return certPath;
 	}
