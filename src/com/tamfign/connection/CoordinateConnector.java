@@ -1,6 +1,5 @@
 package com.tamfign.connection;
 
-import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,7 +9,6 @@ import javax.net.ssl.SSLSocketFactory;
 
 import com.tamfign.command.CoordinateCmdHandler;
 import com.tamfign.command.Command;
-import com.tamfign.command.ServerServerCmd;
 import com.tamfign.configuration.Configuration;
 import com.tamfign.configuration.ServerConfig;
 import com.tamfign.listener.CommandListener;
@@ -56,51 +54,13 @@ public class CoordinateConnector extends Connector implements Runnable {
 			another = (SSLSocket) factory.createSocket(server.getHost(), server.getCoordinationPort());
 			if (another.isConnected()) {
 				addBroadcastList(serverId, another);
-				ServerListController.getInstance().get(serverId).setActived(true);
+				//TODO ServerListController.getInstance().get(serverId).setActived(true);
 				ChatRoomListController.getInstance().addRoom(ChatRoomListController.getMainHall(serverId), serverId,
 						null);
 			}
 		} catch (Exception e) {
 			System.out.println("Fail to connect server-" + serverId);
 		}
-	}
-
-	public void checkOtherServers() {
-		for (int i = 0; i < ServerListController.getInstance().size(); i++) {
-			if (ServerListController.getInstance().get(i).isItselft()) {
-				continue;
-			}
-			if (testConnection(ServerListController.getInstance().get(i))) {
-				ServerListController.getInstance().get(i).setActived(true);
-				connectServer(ServerListController.getInstance().get(i).getId());
-			}
-		}
-	}
-
-	private boolean testConnection(ServerConfig server) {
-		boolean ret = true;
-
-		SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
-		SSLSocket another = null;
-		try {
-			another = (SSLSocket) factory.createSocket(server.getHost(), server.getCoordinationPort());
-			if (!another.isConnected()) {
-				ret = false;
-			} else {
-				sendOutOwnId(another);
-			}
-		} catch (Exception e) {
-			ret = false;
-		} finally {
-			close(another);
-		}
-		return ret;
-	}
-
-	private void sendOutOwnId(Socket socket) throws IOException {
-		if (socket == null || socket.isClosed())
-			return;
-		write(socket, ServerServerCmd.getServerOnCmd());
 	}
 
 	public void addBroadcastList(String serverId, Socket socket) {

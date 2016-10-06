@@ -1,6 +1,5 @@
 package com.tamfign.configuration;
 
-
 public class ServerConfig {
 	private String id = null;
 	private String host = null;
@@ -8,6 +7,24 @@ public class ServerConfig {
 	private int coordinationPort = 0;
 	private boolean isItselft = false;
 	private boolean isActived = false;
+
+	public ServerConfig() {
+	};
+
+	public ServerConfig(String stream) {
+		String[] args = stream.split("|");
+		this.id = args[0];
+		this.host = args[1];
+		this.coordinationPort = Integer.parseInt(args[2]);
+		this.clientPort = Integer.parseInt(args[3]);
+	}
+
+	public ServerConfig(String id, String host, String coordinationPort, String clientPort) {
+		this.id = id;
+		this.host = host;
+		this.coordinationPort = Integer.parseInt(coordinationPort);
+		this.clientPort = Integer.parseInt(clientPort);
+	}
 
 	public void setId(String id) {
 		this.id = id;
@@ -55,5 +72,9 @@ public class ServerConfig {
 
 	public void setActived(boolean isActived) {
 		this.isActived = isActived;
+	}
+
+	public String toString() {
+		return id + "|" + host + "|" + coordinationPort + "|" + clientPort;
 	}
 }

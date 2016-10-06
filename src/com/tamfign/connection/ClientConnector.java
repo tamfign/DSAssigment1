@@ -13,8 +13,6 @@ import com.tamfign.listener.ClientListener;
 import com.tamfign.listener.CommandListener;
 import com.tamfign.messagequeue.MessageQueue;
 import com.tamfign.model.ChatRoomListController;
-import com.tamfign.model.ServerListController;
-
 public class ClientConnector extends Connector implements Runnable {
 	private HashMap<String, Socket> clientSocketsList = null;
 	private MessageQueue clientMQ = new MessageQueue(new ClientCmdHandler(this));
@@ -28,21 +26,11 @@ public class ClientConnector extends Connector implements Runnable {
 		new Thread(clientMQ).start();
 
 		while (true) {
-			if (!ServerListController.getInstance().isAllServerOn()) {
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-					break;
-				}
-			} else {
-				System.out.println("All Servers On");
-				try {
-					keepListenPortAndAcceptMultiClient(Configuration.getClientPort());
-				} catch (Exception e) {
-					e.printStackTrace();
-					break;
-				}
+			try {
+				keepListenPortAndAcceptMultiClient(Configuration.getClientPort());
+			} catch (Exception e) {
+				e.printStackTrace();
+				break;
 			}
 		}
 	}

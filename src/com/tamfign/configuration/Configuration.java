@@ -18,6 +18,10 @@ public class Configuration {
 
 	private static Configuration _instance = null;
 	private ServerConfig itself = null;
+
+	private boolean isRouter = false;
+	private RouterConfig router = null;
+
 	private String certPath = null;
 	// TODO hardcode? configurable? cert pass
 	public static final char certPass[] = "123456".toCharArray();
@@ -55,6 +59,10 @@ public class Configuration {
 		}
 	}
 
+	public static boolean isRouter() {
+		return _instance.isRouter;
+	}
+
 	public static String getCertPath() {
 		return _instance.certPath;
 	}
@@ -76,5 +84,9 @@ public class Configuration {
 			_instance = new Configuration(arguments);
 		}
 		return _instance;
+	}
+
+	public static RouterConfig getRouterConfig() {
+		return _instance.router;
 	}
 }

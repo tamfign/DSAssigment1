@@ -3,10 +3,12 @@ package com.tamfign.command;
 import java.net.Socket;
 
 import com.tamfign.configuration.Configuration;
+import com.tamfign.configuration.ServerConfig;
 import com.tamfign.connection.CoordinateConnector;
 import com.tamfign.model.ChatRoom;
 import com.tamfign.model.ChatRoomListController;
 import com.tamfign.model.ClientListController;
+import com.tamfign.model.ServerListController;
 
 public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 
@@ -16,6 +18,9 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 
 	public void cmdAnalysis(Command cmd) {
 		switch ((String) cmd.getObj().get(Command.TYPE)) {
+		case Command.TYPE_NEW_SERVER:
+			handleNewServer(cmd);
+			break;
 		case Command.TYPE_SERVER_ON:
 			handleServerOn(cmd);
 			break;
@@ -95,6 +100,33 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 		if (room != null && room.getServerId().equals(serverId)) {
 			ChatRoomListController.getInstance().deleteRoom(roomId);
 		}
+	}
+
+	private void handleNewServer(Command cmd) {
+		String serverId = (String) cmd.getObj().get(Command.P_SERVER_ID);
+		String pwd = (String) cmd.getObj().get(Command.P_PWD);
+		String host = (String) cmd.getObj().get(Command.P_HOST);
+		String coPort = (String) cmd.getObj().get(Command.P_COORDINATE_PORT);
+		String clPort = (String) cmd.getObj().get(Command.P_CLIENT_PORT);
+
+		if (verifyServer(pwd)) {
+			ServerListController.getInstance().addServer(new ServerConfig(serverId, host, coPort, clPort));
+			sendApproveServer(cmd.getSocket(), serverId);
+		} else {
+			sendDisapproveServer(cmd.getSocket(), serverId);
+		}
+	}
+
+	private void sendApproveServer(Socket socket, String id) {
+		response(socket, ServerServerCmd.newServerRs(id, true));
+	}
+
+	private void sendDisapproveServer(Socket socket, String id) {
+		response(socket, ServerServerCmd.newServerRs(id, false));
+	}
+
+	private boolean verifyServer(String pwd) {
+		return Command.SERVER_AGREEMENT.equals(ServerVerification.getInstance().decrypt(pwd));
 	}
 
 	protected void handleServerOn(Command cmd) {

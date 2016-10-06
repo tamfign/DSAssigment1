@@ -33,19 +33,23 @@ public class Command {
 	protected final static String TYPE_QUIT = "quit";
 
 	protected final static String TYPE_SERVER_ON = "server_on";
+	protected final static String TYPE_NEW_SERVER = "new_server";
 
 	protected final static String P_IDENTITY = "identity";
 	protected final static String P_PWD = "pwd";
 	protected final static String P_SERVER_ID = "serverid";
 	protected final static String P_LOCKED = "locked";
-	protected final static String P_APPROVED = "approved";
+	public final static String P_APPROVED = "approved";
 	protected final static String P_FORMER = "former";
 	protected final static String P_ROOM_ID = "roomid";
 	protected final static String P_ROOMS = "rooms";
 	protected final static String P_IDENTITIES = "identities";
 	protected final static String P_OWNER = "owner";
-	protected final static String P_HOST = "host";
-	protected final static String P_PORT = "port";
+	public final static String P_HOST = "host";
+	public final static String P_PORT = "port";
+	public final static String P_COORDINATE_PORT = "coordinate_port";
+	public final static String P_CLIENT_PORT = "client_port";
+	public final static String P_SERVERS = "servers";
 	protected final static String P_CONTENT = "content";
 
 	protected final static String CMD_LOCK_IDENTITY = "CMD_LOCK_IDENTITY";
@@ -53,6 +57,8 @@ public class Command {
 	protected final static String CMD_LOCK_ROOM = "CMD_LOCK_ROOM";
 	protected final static String CMD_RELEASE_ROOM = "CMD_RELEASE_ROOM";
 	protected final static String CMD_DELETE_ROOM = "CMD_DELETE_ROOM";
+
+	protected final static String SERVER_AGREEMENT = "IAMREALSERVER";
 
 	private String owner = null;
 	private JSONObject obj = null;

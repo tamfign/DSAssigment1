@@ -2,9 +2,11 @@ package com.tamfign.command;
 
 import java.net.Socket;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.tamfign.configuration.Configuration;
+import com.tamfign.model.ServerListController;
 
 @SuppressWarnings("unchecked")
 public class ServerServerCmd extends Command {
@@ -97,8 +99,30 @@ public class ServerServerCmd extends Command {
 
 	public static String getServerOnCmd() {
 		JSONObject obj = new JSONObject();
-		obj.put(Command.TYPE, Command.TYPE_SERVER_ON);
-		obj.put(Command.P_SERVER_ID, Configuration.getServerId());
+		obj.put(TYPE, TYPE_SERVER_ON);
+		obj.put(P_SERVER_ID, Configuration.getServerId());
 		return obj.toJSONString();
+	}
+
+	public static String getNewServerCmd() {
+		JSONObject obj = new JSONObject();
+		obj.put(TYPE, TYPE_SERVER_ON);
+		obj.put(P_SERVER_ID, Configuration.getServerId());
+		// TODO refactory?
+		obj.put(P_PWD, ServerVerification.getInstance().encrypt(SERVER_AGREEMENT));
+		return obj.toJSONString();
+	}
+
+	public static String newServerRs(String serverId, boolean result) {
+		JSONObject root = new JSONObject();
+		root.put(TYPE, TYPE_NEW_ID);
+		root.put(P_APPROVED, Boolean.toString(result));
+
+		if (result) {
+			JSONArray jList = new JSONArray();
+			jList.addAll(ServerListController.getInstance().getStringList());
+			root.put(P_SERVERS, jList);
+		}
+		return root.toJSONString();
 	}
 }

@@ -7,7 +7,6 @@ import com.tamfign.configuration.ServerConfig;
 public class ServerListController {
 	private ArrayList<ServerConfig> serverList = null;
 	private static ServerListController _instance = null;
-	private boolean isAllServerActivated = false;
 
 	private ServerListController() {
 		this.serverList = new ArrayList<ServerConfig>();
@@ -24,12 +23,19 @@ public class ServerListController {
 		serverList.add(server);
 	}
 
-	public int size() {
-		return serverList.size();
+	public synchronized void addServers(ArrayList<String> list) {
+		for (String stream : list) {
+			serverList.add(new ServerConfig(stream));
+		}
 	}
 
-	public ServerConfig get(int index) {
-		return serverList.get(index);
+	public synchronized ArrayList<String> getStringList() {
+		ArrayList<String> ret = new ArrayList<String>();
+
+		for (ServerConfig config : serverList) {
+			ret.add(config.toString());
+		}
+		return ret;
 	}
 
 	public ServerConfig get(String serverId) {
@@ -41,17 +47,5 @@ public class ServerListController {
 			}
 		}
 		return ret;
-	}
-
-	public synchronized boolean isAllServerOn() {
-		if (!isAllServerActivated) {
-			for (ServerConfig server : serverList) {
-				if (!server.isItselft() && !server.isActived()) {
-					return false;
-				}
-			}
-			isAllServerActivated = true;
-		}
-		return isAllServerActivated;
 	}
 }
