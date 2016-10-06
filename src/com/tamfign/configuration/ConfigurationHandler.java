@@ -4,9 +4,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.tamfign.model.RouterListController;
-import com.tamfign.model.ServerListController;
-
 public class ConfigurationHandler extends DefaultHandler {
 	private static final String SERVER = "server";
 	private static final String ROUTER = "router";
@@ -18,6 +15,8 @@ public class ConfigurationHandler extends DefaultHandler {
 
 	private String tag = null;
 	private ServerConfig config = null;
+	private ServerConfig serverConfig = null;
+	private RouterConfig routerConfig = null;
 
 	@Override
 	public void characters(char[] ch, int start, int length) throws SAXException {
@@ -39,10 +38,10 @@ public class ConfigurationHandler extends DefaultHandler {
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 		if (SERVER.equals(qName)) {
-			ServerListController.getInstance().addServer(this.config);
+			serverConfig = this.config;
 			this.config = null;
 		} else if (ROUTER.equals(qName)) {
-			RouterListController.getInstance().addRouter(this.config);
+			routerConfig = (RouterConfig) this.config;
 			this.config = null;
 		}
 		this.tag = null;
@@ -67,5 +66,13 @@ public class ConfigurationHandler extends DefaultHandler {
 		default:
 			this.tag = null;
 		}
+	}
+
+	public ServerConfig getServerConfig() {
+		return this.serverConfig;
+	}
+
+	public RouterConfig getRouterConfig() {
+		return this.routerConfig;
 	}
 }

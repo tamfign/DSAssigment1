@@ -11,8 +11,6 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.SAXException;
 
 import com.tamfign.main.ServerArguments;
-import com.tamfign.model.RouterListController;
-import com.tamfign.model.ServerListController;
 
 public class Configuration {
 
@@ -40,23 +38,14 @@ public class Configuration {
 			e.printStackTrace();
 		}
 
-		getItOwnConfig(arguments.getServerId());
-
-		if (itself != null) {
-			itself.setActived(true);
-			itself.setItselft(true);
+		isRouter = arguments.isRouter();
+		if (!isRouter) {
+			itself = configHandler.getServerConfig();
+			router = configHandler.getRouterConfig();
 		} else {
-			throw new IOException("No matched ServerId");
+			itself = configHandler.getRouterConfig();
 		}
-
 		certPath = arguments.getCertPath();
-	}
-
-	private void getItOwnConfig(String serverId) {
-		itself = RouterListController.getInstance().get(serverId);
-		if (itself == null) {
-			itself = ServerListController.getInstance().get(serverId);
-		}
 	}
 
 	public static boolean isRouter() {
