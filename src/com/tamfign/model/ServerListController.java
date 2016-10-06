@@ -38,6 +38,10 @@ public class ServerListController {
 		return ret;
 	}
 
+	public synchronized ArrayList<ServerConfig> getList() {
+		return this.serverList;
+	}
+
 	public ServerConfig get(String serverId) {
 		ServerConfig ret = null;
 		for (ServerConfig config : serverList) {

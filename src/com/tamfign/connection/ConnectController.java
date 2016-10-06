@@ -52,6 +52,8 @@ public class ConnectController {
 
 		new Thread(this.servers).start();
 		new Thread(this.clients).start();
+
+		this.servers.checkOtherServers();
 	}
 
 	// TODO refactory

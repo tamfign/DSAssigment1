@@ -1,5 +1,6 @@
 package com.tamfign.connection;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
 import com.tamfign.command.CoordinateCmdHandler;
+import com.tamfign.command.ServerServerCmd;
 import com.tamfign.command.Command;
 import com.tamfign.configuration.Configuration;
 import com.tamfign.configuration.ServerConfig;
@@ -45,22 +47,38 @@ public class CoordinateConnector extends Connector implements Runnable {
 		broadcast(new ArrayList<Socket>(serverList.values()), cmd);
 	}
 
-	public void connectServer(String serverId) {
-		ServerConfig server = ServerListController.getInstance().get(serverId);
+	public void checkOtherServers() {
+		for (ServerConfig server : ServerListController.getInstance().getList()) {
+			tryConnectServer(server, true);
+		}
+	}
+
+	public void tryConnectServer(ServerConfig server, boolean isNewServer) {
 		SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
 		SSLSocket another = null;
-
 		try {
 			another = (SSLSocket) factory.createSocket(server.getHost(), server.getCoordinationPort());
 			if (another.isConnected()) {
-				addBroadcastList(serverId, another);
-				//TODO ServerListController.getInstance().get(serverId).setActived(true);
-				ChatRoomListController.getInstance().addRoom(ChatRoomListController.getMainHall(serverId), serverId,
-						null);
+				if (isNewServer) {
+					sendOutOwnId(another);
+				} else {
+					ServerListController.getInstance().addServer(server);
+				}
+				addBroadcastList(server.getId(), another);
+				ChatRoomListController.getInstance().addRoom(ChatRoomListController.getMainHall(server.getId()),
+						server.getId(), null);
 			}
 		} catch (Exception e) {
-			System.out.println("Fail to connect server-" + serverId);
+			System.out.println("Fail to connect server-" + server.getId());
+		} finally {
+			close(another);
 		}
+	}
+
+	private void sendOutOwnId(Socket socket) throws IOException {
+		if (socket == null || socket.isClosed())
+			return;
+		write(socket, ServerServerCmd.getServerOnCmd());
 	}
 
 	public void addBroadcastList(String serverId, Socket socket) {
