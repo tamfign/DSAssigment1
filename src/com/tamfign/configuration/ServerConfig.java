@@ -7,6 +7,8 @@ public class ServerConfig {
 	private int coordinationPort = 0;
 	private boolean isItselft = false;
 	private boolean isActived = false;
+	private String cerPath = null;
+	private String cerPwd = null;
 
 	public ServerConfig() {
 	};
@@ -72,6 +74,22 @@ public class ServerConfig {
 
 	public void setActived(boolean isActived) {
 		this.isActived = isActived;
+	}
+
+	public String getCerPath() {
+		return cerPath;
+	}
+
+	public void setCerPath(String cerPath) {
+		this.cerPath = cerPath;
+	}
+
+	public String getCerPwd() {
+		return cerPwd;
+	}
+
+	public void setCerPwd(String cerPwd) {
+		this.cerPwd = cerPwd;
 	}
 
 	public String toString() {

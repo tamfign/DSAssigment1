@@ -21,12 +21,9 @@ public class Main {
 			controller = ConnectController.getInstance();
 			controller.run();
 		} catch (CmdLineException e) {
-			System.err.println("Router Example: java -jar server.jar -n id -r -c cert_key -u user_data");
-			System.err.println(
-					"Server Example: java -jar server.jar -n id -c cert_key [-h router_host] [-p router_port]");
+			System.err.println("Example: java -jar server.jar [-r] -l server_config");
 		} catch (IOException e) {
 			System.err.println(e.getMessage());
 		}
 	}
-
 }

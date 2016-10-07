@@ -20,23 +20,8 @@ public class Configuration {
 	private boolean isRouter = false;
 	private RouterConfig router = null;
 
-	private String certPath = null;
-	// TODO hardcode? configurable? cert pass
-	public static final char certPass[] = "123456".toCharArray();
-	// TODO hardcode? configurable? cert alia main pass
-	public static final char certAliaMainPass[] = "123456".toCharArray();
-
 	private Configuration(ServerArguments arguments) throws IOException {
-		ConfigurationHandler configHandler = new ConfigurationHandler();
-		SAXParser parser = null;
-
-		try {
-			parser = SAXParserFactory.newInstance().newSAXParser();
-			InputStream is = new FileInputStream(arguments.getServerConfigPath());
-			parser.parse(is, configHandler);
-		} catch (ParserConfigurationException | SAXException e) {
-			e.printStackTrace();
-		}
+		ConfigurationHandler configHandler = getConfigHandler(arguments);
 
 		isRouter = arguments.isRouter();
 		if (!isRouter) {
@@ -45,15 +30,28 @@ public class Configuration {
 		} else {
 			itself = configHandler.getRouterConfig();
 		}
-		certPath = arguments.getCertPath();
+
+		System.setProperty("javax.net.ssl.trustStore", itself.getCerPath());
+		System.setProperty("javax.net.ssl.trustStorePassword", itself.getCerPwd());
+		System.setProperty("javax.net.debug", "all");
+	}
+
+	private ConfigurationHandler getConfigHandler(ServerArguments args) throws IOException {
+		ConfigurationHandler configHandler = new ConfigurationHandler();
+		SAXParser parser = null;
+
+		try {
+			parser = SAXParserFactory.newInstance().newSAXParser();
+			InputStream is = new FileInputStream(args.getServerConfigPath());
+			parser.parse(is, configHandler);
+		} catch (ParserConfigurationException | SAXException e) {
+			e.printStackTrace();
+		}
+		return configHandler;
 	}
 
 	public static boolean isRouter() {
 		return _instance.isRouter;
-	}
-
-	public static String getCertPath() {
-		return _instance.certPath;
 	}
 
 	public static String getServerId() {

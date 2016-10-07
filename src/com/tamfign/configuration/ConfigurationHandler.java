@@ -7,10 +7,13 @@ import org.xml.sax.helpers.DefaultHandler;
 public class ConfigurationHandler extends DefaultHandler {
 	private static final String SERVER = "server";
 	private static final String ROUTER = "router";
-	private static final String SERVER_ID = "server_id";
+	private static final String SERVER_ID = "id";
 	private static final String HOST = "host";
 	private static final String CLIENT_PORT = "client_port";
 	private static final String COODINATE_PORT = "coordinate_port";
+	private static final String CER_PATH = "cer_path";
+	private static final String CER_PWD = "cer_pwd";
+	private static final String USER_DATA = "user_data";
 	private static final String IS_MAIN = "is_main";
 
 	private String tag = null;
@@ -32,6 +35,12 @@ public class ConfigurationHandler extends DefaultHandler {
 			this.config.setCoordinationPort(Integer.parseInt(data));
 		} else if (IS_MAIN.equalsIgnoreCase(this.tag)) {
 			((RouterConfig) this.config).setMain(Boolean.parseBoolean(data));
+		} else if (CER_PATH.equalsIgnoreCase(this.tag)) {
+			this.config.setCerPath(data);
+		} else if (CER_PWD.equalsIgnoreCase(this.tag)) {
+			this.config.setCerPwd(data);
+		} else if (USER_DATA.equalsIgnoreCase(this.tag)) {
+			((RouterConfig) this.config).setUserDataPath(data);
 		}
 	}
 
@@ -60,7 +69,11 @@ public class ConfigurationHandler extends DefaultHandler {
 		case HOST:
 		case CLIENT_PORT:
 		case COODINATE_PORT:
+		case CER_PWD:
+		case CER_PATH:
+		case USER_DATA:
 		case IS_MAIN:
+
 			this.tag = qName;
 			break;
 		default:
