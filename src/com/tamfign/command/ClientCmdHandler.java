@@ -79,17 +79,22 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 	}
 
 	private boolean isClientAuthorised(Command cmd) {
+		boolean ret = false;
 		String id = (String) cmd.getObj().get(Command.P_IDENTITY);
 		String pwd = (String) cmd.getObj().get(Command.P_PWD);
 
 		User user = UserDataController.getInstance().getUser(id);
-		return user.verify(pwd);
+		if (user != null) {
+			ret = user.verify(pwd);
+		}
+		return ret;
 	}
 
 	private void handleLockIdentiy(Command cmd) {
 		String id = (String) cmd.getObj().get(Command.P_IDENTITY);
 
 		if (isIdValid(id) && isClientAuthorised(cmd)) {
+			//TODO route to other servers
 			lockIdentity(id, cmd);
 		} else {
 			sendDisapproveIdentity(cmd.getSocket(), id);

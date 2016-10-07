@@ -11,6 +11,7 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.SAXException;
 
 import com.tamfign.main.ServerArguments;
+import com.tamfign.userdata.UserData;
 
 public class Configuration {
 
@@ -29,11 +30,11 @@ public class Configuration {
 			router = configHandler.getRouterConfig();
 		} else {
 			itself = configHandler.getRouterConfig();
+			initialUserDataList();
 		}
 
-		System.setProperty("javax.net.ssl.trustStore", itself.getCerPath());
-		System.setProperty("javax.net.ssl.trustStorePassword", itself.getCerPwd());
-		System.setProperty("javax.net.debug", "all");
+		System.setProperty("javax.net.ssl.keyStore", itself.getCerPath());
+		System.setProperty("javax.net.ssl.keyStorePassword", itself.getCerPwd());
 	}
 
 	private ConfigurationHandler getConfigHandler(ServerArguments args) throws IOException {
@@ -48,6 +49,20 @@ public class Configuration {
 			e.printStackTrace();
 		}
 		return configHandler;
+	}
+
+	// TODO merge with above
+	private void initialUserDataList() throws IOException {
+		UserData userDataHandler = new UserData();
+		SAXParser parser = null;
+
+		try {
+			parser = SAXParserFactory.newInstance().newSAXParser();
+			InputStream is = new FileInputStream(((RouterConfig) itself).getUserDataPath());
+			parser.parse(is, userDataHandler);
+		} catch (ParserConfigurationException | SAXException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static boolean isRouter() {
