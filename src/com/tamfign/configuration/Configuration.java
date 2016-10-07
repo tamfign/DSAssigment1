@@ -33,6 +33,7 @@ public class Configuration {
 			initialUserDataList();
 		}
 
+		System.setProperty("javax.net.ssl.trustStore", itself.getCerPath());
 		System.setProperty("javax.net.ssl.keyStore", itself.getCerPath());
 		System.setProperty("javax.net.ssl.keyStorePassword", itself.getCerPwd());
 	}
@@ -71,6 +72,10 @@ public class Configuration {
 
 	public static String getServerId() {
 		return _instance.itself.getId();
+	}
+
+	public static String getHost() {
+		return _instance.itself.getHost();
 	}
 
 	public static int getClientPort() {

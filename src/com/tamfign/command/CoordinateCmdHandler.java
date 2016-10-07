@@ -1,6 +1,7 @@
 package com.tamfign.command;
 
 import java.net.Socket;
+import java.util.ArrayList;
 
 import com.tamfign.configuration.Configuration;
 import com.tamfign.configuration.ServerConfig;
@@ -110,19 +111,20 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 		String clPort = (String) cmd.getObj().get(Command.P_CLIENT_PORT);
 
 		if (verifyServer(pwd)) {
+			ArrayList<String> currentServerList = ServerListController.getInstance().getStringList();
 			ServerListController.getInstance().addServer(new ServerConfig(serverId, host, coPort, clPort));
-			sendApproveServer(cmd.getSocket(), serverId);
+			sendApproveServer(cmd.getSocket(), serverId, currentServerList);
 		} else {
 			sendDisapproveServer(cmd.getSocket(), serverId);
 		}
 	}
 
-	private void sendApproveServer(Socket socket, String id) {
-		response(socket, ServerServerCmd.newServerRs(id, true));
+	private void sendApproveServer(Socket socket, String id, ArrayList<String> serverList) {
+		response(socket, ServerServerCmd.newServerRs(id, true, serverList));
 	}
 
 	private void sendDisapproveServer(Socket socket, String id) {
-		response(socket, ServerServerCmd.newServerRs(id, false));
+		response(socket, ServerServerCmd.newServerRs(id, false, null));
 	}
 
 	private boolean verifyServer(String pwd) {

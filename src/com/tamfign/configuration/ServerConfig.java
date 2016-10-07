@@ -14,7 +14,7 @@ public class ServerConfig {
 	};
 
 	public ServerConfig(String stream) {
-		String[] args = stream.split("|");
+		String[] args = stream.split("\\|");
 		this.id = args[0];
 		this.host = args[1];
 		this.coordinationPort = Integer.parseInt(args[2]);

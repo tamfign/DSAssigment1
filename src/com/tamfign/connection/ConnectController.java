@@ -39,7 +39,7 @@ public class ConnectController {
 				return;
 			}
 
-			boolean approved = Boolean.getBoolean((String) result.get(Command.P_APPROVED));
+			boolean approved = Boolean.parseBoolean((String) result.get(Command.P_APPROVED));
 			if (!approved) {
 				System.out.println("Rejected by router.");
 				return;
