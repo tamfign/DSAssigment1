@@ -31,8 +31,14 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 		case Command.TYPE_QUIT:
 			handleQuit(cmd);
 			break;
+		case Command.TYPE_JOIN_SERVER:
+			handleLockIdentiy(cmd);
+			break;
 		case Command.TYPE_NEW_ID:
 			handleNewIdentity(cmd);
+			break;
+		case Command.CMD_LOCK_IDENTITY:
+			handleJoinServer(cmd);
 			break;
 		case Command.TYPE_LIST:
 			handleList(cmd);
@@ -63,6 +69,47 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 	 * For identity
 	 */
 
+	private void handleJoinServer(Command cmd) {
+		boolean approved = (Boolean) cmd.getObj().get(Command.P_APPROVED);
+		if (approved) {
+			createIdentity(cmd.getOwner(), cmd.getSocket(), ChatRoomListController.getLocalMainHall());
+			approveJoinServer(cmd.getSocket(), cmd.getOwner());
+			((ClientConnector) connector).broadcastWithinRoom(null, ChatRoomListController.getLocalMainHall(),
+					ClientServerCmd.roomChangeRq(cmd.getOwner(), "", ChatRoomListController.getLocalMainHall()));
+		} else {
+			sendDisapproveJoinServer(cmd.getSocket(), cmd.getOwner());
+		}
+	}
+
+	private void handleLockIdentiy(Command cmd) {
+		String id = (String) cmd.getObj().get(Command.P_IDENTITY);
+
+		if (isIdValid(id)) {
+			lockIdentity(id, cmd);
+		} else {
+			sendDisapproveJoinServer(cmd.getSocket(), id);
+		}
+	}
+
+	private void lockIdentity(String identity, Command cmd) {
+		if (!ClientListController.getInstance().isIdentityExist(identity)) {
+			connector.requestTheOther(InternalCmd.getInternIdCmd(cmd, Command.CMD_LOCK_IDENTITY, identity));
+			releaseIdentity(identity, cmd);
+		}
+	}
+
+	private void releaseIdentity(String identity, Command cmd) {
+		connector.requestTheOther(InternalCmd.getInternIdCmd(cmd, Command.CMD_RELEASE_IDENTITY, identity));
+	}
+
+	private void approveJoinServer(Socket socket, String id) {
+		response(socket, ClientServerCmd.joinServerRs(id, true));
+	}
+
+	private void sendDisapproveJoinServer(Socket socket, String id) {
+		response(socket, ClientServerCmd.joinServerRs(id, false));
+	}
+
 	private boolean isClientAuthorised(Command cmd) {
 		boolean ret = false;
 		String id = (String) cmd.getObj().get(Command.P_IDENTITY);
@@ -78,30 +125,25 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 	private void handleNewIdentity(Command cmd) {
 		String id = (String) cmd.getObj().get(Command.P_IDENTITY);
 		if (ServerListController.getInstance().size() <= 0) {
-			sendDisapproveIdentity(cmd.getSocket(), id);
+			sendDisapproveJoinServer(cmd.getSocket(), id);
 			return;
 		}
 
-		// TODO CAN only check whether id duplicated in servers not router.
-		if (isIdValid(id) && !isIdExists(id) && isClientAuthorised(cmd)) {
+		if (isIdValid(id) && isClientAuthorised(cmd)) {
 			// TODO get usage of the servers
 			ServerConfig server = ServerListController.getInstance().getList().get(0);
-			approveIdentity(cmd.getSocket(), cmd.getOwner(), server);
+			approveNewIdentity(cmd.getSocket(), server);
 		} else {
-			sendDisapproveIdentity(cmd.getSocket(), id);
+			disapproveNewIdentity(cmd.getSocket());
 		}
 	}
 
-	private void approveIdentity(Socket socket, String id, ServerConfig server) {
-		String roomId = ChatRoomListController.getMainHall(server.getId());
-
-		response(socket, ClientServerCmd.newIdentityRs(id, true));
-		response(socket, ClientServerCmd.roomChangeRq(id, "", "Routering"));
-		response(socket, ClientServerCmd.routeRq(roomId, server.getHost(), server.getClientPort()));
+	private void approveNewIdentity(Socket socket, ServerConfig server) {
+		response(socket, ClientServerCmd.newIdentityRq(true, server.getId(), server.getHost(), server.getClientPort()));
 	}
 
-	private boolean isIdExists(String id) {
-		return ClientListController.getInstance().isIdentityExist(id);
+	private void disapproveNewIdentity(Socket socket) {
+		response(socket, ClientServerCmd.newIdentityRq(false, null, null, 0));
 	}
 
 	private boolean isIdValid(String id) {
@@ -114,10 +156,6 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 			}
 		}
 		return ret;
-	}
-
-	private void sendDisapproveIdentity(Socket socket, String id) {
-		response(socket, ClientServerCmd.newIdentityRs(id, false));
 	}
 
 	private void createIdentity(String identity, Socket socket, String roomId) {

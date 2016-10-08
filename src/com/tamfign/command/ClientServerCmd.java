@@ -13,9 +13,9 @@ public class ClientServerCmd extends Command {
 		super(socket, cmd, owner);
 	}
 
-	public static String newIdentityRs(String identity, boolean result) {
+	public static String joinServerRs(String identity, boolean result) {
 		JSONObject root = new JSONObject();
-		root.put(TYPE, TYPE_NEW_ID);
+		root.put(TYPE, TYPE_JOIN_SERVER);
 		root.put(P_APPROVED, Boolean.toString(result));
 		return root.toJSONString();
 	}
@@ -94,6 +94,18 @@ public class ClientServerCmd extends Command {
 		root.put(P_ROOM_ID, roomId);
 		root.put(P_HOST, host);
 		root.put(P_PORT, String.valueOf(port));
+		return root.toJSONString();
+	}
+
+	public static String newIdentityRq(boolean result, String serverId, String host, int port) {
+		JSONObject root = new JSONObject();
+		root.put(TYPE, TYPE_NEW_ID);
+		root.put(P_APPROVED, Boolean.toString(result));
+		if (result) {
+			root.put(P_SERVER_ID, serverId);
+			root.put(P_HOST, host);
+			root.put(P_PORT, String.valueOf(port));
+		}
 		return root.toJSONString();
 	}
 

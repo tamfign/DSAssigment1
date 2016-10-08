@@ -12,6 +12,7 @@ public class Command {
 	protected final static String TYPE = "type";
 	protected final static String CMD = "type";
 	protected final static String TYPE_NEW_ID = "newidentity";
+	protected final static String TYPE_JOIN_SERVER = "join_server";
 	protected final static String TYPE_LOCK_ID = "lockidenity";
 	protected final static String TYPE_RELEASE_ID = "releaseidentity";
 	protected final static String TYPE_WHO = "who";
@@ -98,37 +99,37 @@ public class Command {
 	public static boolean getResult(JSONObject obj) {
 		boolean ret = false;
 
-		switch ((String) obj.get(Command.TYPE)) {
-		case (Command.TYPE_LOCK_ID):
-		case (Command.TYPE_LOCK_ROOM):
-			ret = Boolean.parseBoolean((String) obj.get(Command.P_LOCKED));
+		switch ((String) obj.get(TYPE)) {
+		case (TYPE_LOCK_ID):
+		case (TYPE_LOCK_ROOM):
+			ret = Boolean.parseBoolean((String) obj.get(P_LOCKED));
 			break;
 		default:
-			ret = Boolean.parseBoolean((String) obj.get(Command.P_APPROVED));
+			ret = Boolean.parseBoolean((String) obj.get(P_APPROVED));
 		}
 		return ret;
 	}
 
 	public static boolean isNewId(JSONObject obj) {
 		String cmdType = (String) obj.get(Command.TYPE);
-		return Command.TYPE_NEW_ID.equals(cmdType) || Command.TYPE_MOVE_JOIN.equals(cmdType);
+		return TYPE_NEW_ID.equals(cmdType) || TYPE_MOVE_JOIN.equals(cmdType) || TYPE_JOIN_SERVER.equals(cmdType);
 	}
 
 	public static String getNewId(JSONObject obj) {
-		return (String) obj.get(Command.P_IDENTITY);
+		return (String) obj.get(P_IDENTITY);
 	}
 
 	public static boolean isClosing(JSONObject obj) {
-		String cmdType = (String) obj.get(Command.TYPE);
-		return Command.TYPE_QUIT.equals(cmdType);
+		String cmdType = (String) obj.get(TYPE);
+		return TYPE_QUIT.equals(cmdType);
 	}
 
 	public static boolean isMoving(JSONObject obj) {
 		boolean ret = false;
 
-		String cmdType = (String) obj.get(Command.TYPE);
-		if (Command.TYPE_JOIN.equals(cmdType)) {
-			String roomId = (String) obj.get(Command.P_ROOM_ID);
+		String cmdType = (String) obj.get(TYPE);
+		if (TYPE_JOIN.equals(cmdType)) {
+			String roomId = (String) obj.get(P_ROOM_ID);
 			ret = ChatRoomListController.getInstance().isOtherServer(roomId);
 		}
 		return ret;
