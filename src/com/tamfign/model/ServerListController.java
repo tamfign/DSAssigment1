@@ -52,4 +52,8 @@ public class ServerListController {
 		}
 		return ret;
 	}
+
+	public synchronized int size() {
+		return this.serverList.size();
+	}
 }

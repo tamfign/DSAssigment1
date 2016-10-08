@@ -13,6 +13,7 @@ import com.tamfign.listener.ClientListener;
 import com.tamfign.listener.CommandListener;
 import com.tamfign.messagequeue.MessageQueue;
 import com.tamfign.model.ChatRoomListController;
+
 public class ClientConnector extends Connector implements Runnable {
 	private HashMap<String, Socket> clientSocketsList = null;
 	private MessageQueue clientMQ = new MessageQueue(new ClientCmdHandler(this));

@@ -32,9 +32,6 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 			handleQuit(cmd);
 			break;
 		case Command.TYPE_NEW_ID:
-			handleLockIdentiy(cmd);
-			break;
-		case Command.CMD_LOCK_IDENTITY:
 			handleNewIdentity(cmd);
 			break;
 		case Command.TYPE_LIST:
@@ -66,18 +63,6 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 	 * For identity
 	 */
 
-	private void handleNewIdentity(Command cmd) {
-		boolean approved = (Boolean) cmd.getObj().get(Command.P_APPROVED);
-		if (approved) {
-			createIdentity(cmd.getOwner(), cmd.getSocket(), ChatRoomListController.getLocalMainHall());
-			approveIdentity(cmd.getSocket(), cmd.getOwner());
-			((ClientConnector) connector).broadcastWithinRoom(null, ChatRoomListController.getLocalMainHall(),
-					ClientServerCmd.roomChangeRq(cmd.getOwner(), "", ChatRoomListController.getLocalMainHall()));
-		} else {
-			sendDisapproveIdentity(cmd.getSocket(), cmd.getOwner());
-		}
-	}
-
 	private boolean isClientAuthorised(Command cmd) {
 		boolean ret = false;
 		String id = (String) cmd.getObj().get(Command.P_IDENTITY);
@@ -90,15 +75,33 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 		return ret;
 	}
 
-	private void handleLockIdentiy(Command cmd) {
+	private void handleNewIdentity(Command cmd) {
 		String id = (String) cmd.getObj().get(Command.P_IDENTITY);
+		if (ServerListController.getInstance().size() <= 0) {
+			sendDisapproveIdentity(cmd.getSocket(), id);
+			return;
+		}
 
-		if (isIdValid(id) && isClientAuthorised(cmd)) {
-			//TODO route to other servers
-			lockIdentity(id, cmd);
+		// TODO CAN only check whether id duplicated in servers not router.
+		if (isIdValid(id) && !isIdExists(id) && isClientAuthorised(cmd)) {
+			// TODO get usage of the servers
+			ServerConfig server = ServerListController.getInstance().getList().get(0);
+			approveIdentity(cmd.getSocket(), cmd.getOwner(), server);
 		} else {
 			sendDisapproveIdentity(cmd.getSocket(), id);
 		}
+	}
+
+	private void approveIdentity(Socket socket, String id, ServerConfig server) {
+		String roomId = ChatRoomListController.getMainHall(server.getId());
+
+		response(socket, ClientServerCmd.newIdentityRs(id, true));
+		response(socket, ClientServerCmd.roomChangeRq(id, "", "Routering"));
+		response(socket, ClientServerCmd.routeRq(roomId, server.getHost(), server.getClientPort()));
+	}
+
+	private boolean isIdExists(String id) {
+		return ClientListController.getInstance().isIdentityExist(id);
 	}
 
 	private boolean isIdValid(String id) {
@@ -113,23 +116,8 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 		return ret;
 	}
 
-	private void lockIdentity(String identity, Command cmd) {
-		if (!ClientListController.getInstance().isIdentityExist(identity)) {
-			connector.requestTheOther(InternalCmd.getInternIdCmd(cmd, Command.CMD_LOCK_IDENTITY, identity));
-			releaseIdentity(identity, cmd);
-		}
-	}
-
-	private void releaseIdentity(String identity, Command cmd) {
-		connector.requestTheOther(InternalCmd.getInternIdCmd(cmd, Command.CMD_RELEASE_IDENTITY, identity));
-	}
-
 	private void sendDisapproveIdentity(Socket socket, String id) {
 		response(socket, ClientServerCmd.newIdentityRs(id, false));
-	}
-
-	private void approveIdentity(Socket socket, String id) {
-		response(socket, ClientServerCmd.newIdentityRs(id, true));
 	}
 
 	private void createIdentity(String identity, Socket socket, String roomId) {

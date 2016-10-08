@@ -24,7 +24,6 @@ public class User {
 		boolean ret = false;
 
 		if (pwd != null || this.pwd != null) {
-			System.out.println(PasswordVerification.getInstance().decrypt(pwd));
 			ret = PasswordVerification.getInstance().decrypt(pwd)
 					.equals(PasswordVerification.getInstance().decrypt(this.pwd));
 		}
