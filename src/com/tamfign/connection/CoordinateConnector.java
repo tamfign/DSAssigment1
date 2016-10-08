@@ -32,7 +32,11 @@ public class CoordinateConnector extends Connector implements Runnable {
 		new Thread(serverMQ).start();
 
 		try {
-			System.out.println("Start Listening Other Servers");
+			if (Configuration.isRouter()) {
+				System.out.println("Start Accepting Servers");
+			} else {
+				System.out.println("Server " + Configuration.getServerId() + " is On.");
+			}
 			keepListenPortAndAcceptMultiClient(Configuration.getCoordinationPort());
 		} catch (Exception e) {
 			e.printStackTrace();

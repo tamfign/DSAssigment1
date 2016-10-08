@@ -101,6 +101,7 @@ public class ServerServerCmd extends Command {
 		JSONObject obj = new JSONObject();
 		obj.put(TYPE, TYPE_SERVER_ON);
 		obj.put(P_SERVER_ID, Configuration.getServerId());
+		obj.put(P_SERVER, Configuration.getConfig().toString());
 		return obj.toJSONString();
 	}
 

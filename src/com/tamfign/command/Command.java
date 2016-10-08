@@ -49,6 +49,7 @@ public class Command {
 	public final static String P_PORT = "port";
 	public final static String P_COORDINATE_PORT = "coordinate_port";
 	public final static String P_CLIENT_PORT = "client_port";
+	public final static String P_SERVER = "server";
 	public final static String P_SERVERS = "servers";
 	protected final static String P_CONTENT = "content";
 

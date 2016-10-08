@@ -70,6 +70,10 @@ public class Configuration {
 		return _instance.isRouter;
 	}
 
+	public static ServerConfig getConfig() {
+		return _instance.itself;
+	}
+
 	public static String getServerId() {
 		return _instance.itself.getId();
 	}

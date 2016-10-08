@@ -132,12 +132,9 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 	}
 
 	protected void handleServerOn(Command cmd) {
-		String serverId = (String) cmd.getObj().get(Command.P_SERVER_ID);
-		String host = (String) cmd.getObj().get(Command.P_HOST);
-		String coPort = (String) cmd.getObj().get(Command.P_COORDINATE_PORT);
-		String clPort = (String) cmd.getObj().get(Command.P_CLIENT_PORT);
+		String stream = (String) cmd.getObj().get(Command.P_SERVER);
 
-		ServerConfig sConfig = new ServerConfig(serverId, host, coPort, clPort);
+		ServerConfig sConfig = new ServerConfig(stream);
 		((CoordinateConnector) connector).tryConnectServer(sConfig, false);
 	}
 
