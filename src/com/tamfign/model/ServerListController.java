@@ -24,6 +24,9 @@ public class ServerListController {
 	}
 
 	public synchronized void addServers(ArrayList<String> list) {
+		if (list == null)
+			return;
+
 		for (String stream : list) {
 			serverList.add(new ServerConfig(stream));
 		}

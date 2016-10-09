@@ -1,6 +1,7 @@
 package com.tamfign.command;
 
 import java.net.Socket;
+import java.util.ArrayList;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -40,18 +41,18 @@ public class Command {
 	protected final static String P_PWD = "pwd";
 	protected final static String P_SERVER_ID = "serverid";
 	protected final static String P_LOCKED = "locked";
-	public final static String P_APPROVED = "approved";
+	protected final static String P_APPROVED = "approved";
 	protected final static String P_FORMER = "former";
 	protected final static String P_ROOM_ID = "roomid";
 	protected final static String P_ROOMS = "rooms";
 	protected final static String P_IDENTITIES = "identities";
 	protected final static String P_OWNER = "owner";
-	public final static String P_HOST = "host";
-	public final static String P_PORT = "port";
-	public final static String P_COORDINATE_PORT = "coordinate_port";
-	public final static String P_CLIENT_PORT = "client_port";
-	public final static String P_SERVER = "server";
-	public final static String P_SERVERS = "servers";
+	protected final static String P_HOST = "host";
+	protected final static String P_PORT = "port";
+	protected final static String P_COORDINATE_PORT = "coordinate_port";
+	protected final static String P_CLIENT_PORT = "client_port";
+	protected final static String P_SERVER = "server";
+	protected final static String P_SERVERS = "servers";
 	protected final static String P_CONTENT = "content";
 
 	protected final static String CMD_LOCK_IDENTITY = "CMD_LOCK_IDENTITY";
@@ -108,6 +109,11 @@ public class Command {
 			ret = Boolean.parseBoolean((String) obj.get(P_APPROVED));
 		}
 		return ret;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static ArrayList<String> getServers(JSONObject obj) {
+		return (ArrayList<String>) obj.get(Command.P_SERVERS);
 	}
 
 	public static boolean isNewId(JSONObject obj) {

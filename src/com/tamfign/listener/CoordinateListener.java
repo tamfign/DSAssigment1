@@ -16,7 +16,7 @@ public class CoordinateListener extends CommandListener {
 
 	@Override
 	protected void handleDisconnect() {
-		// Do nothing, as assuming that servers won't crash.
+		//TODO if server crash clean its data.
 	}
 
 	@Override

@@ -31,7 +31,6 @@ public abstract class Connector implements ConnectorInf {
 	protected abstract CommandListener getListener(Socket socket);
 
 	private SSLServerSocket generateSSLServerSocket(int port) throws Exception {
-		// TODO make sure it's TLS
 		SSLServerSocketFactory factory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
 		return (SSLServerSocket) factory.createServerSocket(port);
 	}

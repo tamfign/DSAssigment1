@@ -110,7 +110,6 @@ public class ServerServerCmd extends Command {
 		JSONObject obj = new JSONObject();
 		obj.put(TYPE, TYPE_NEW_SERVER);
 		obj.put(P_SERVER_ID, Configuration.getServerId());
-		// TODO refactory?
 		obj.put(P_PWD, ServerVerification.getInstance().encrypt(SERVER_AGREEMENT));
 		obj.put(P_HOST, Configuration.getHost());
 		obj.put(P_COORDINATE_PORT, String.valueOf(Configuration.getCoordinationPort()));
@@ -120,7 +119,7 @@ public class ServerServerCmd extends Command {
 
 	public static String newServerRs(String serverId, boolean result, ArrayList<String> serverList) {
 		JSONObject root = new JSONObject();
-		root.put(TYPE, TYPE_NEW_ID);
+		root.put(TYPE, TYPE_NEW_SERVER);
 		root.put(P_APPROVED, Boolean.toString(result));
 
 		if (result) {
