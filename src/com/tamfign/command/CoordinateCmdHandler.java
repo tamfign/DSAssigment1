@@ -10,6 +10,7 @@ import com.tamfign.model.ChatRoom;
 import com.tamfign.model.ChatRoomListController;
 import com.tamfign.model.ClientListController;
 import com.tamfign.model.ServerListController;
+import com.tamfign.security.ServerVerification;
 
 public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 

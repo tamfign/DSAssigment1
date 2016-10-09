@@ -7,6 +7,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.tamfign.configuration.Configuration;
+import com.tamfign.security.ServerVerification;
 
 @SuppressWarnings("unchecked")
 public class ServerServerCmd extends Command {

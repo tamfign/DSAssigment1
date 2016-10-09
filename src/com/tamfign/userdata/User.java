@@ -1,5 +1,7 @@
 package com.tamfign.userdata;
 
+import com.tamfign.security.PasswordVerification;
+
 public class User {
 	private String name = null;
 	private String pwd = null;
