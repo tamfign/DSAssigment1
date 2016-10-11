@@ -129,7 +129,7 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 	}
 
 	private boolean verifyServer(String pwd) {
-		return Command.SERVER_AGREEMENT.equals(ServerVerification.getInstance().decrypt(pwd));
+		return Command.SERVER_AGREEMENT.equals(ServerVerification.getInstance().unsign(pwd));
 	}
 
 	protected void handleServerOn(Command cmd) {

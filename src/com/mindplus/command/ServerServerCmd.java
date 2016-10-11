@@ -110,7 +110,7 @@ public class ServerServerCmd extends Command {
 		JSONObject obj = new JSONObject();
 		obj.put(TYPE, TYPE_NEW_SERVER);
 		obj.put(P_SERVER_ID, Configuration.getServerId());
-		obj.put(P_PWD, ServerVerification.getInstance().encrypt(SERVER_AGREEMENT));
+		obj.put(P_PWD, ServerVerification.getInstance().sign(SERVER_AGREEMENT));
 		obj.put(P_HOST, Configuration.getHost());
 		obj.put(P_COORDINATE_PORT, String.valueOf(Configuration.getCoordinationPort()));
 		obj.put(P_CLIENT_PORT, String.valueOf(Configuration.getClientPort()));
