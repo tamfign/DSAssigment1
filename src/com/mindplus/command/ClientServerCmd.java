@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import com.mindplus.security.ServerVerification;
+
 @SuppressWarnings("unchecked")
 public class ClientServerCmd extends Command {
 
@@ -45,7 +47,6 @@ public class ClientServerCmd extends Command {
 		return root.toJSONString();
 	}
 
-	// Server todo
 	public static String serverChangeRs(boolean result, String serverId) {
 		JSONObject root = new JSONObject();
 		root.put(TYPE, TYPE_SERVER_CHANGE);
@@ -105,6 +106,7 @@ public class ClientServerCmd extends Command {
 			root.put(P_SERVER_ID, serverId);
 			root.put(P_HOST, host);
 			root.put(P_PORT, String.valueOf(port));
+			root.put(P_PWD, ServerVerification.getInstance().encrypt(CLIENT_AUTHORIZED));
 		}
 		return root.toJSONString();
 	}

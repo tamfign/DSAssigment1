@@ -13,6 +13,7 @@ import com.mindplus.model.ChatRoomListController;
 import com.mindplus.model.Client;
 import com.mindplus.model.ClientListController;
 import com.mindplus.model.ServerListController;
+import com.mindplus.security.ServerVerification;
 import com.mindplus.userdata.User;
 import com.mindplus.userdata.UserDataController;
 
@@ -31,11 +32,11 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 		case Command.TYPE_QUIT:
 			handleQuit(cmd);
 			break;
-		case Command.TYPE_JOIN_SERVER:
-			handleLockIdentiy(cmd);
-			break;
 		case Command.TYPE_NEW_ID:
 			handleNewIdentity(cmd);
+			break;
+		case Command.TYPE_JOIN_SERVER:
+			handleLockIdentiy(cmd);
 			break;
 		case Command.CMD_LOCK_IDENTITY:
 			handleJoinServer(cmd);
@@ -83,12 +84,17 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 
 	private void handleLockIdentiy(Command cmd) {
 		String id = (String) cmd.getObj().get(Command.P_IDENTITY);
+		String ticket = (String) cmd.getObj().get(Command.P_PWD);
 
-		if (isIdValid(id)) {
+		if (isClientAuthorized(ticket) && isIdValid(id)) {
 			lockIdentity(id, cmd);
 		} else {
 			sendDisapproveJoinServer(cmd.getSocket(), id);
 		}
+	}
+
+	private boolean isClientAuthorized(String ticket) {
+		return Command.CLIENT_AUTHORIZED.equals(ServerVerification.getInstance().decrypt(ticket));
 	}
 
 	private void lockIdentity(String identity, Command cmd) {
@@ -123,6 +129,11 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 	}
 
 	private void handleNewIdentity(Command cmd) {
+		// Server does not support unauthorized client.
+		if (!Configuration.isRouter()) {
+			disapproveNewIdentity(cmd.getSocket());
+		}
+
 		String id = (String) cmd.getObj().get(Command.P_IDENTITY);
 		if (ServerListController.getInstance().size() <= 0) {
 			sendDisapproveJoinServer(cmd.getSocket(), id);

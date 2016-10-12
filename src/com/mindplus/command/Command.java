@@ -62,6 +62,7 @@ public class Command {
 	protected final static String CMD_DELETE_ROOM = "CMD_DELETE_ROOM";
 
 	protected final static String SERVER_AGREEMENT = "IAMREALSERVER";
+	protected final static String CLIENT_AUTHORIZED = "IAMAUTHORIZED";
 
 	private String owner = null;
 	private JSONObject obj = null;

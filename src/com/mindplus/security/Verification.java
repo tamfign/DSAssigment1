@@ -70,4 +70,16 @@ public class Verification {
 		}
 		return ret;
 	}
+
+	public String encrypt(String str) {
+		String ret = null;
+
+		try {
+			cipher.init(Cipher.ENCRYPT_MODE, pubKey);
+			ret = new String(Base64.getEncoder().encode(cipher.doFinal(str.getBytes())));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ret;
+	}
 }
