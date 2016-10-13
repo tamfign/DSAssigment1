@@ -71,11 +71,11 @@ public class CoordinateConnector extends Connector implements Runnable {
 				addBroadcastList(server.getId(), another);
 				ChatRoomListController.getInstance().addRoom(ChatRoomListController.getMainHall(server.getId()),
 						server.getId(), null);
+			} else {
+				close(another);
 			}
 		} catch (Exception e) {
 			System.out.println("Fail to connect server-" + server.getId());
-		} finally {
-			close(another);
 		}
 	}
 

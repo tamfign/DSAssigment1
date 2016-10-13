@@ -16,7 +16,7 @@ public class ConnectController {
 		return new ConnectController();
 	}
 
-	public void run() {
+	public void run() throws Exception {
 		if (!Configuration.isRouter()) {
 			new RouterConnector(this).run();
 			new Thread(this.servers).start();

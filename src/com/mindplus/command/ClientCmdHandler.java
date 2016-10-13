@@ -101,6 +101,8 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 		if (!ClientListController.getInstance().isIdentityExist(identity)) {
 			connector.requestTheOther(InternalCmd.getInternIdCmd(cmd, Command.CMD_LOCK_IDENTITY, identity));
 			releaseIdentity(identity, cmd);
+		} else {
+			sendDisapproveJoinServer(cmd.getSocket(), identity);
 		}
 	}
 
