@@ -257,8 +257,10 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 		String roomId = (String) cmd.getObj().get(Command.P_ROOM_ID);
 
 		if (!isOwnerOfRoom(cmd.getOwner()) && isRoomAvailable(roomId)) {
-			ServerConfig server = getServer(roomId);
-			if (!server.isItselft()) {
+			String serverId = getRoomServerId(roomId);
+
+			if (!Configuration.getConfig().getId().equals(serverId)) {
+				ServerConfig server = getServer(serverId);
 				routeClient(cmd.getOwner(), roomId, server, cmd.getSocket());
 			} else {
 				approveJoin(cmd.getOwner(), roomId);
@@ -266,6 +268,10 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 		} else {
 			disapproveJoin(cmd.getSocket(), cmd.getOwner(), roomId);
 		}
+	}
+
+	private ServerConfig getServer(String serverId) {
+		return ServerListController.getInstance().get(serverId);
 	}
 
 	private void handleDeleteRoom(Command cmd) {
@@ -384,10 +390,6 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 			ret = true;
 		}
 		return ret;
-	}
-
-	private ServerConfig getServer(String roomId) {
-		return ServerListController.getInstance().get(getRoomServerId(roomId));
 	}
 
 	private String getRoomServerId(String roomId) {
