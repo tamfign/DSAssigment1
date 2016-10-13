@@ -20,11 +20,10 @@ public class RouterConnector extends Connector {
 		super(controller);
 	}
 
-	public void run() {
+	public void run() throws Exception {
 		JSONObject result = contactRouter(Configuration.getRouterConfig());
 		if (result == null) {
-			System.out.println("Router can not be reached yet.");
-			return;
+			throw new Exception("Router can not be reached yet.");
 		}
 
 		boolean approved = Command.getResult(result);

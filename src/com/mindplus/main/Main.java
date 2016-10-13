@@ -37,6 +37,8 @@ public class Main {
 			System.err.println("Example: java -jar server.jar [-r] -l server_config");
 		} catch (IOException e) {
 			System.err.println(e.getMessage());
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
 		}
 	}
 
