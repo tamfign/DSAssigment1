@@ -15,21 +15,21 @@ public class ServerConfig {
 
 	public ServerConfig(String stream) {
 		String[] args = stream.split("\\|");
-		this.id = args[0];
+		this.id = args[0].toLowerCase();
 		this.host = args[1];
 		this.coordinationPort = Integer.parseInt(args[2]);
 		this.clientPort = Integer.parseInt(args[3]);
 	}
 
 	public ServerConfig(String id, String host, String coordinationPort, String clientPort) {
-		this.id = id;
+		this.id = id.toLowerCase();
 		this.host = host;
 		this.coordinationPort = Integer.parseInt(coordinationPort);
 		this.clientPort = Integer.parseInt(clientPort);
 	}
 
 	public void setId(String id) {
-		this.id = id;
+		this.id = id.toLowerCase();
 	}
 
 	public void setHost(String host) {

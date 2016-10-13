@@ -26,33 +26,34 @@ public class ChatRoomListController {
 		synchronized (this) {
 			ChatRoom newRoom = new ChatRoom(roomId, serverId, owner);
 			newRoom.addMember(owner);
-			roomList.put(roomId, newRoom);
+			roomList.put(roomId.toLowerCase(), newRoom);
 		}
 	}
 
 	public void changeRoom(String former, String newRoom, String identity) {
 		synchronized (this) {
-			roomList.get(former).removeMember(identity);
-			roomList.get(newRoom).addMember(identity);
+			roomList.get(former.toLowerCase()).removeMember(identity);
+			roomList.get(newRoom.toLowerCase()).addMember(identity);
 		}
 	}
 
 	public void deleteRoom(String roomId) {
 		synchronized (this) {
-			roomList.get(getLocalMainHall()).addMembers(roomList.get(roomId).getMemberList());
-			roomList.remove(roomId);
+			roomList.get(getLocalMainHall().toLowerCase())
+					.addMembers(roomList.get(roomId.toLowerCase()).getMemberList());
+			roomList.remove(roomId.toLowerCase());
 		}
 	}
 
 	public void removeRoom(String roomId) {
 		synchronized (this) {
-			roomList.remove(roomId);
+			roomList.remove(roomId.toLowerCase());
 		}
 	}
 
 	public boolean isRoomExists(String roomId) {
 		synchronized (this) {
-			return roomList.containsKey(roomId);
+			return roomList.containsKey(roomId.toLowerCase());
 		}
 	}
 
@@ -66,36 +67,37 @@ public class ChatRoomListController {
 
 	public ChatRoom getChatRoom(String roomId) {
 		synchronized (this) {
-			return roomList.get(roomId);
+			return roomList.get(roomId.toLowerCase());
 		}
 	}
 
 	public void addMember(String roomId, String identity) {
 		synchronized (this) {
-			if (roomList.get(roomId) != null) {
-				roomList.get(roomId).addMember(identity);
+			if (roomList.get(roomId.toLowerCase()) != null) {
+				roomList.get(roomId.toLowerCase()).addMember(identity);
 			}
 		}
 	}
 
 	public void removeMember(String roomId, String identity) {
 		synchronized (this) {
-			if (roomList.get(roomId) != null) {
-				roomList.get(roomId).removeMember(identity);
+			if (roomList.get(roomId.toLowerCase()) != null) {
+				roomList.get(roomId.toLowerCase()).removeMember(identity);
 			}
 		}
 	}
 
 	public ArrayList<String> getMemberList(String roomId) {
 		synchronized (this) {
-			return roomList.get(roomId).getMemberList();
+			return roomList.get(roomId.toLowerCase()).getMemberList();
 		}
 	}
 
 	public boolean isOtherServer(String roomId) {
 		boolean ret = false;
 
-		if (roomList.get(roomId) != null && !Configuration.getServerId().equals(roomList.get(roomId).getServerId())) {
+		if (roomList.get(roomId.toLowerCase()) != null
+				&& !Configuration.getServerId().equals(roomList.get(roomId.toLowerCase()).getServerId())) {
 			ret = true;
 		}
 		return ret;
