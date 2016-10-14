@@ -298,7 +298,8 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 	private void handleLockRoomId(Command cmd) {
 		String roomId = (String) cmd.getObj().get(Command.P_ROOM_ID);
 
-		if (isIdValid(roomId) && !ChatRoomListController.getInstance().isRoomExists(roomId)) {
+		if (!isOwnerOfRoom(cmd.getOwner()) && isIdValid(roomId)
+				&& !ChatRoomListController.getInstance().isRoomExists(roomId)) {
 			connector.requestTheOther(InternalCmd.getInternRoomCmd(cmd, Command.CMD_LOCK_ROOM, roomId));
 		} else {
 			disapproveChatRoom(cmd.getSocket(), roomId);
