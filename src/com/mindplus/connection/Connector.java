@@ -93,7 +93,7 @@ public abstract class Connector implements ConnectorInf {
 			os.println(cmd);
 			os.flush();
 		} catch (IOException e) {
-			// e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 
