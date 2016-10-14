@@ -59,9 +59,9 @@ public abstract class Connector implements ConnectorInf {
 				try {
 					write(socket, cmd);
 					ret &= readResult(socket);
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (ParseException e) {
+				} catch (Exception e) {
+					// If any exception happens, consider it's false.
+					ret = false;
 					e.printStackTrace();
 				}
 			}
@@ -78,8 +78,15 @@ public abstract class Connector implements ConnectorInf {
 	}
 
 	private boolean readResult(Socket socket) throws ParseException, IOException {
+		boolean ret = false;
 		BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		return Command.getResult(Command.getCmdObject((br.readLine())));
+		String cmd = br.readLine();
+
+		// If read nothing back, consider it's false.
+		if (cmd != null && !"".equals(cmd)) {
+			ret = Command.getResult(Command.getCmdObject((cmd)));
+		}
+		return ret;
 	}
 
 	public String readCmd(Socket socket) throws IOException {
