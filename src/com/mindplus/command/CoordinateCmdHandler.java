@@ -128,8 +128,8 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 		response(socket, ServerServerCmd.newServerRs(id, false, null));
 	}
 
-	private boolean verifyServer(String pwd) {
-		return Command.SERVER_AGREEMENT.equals(ServerVerification.getInstance().unsign(pwd));
+	private boolean verifyServer(String contextWithSignature) {
+		return ServerVerification.getInstance().verify(contextWithSignature);
 	}
 
 	protected void handleServerOn(Command cmd) {

@@ -28,8 +28,7 @@ public class RouterConnector extends Connector {
 
 		boolean approved = Command.getResult(result);
 		if (!approved) {
-			System.out.println("Rejected by router.");
-			return;
+			throw new Exception("Rejected by router.");
 		}
 		ServerListController.getInstance().addServers(Command.getServers(result));
 	}
