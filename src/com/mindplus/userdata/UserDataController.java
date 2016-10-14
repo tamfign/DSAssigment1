@@ -18,10 +18,10 @@ public class UserDataController {
 	}
 
 	public void add(User user) {
-		userList.put(user.getName().toLowerCase(), user);
+		userList.put(user.getName(), user);
 	}
 
 	public User getUser(String userName) {
-		return userList.get(userName.toLowerCase());
+		return userList.get(userName);
 	}
 }

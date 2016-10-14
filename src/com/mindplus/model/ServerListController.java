@@ -48,7 +48,7 @@ public class ServerListController {
 	public ServerConfig get(String serverId) {
 		ServerConfig ret = null;
 		for (ServerConfig config : serverList) {
-			if (serverId != null && serverId.equalsIgnoreCase(config.getId())) {
+			if (serverId != null && serverId.equals(config.getId())) {
 				ret = config;
 				break;
 			}
