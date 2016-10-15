@@ -136,4 +136,19 @@ public class ServerServerCmd extends Command {
 		obj.put(P_ROOMS, jRoomList);
 		return obj.toJSONString();
 	}
+
+	public static String getRoomListStreamRq() {
+		JSONObject obj = new JSONObject();
+		obj.put(TYPE, TYPE_ROOM_LIST_STREAM);
+		return obj.toJSONString();
+	}
+
+	public static String getRoomListStreamRs(ArrayList<String> roomList) {
+		JSONArray jRoomList = new JSONArray();
+		JSONObject obj = new JSONObject();
+		obj.put(TYPE, TYPE_ROOM_LIST_STREAM);
+		jRoomList.addAll(roomList);
+		obj.put(P_ROOMS, jRoomList);
+		return obj.toJSONString();
+	}
 }

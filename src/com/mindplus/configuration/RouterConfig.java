@@ -1,7 +1,7 @@
 package com.mindplus.configuration;
 
 public class RouterConfig extends ServerConfig {
-	private boolean isMain = false;
+	private boolean isBackUp = false;
 	private String userDataPath = null;
 
 	public String getUserDataPath() {
@@ -12,11 +12,11 @@ public class RouterConfig extends ServerConfig {
 		this.userDataPath = userDataPath;
 	}
 
-	public boolean isMain() {
-		return isMain;
+	public boolean isBackUp() {
+		return isBackUp;
 	}
 
-	public void setMain(boolean isMain) {
-		this.isMain = isMain;
+	public void setBackUp(boolean isMain) {
+		this.isBackUp = isMain;
 	}
 }

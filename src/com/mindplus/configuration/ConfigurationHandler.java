@@ -14,7 +14,7 @@ public class ConfigurationHandler extends DefaultHandler {
 	private static final String CER_PATH = "cer_path";
 	private static final String CER_PWD = "cer_pwd";
 	private static final String USER_DATA = "user_data";
-	private static final String IS_MAIN = "is_main";
+	private static final String IS_MAIN = "is_backup";
 
 	private String tag = null;
 	private ServerConfig config = null;
@@ -34,7 +34,7 @@ public class ConfigurationHandler extends DefaultHandler {
 		} else if (COODINATE_PORT.equalsIgnoreCase(this.tag)) {
 			this.config.setCoordinationPort(Integer.parseInt(data));
 		} else if (IS_MAIN.equalsIgnoreCase(this.tag)) {
-			((RouterConfig) this.config).setMain(Boolean.parseBoolean(data));
+			((RouterConfig) this.config).setBackUp(Boolean.parseBoolean(data));
 		} else if (CER_PATH.equalsIgnoreCase(this.tag)) {
 			this.config.setCerPath(data);
 		} else if (CER_PWD.equalsIgnoreCase(this.tag)) {

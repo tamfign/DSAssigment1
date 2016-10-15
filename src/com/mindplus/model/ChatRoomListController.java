@@ -41,6 +41,24 @@ public class ChatRoomListController {
 		roomList.put(roomId, newRoom);
 	}
 
+	public synchronized void addRooms(ArrayList<String> list) {
+		for (String stream : list) {
+			if (stream != null && !"".equals(stream)) {
+				ChatRoom room = new ChatRoom(stream);
+				roomList.put(room.getName(), room);
+			}
+		}
+	}
+
+	public synchronized ArrayList<String> getRooms() {
+		ArrayList<String> list = new ArrayList<String>();
+
+		for (ChatRoom room : roomList.values()) {
+			list.add(room.toString());
+		}
+		return list;
+	}
+
 	public synchronized void changeRoom(String former, String newRoom, String identity) {
 		roomList.get(former).removeMember(identity);
 		roomList.get(newRoom).addMember(identity);

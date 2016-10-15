@@ -9,6 +9,7 @@ import org.json.simple.parser.ParseException;
 
 import com.mindplus.model.ChatRoomListController;
 
+@SuppressWarnings("unchecked")
 public class Command {
 	protected final static String TYPE = "type";
 	protected final static String CMD = "type";
@@ -30,6 +31,7 @@ public class Command {
 	protected final static String TYPE_ROUTE = "route";
 	protected final static String TYPE_MOVE_JOIN = "movejoin";
 	protected final static String TYPE_SERVER_CHANGE = "serverchange";
+	protected final static String TYPE_ROOM_LIST_STREAM = "room_list_stream";
 
 	protected final static String TYPE_MESSAGE = "message";
 	protected final static String TYPE_QUIT = "quit";
@@ -115,13 +117,20 @@ public class Command {
 		return ret;
 	}
 
-	@SuppressWarnings("unchecked")
+	public static boolean isRoomLisStream(JSONObject obj) {
+		return TYPE_ROOM_LIST_STREAM.equals((String) obj.get(TYPE));
+	}
+
+	public static ArrayList<String> getRooms(JSONObject obj) {
+		return (ArrayList<String>) obj.get(P_ROOMS);
+	}
+
 	public static ArrayList<String> getServers(JSONObject obj) {
-		return (ArrayList<String>) obj.get(Command.P_SERVERS);
+		return (ArrayList<String>) obj.get(P_SERVERS);
 	}
 
 	public static boolean isNewId(JSONObject obj) {
-		String cmdType = (String) obj.get(Command.TYPE);
+		String cmdType = (String) obj.get(TYPE);
 		return TYPE_MOVE_JOIN.equals(cmdType) || TYPE_JOIN_SERVER.equals(cmdType);
 	}
 

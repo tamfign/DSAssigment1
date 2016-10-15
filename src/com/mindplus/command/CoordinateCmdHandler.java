@@ -49,6 +49,9 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 		case Command.TYPE_GET_FULL_ROOM_LIST:
 			handlGetFullRoomList(cmd);
 			break;
+		case Command.TYPE_ROOM_LIST_STREAM:
+			handRoomListStream(cmd);
+			break;
 		case Command.CMD_LOCK_IDENTITY:
 			broadcastLockIdentity(cmd);
 			break;
@@ -72,6 +75,10 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 			break;
 		default:
 		}
+	}
+
+	private void handRoomListStream(Command cmd) {
+		response(cmd.getSocket(), ServerServerCmd.getRoomListStreamRs(ChatRoomListController.getInstance().getRooms()));
 	}
 
 	private void askRouterFullRooomList(Command cmd) {
@@ -162,20 +169,11 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 		String clPort = (String) cmd.getObj().get(Command.P_CLIENT_PORT);
 
 		if (verifyServer(pwd) && !ServerListController.getInstance().isExists(serverId)) {
+			/**
+			 * TODO current server list should only have the servers really
+			 * /*online.
+			 */
 			ArrayList<String> currentServerList = ServerListController.getInstance().getStringList();
-
-			// TODO after heartbeat remove below block
-			if (currentServerList.size() > 0) {
-				int index = -1;
-				for (int i = 0; i < currentServerList.size(); i++) {
-					if (currentServerList.get(i).substring(0, 2).equals(serverId)) {
-						index = i;
-					}
-				}
-				if (index > 0)
-					currentServerList.remove(index);
-			}
-
 			ServerListController.getInstance().addServer(new ServerConfig(serverId, host, coPort, clPort));
 			ChatRoomListController.getInstance().addRoom(ChatRoomListController.getMainHall(serverId), serverId, null);
 			sendApproveServer(cmd.getSocket(), serverId, currentServerList);

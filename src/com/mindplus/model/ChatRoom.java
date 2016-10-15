@@ -15,6 +15,12 @@ public class ChatRoom {
 		this.members = new ArrayList<String>();
 	}
 
+	public ChatRoom(String stream) {
+		String[] args = stream.split("\\|");
+		this.name = args[0];
+		this.serverId = args[1];
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -41,5 +47,9 @@ public class ChatRoom {
 
 	public ArrayList<String> getMemberList() {
 		return this.members;
+	}
+
+	public String toString() {
+		return this.name + "|" + this.serverId;
 	}
 }
