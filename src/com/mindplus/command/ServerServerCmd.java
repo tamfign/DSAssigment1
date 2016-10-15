@@ -121,4 +121,19 @@ public class ServerServerCmd extends Command {
 		}
 		return root.toJSONString();
 	}
+
+	public static String getRoomListCmdRq() {
+		JSONObject obj = new JSONObject();
+		obj.put(TYPE, TYPE_GET_FULL_ROOM_LIST);
+		return obj.toJSONString();
+	}
+
+	public static String getRoomListCmdRs(ArrayList<String> roomList) {
+		JSONArray jRoomList = new JSONArray();
+		JSONObject obj = new JSONObject();
+		obj.put(TYPE, TYPE_GET_FULL_ROOM_LIST);
+		jRoomList.addAll(roomList);
+		obj.put(P_ROOMS, jRoomList);
+		return obj.toJSONString();
+	}
 }

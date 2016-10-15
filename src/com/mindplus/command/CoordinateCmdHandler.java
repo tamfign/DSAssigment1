@@ -46,6 +46,9 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 		case Command.TYPE_GET_CHATROOM_LOCATION:
 			handleGetRoomLocation(cmd);
 			break;
+		case Command.TYPE_GET_FULL_ROOM_LIST:
+			handlGetFullRoomList(cmd);
+			break;
 		case Command.CMD_LOCK_IDENTITY:
 			broadcastLockIdentity(cmd);
 			break;
@@ -64,8 +67,20 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 		case Command.CMD_ROUTE_ROOM:
 			askRouterRoomServerId(cmd);
 			break;
+		case Command.CMD_ROOM_LIST:
+			askRouterFullRooomList(cmd);
+			break;
 		default:
 		}
+	}
+
+	private void askRouterFullRooomList(Command cmd) {
+		connector.requestTheOther(InternalCmd.getInternRoomResultCmd(cmd, Command.CMD_ROOM_LIST,
+				((CoordinateConnector) connector).requestRouter(ServerServerCmd.getRoomListCmdRq(), true)));
+	}
+
+	private void handlGetFullRoomList(Command cmd) {
+		response(cmd.getSocket(), ServerServerCmd.getRoomListCmdRs(ChatRoomListController.getInstance().getList()));
 	}
 
 	private void askRouterRoomServerId(Command cmd) {

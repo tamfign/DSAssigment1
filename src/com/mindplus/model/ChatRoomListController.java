@@ -12,7 +12,10 @@ public class ChatRoomListController {
 
 	private ChatRoomListController() {
 		this.roomList = new HashMap<String, ChatRoom>();
-		addRoom(getLocalMainHall(), Configuration.getServerId(), null);
+
+		// Router does not have chat room.
+		if (!Configuration.isRouter())
+			addRoom(getLocalMainHall(), Configuration.getServerId(), null);
 	}
 
 	public static ChatRoomListController getInstance() {
@@ -44,7 +47,9 @@ public class ChatRoomListController {
 	}
 
 	public synchronized void deleteRoom(String roomId) {
-		roomList.get(getLocalMainHall()).addMembers(roomList.get(roomId).getMemberList());
+		// Router no need to handle memebers
+		if (!Configuration.isRouter())
+			roomList.get(getLocalMainHall()).addMembers(roomList.get(roomId).getMemberList());
 		roomList.remove(roomId);
 	}
 

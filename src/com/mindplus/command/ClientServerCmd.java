@@ -55,13 +55,10 @@ public class ClientServerCmd extends Command {
 		return root.toJSONString();
 	}
 
-	public static String listRs(ArrayList<String> roomList) {
+	public static String listRs(JSONObject obj) {
 		JSONObject root = new JSONObject();
-		JSONArray jList = new JSONArray();
-		jList.addAll(roomList);
-
 		root.put(TYPE, TYPE_ROOM_LIST);
-		root.put(P_ROOMS, jList);
+		root.put(P_ROOMS, obj.get(P_ROOMS));
 		return root.toJSONString();
 	}
 

@@ -44,6 +44,9 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 		case Command.TYPE_LIST:
 			handleList(cmd);
 			break;
+		case Command.CMD_ROOM_LIST:
+			handleRouterList(cmd);
+			break;
 		case Command.TYPE_WHO:
 			handleWho(cmd);
 			break;
@@ -435,7 +438,11 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 	}
 
 	private void handleList(Command cmd) {
-		response(cmd.getSocket(), ClientServerCmd.listRs(ChatRoomListController.getInstance().getList()));
+		connector.requestTheOther(InternalCmd.getRoomListCmdRq(cmd));
+	}
+
+	private void handleRouterList(Command cmd) {
+		response(cmd.getSocket(), ClientServerCmd.listRs(cmd.getObj()));
 	}
 
 	private void broadcastRoomChange(String clientId, String former, String newRoom) {
