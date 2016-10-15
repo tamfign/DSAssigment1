@@ -10,10 +10,6 @@ import java.util.List;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
-
-import org.json.simple.parser.ParseException;
-
-import com.mindplus.command.Command;
 import com.mindplus.listener.CommandListener;
 
 public abstract class Connector implements ConnectorInf {
@@ -52,40 +48,12 @@ public abstract class Connector implements ConnectorInf {
 		}
 	}
 
-	protected boolean broadcastAndGetResult(List<Socket> listenerList, String cmd) {
-		boolean ret = true;
-		if (listenerList != null) {
-			for (Socket socket : listenerList) {
-				try {
-					write(socket, cmd);
-					ret &= readResult(socket);
-				} catch (Exception e) {
-					// If any exception happens, consider it's false.
-					ret = false;
-					e.printStackTrace();
-				}
-			}
-		}
-		return ret;
-	}
-
 	protected void broadcast(List<Socket> listenerList, String cmd) {
 		if (listenerList != null) {
 			for (Socket socket : listenerList) {
 				write(socket, cmd);
 			}
 		}
-	}
-
-	private boolean readResult(Socket socket) throws ParseException, IOException {
-		boolean ret = false;
-		String cmd = readCmd(socket);
-
-		// If read nothing back, consider it's false.
-		if (cmd != null && !"".equals(cmd)) {
-			ret = Command.getResult(Command.getCmdObject((cmd)));
-		}
-		return ret;
 	}
 
 	public String readCmd(Socket socket) throws IOException {

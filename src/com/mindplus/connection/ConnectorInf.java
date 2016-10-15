@@ -7,13 +7,7 @@ import com.mindplus.command.Command;
 
 public interface ConnectorInf {
 
-	public abstract boolean broadcastAndGetResult(String cmd);
-
 	public abstract void broadcast(String cmd);
-
-	public abstract void addBroadcastList(String id, Socket socket);
-
-	public abstract void removeBroadcastList(String id);
 
 	public abstract String readCmd(Socket socket) throws IOException;
 

@@ -2,13 +2,12 @@ package com.mindplus.connection;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
 import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 
 import com.mindplus.command.Command;
 import com.mindplus.command.CoordinateCmdHandler;
@@ -21,12 +20,10 @@ import com.mindplus.messagequeue.MessageQueue;
 import com.mindplus.model.ServerListController;
 
 public class CoordinateConnector extends Connector implements Runnable {
-	private static HashMap<String, Socket> serverList = null;
 	private MessageQueue serverMQ = new MessageQueue(new CoordinateCmdHandler(this));
 
 	protected CoordinateConnector(ConnectController controller) {
 		super(controller);
-		serverList = new HashMap<String, Socket>();
 	}
 
 	public void run() {
@@ -45,11 +42,44 @@ public class CoordinateConnector extends Connector implements Runnable {
 	}
 
 	public boolean broadcastAndGetResult(String cmd) {
-		return broadcastAndGetResult(new ArrayList<Socket>(serverList.values()), cmd);
+		return broadcastAndGetResult(cmd, true);
 	}
 
 	public void broadcast(String cmd) {
-		broadcast(new ArrayList<Socket>(serverList.values()), cmd);
+		broadcastAndGetResult(cmd, false);
+	}
+
+	private boolean broadcastAndGetResult(String cmd, boolean needResult) {
+		SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+		SSLSocket socket = null;
+		boolean ret = true;
+
+		for (ServerConfig server : ServerListController.getInstance().getList()) {
+			try {
+				socket = (SSLSocket) factory.createSocket(server.getHost(), server.getCoordinationPort());
+				write(socket, cmd);
+				if (needResult)
+					ret &= readResult(socket);
+			} catch (Exception e) {
+				// If any exception happens, consider it's false.
+				ret = false;
+				e.printStackTrace();
+			} finally {
+				close(socket);
+			}
+		}
+		return ret;
+	}
+
+	private boolean readResult(Socket socket) throws ParseException, IOException {
+		boolean ret = false;
+		String cmd = readCmd(socket);
+
+		// If read nothing back, consider it's false.
+		if (cmd != null && !"".equals(cmd)) {
+			ret = Command.getResult(Command.getCmdObject((cmd)));
+		}
+		return ret;
 	}
 
 	public void checkOtherServers() {
@@ -69,8 +99,6 @@ public class CoordinateConnector extends Connector implements Runnable {
 				} else {
 					ServerListController.getInstance().addServer(server);
 				}
-				// TODO heartbeat remove from list?
-				addBroadcastList(server.getId(), another);
 			} else {
 				close(another);
 			}
@@ -83,18 +111,6 @@ public class CoordinateConnector extends Connector implements Runnable {
 		if (socket == null || socket.isClosed())
 			return;
 		write(socket, ServerServerCmd.getServerOnCmd());
-	}
-
-	public void addBroadcastList(String serverId, Socket socket) {
-		synchronized (serverList) {
-			serverList.put(serverId, socket);
-		}
-	}
-
-	public void removeBroadcastList(String id) {
-		synchronized (serverList) {
-			serverList.remove(id);
-		}
 	}
 
 	@Override

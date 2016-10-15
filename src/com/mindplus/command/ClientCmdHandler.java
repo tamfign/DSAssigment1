@@ -180,7 +180,7 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 	private void createIdentity(String identity, Socket socket, String roomId) {
 		ClientListController.getInstance().addIndentity(identity, Configuration.getServerId(), roomId);
 		ChatRoomListController.getInstance().addMember(roomId, identity);
-		connector.addBroadcastList(identity, socket);
+		((ClientConnector) connector).addBroadcastList(identity, socket);
 	}
 
 	private void handlerMoveJoin(Command cmd) {
@@ -241,7 +241,7 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 			e.printStackTrace();
 		}
 		connector.close(socket);// Will close socket and terminal this thread.
-		connector.removeBroadcastList(id);
+		((ClientConnector) connector).removeBroadcastList(id);
 	}
 
 	/**

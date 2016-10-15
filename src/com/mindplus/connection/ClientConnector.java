@@ -49,10 +49,6 @@ public class ClientConnector extends Connector implements Runnable {
 		broadcast(new ArrayList<Socket>(clientSocketsList.values()), cmd);
 	}
 
-	public boolean broadcastAndGetResult(String cmd) {
-		return broadcastAndGetResult(new ArrayList<Socket>(clientSocketsList.values()), cmd);
-	}
-
 	public void broadcastWithinRoom(String former, String roomId, String cmd) {
 		ArrayList<Socket> list = new ArrayList<Socket>();
 		ArrayList<String> memberList = new ArrayList<String>();

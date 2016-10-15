@@ -125,24 +125,6 @@ public class Command {
 		return TYPE_MOVE_JOIN.equals(cmdType) || TYPE_JOIN_SERVER.equals(cmdType);
 	}
 
-	public static boolean isWithServerId(JSONObject obj) {
-		boolean ret = false;
-
-		switch ((String) obj.get(Command.TYPE)) {
-		case TYPE_SERVER_ON:
-		case TYPE_LOCK_ROOM:
-		case TYPE_LOCK_ID:
-			ret = true;
-			break;
-		default:
-		}
-		return ret;
-	}
-
-	public static String getNewServerId(JSONObject obj) {
-		return (String) obj.get(P_SERVER_ID);
-	}
-
 	public static String getNewId(JSONObject obj) {
 		return (String) obj.get(P_IDENTITY);
 	}

@@ -130,7 +130,8 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 	}
 
 	private boolean getLockIdentityResult(String identity) {
-		return connector.broadcastAndGetResult(ServerServerCmd.lockIdentityRq(Configuration.getServerId(), identity));
+		return ((CoordinateConnector) connector)
+				.broadcastAndGetResult(ServerServerCmd.lockIdentityRq(Configuration.getServerId(), identity));
 	}
 
 	private void handleGetRoomLocation(Command cmd) {

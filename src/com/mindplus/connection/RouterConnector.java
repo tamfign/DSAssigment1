@@ -86,20 +86,7 @@ public class RouterConnector extends Connector {
 	}
 
 	@Override
-	public boolean broadcastAndGetResult(String cmd) {
-		return false;
-	}
-
-	@Override
 	public void broadcast(String cmd) {
-	}
-
-	@Override
-	public void addBroadcastList(String id, Socket socket) {
-	}
-
-	@Override
-	public void removeBroadcastList(String id) {
 	}
 
 	@Override
