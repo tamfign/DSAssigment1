@@ -1,5 +1,7 @@
 package com.mindplus.connection;
 
+import org.json.simple.JSONObject;
+
 import com.mindplus.command.Command;
 import com.mindplus.configuration.Configuration;
 
@@ -38,7 +40,7 @@ public class ConnectController {
 		clients.runInternalRequest(cmd);
 	}
 
-	public boolean requestRouter(String cmd, boolean needResponse) {
+	public JSONObject requestRouter(String cmd, boolean needResponse) {
 		return router.runInternalRequest(cmd, needResponse);
 	}
 }

@@ -74,14 +74,11 @@ public class RouterConnector extends Connector {
 		}
 	}
 
-	public boolean runInternalRequest(String cmd, boolean needResponse) {
-		boolean ret = false;
+	public JSONObject runInternalRequest(String cmd, boolean needResponse) {
+		JSONObject ret = null;
 
 		if (needResponse) {
-			JSONObject result = sendAndGet(cmd);
-			if (result != null) {
-				ret = Command.getResult(result);
-			}
+			ret = sendAndGet(cmd);
 		} else {
 			sendOnly(cmd);
 		}

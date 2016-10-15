@@ -3,6 +3,8 @@ package com.mindplus.command;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import org.json.simple.JSONObject;
+
 import com.mindplus.configuration.Configuration;
 import com.mindplus.configuration.ServerConfig;
 import com.mindplus.connection.CoordinateConnector;
@@ -41,6 +43,9 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 		case Command.TYPE_DELETE_ROOM:
 			handleDeleteRoom(cmd);
 			break;
+		case Command.TYPE_GET_CHATROOM_LOCATION:
+			handleGetRoomLocation(cmd);
+			break;
 		case Command.CMD_LOCK_IDENTITY:
 			broadcastLockIdentity(cmd);
 			break;
@@ -56,8 +61,17 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 		case Command.CMD_RELEASE_ROOM:
 			askRouterReleaseRoomId(cmd);
 			break;
+		case Command.CMD_ROUTE_ROOM:
+			askRouterRoomServerId(cmd);
+			break;
 		default:
 		}
+	}
+
+	private void askRouterRoomServerId(Command cmd) {
+		String roomId = (String) cmd.getObj().get(Command.P_ROOM_ID);
+		connector.requestTheOther(InternalCmd.getInternRoomResultCmd(cmd, Command.CMD_ROUTE_ROOM,
+				((CoordinateConnector) connector).requestRouter(ServerServerCmd.getRoomLocationRq(roomId), true)));
 	}
 
 	private void askRouterReleaseRoomId(Command cmd) {
@@ -79,8 +93,15 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 	}
 
 	private boolean getLockRoomResult(String roomId) {
-		return ((CoordinateConnector) connector)
+		boolean ret = false;
+		JSONObject result = ((CoordinateConnector) connector)
 				.requestRouter(ServerServerCmd.lockRoomRq(Configuration.getServerId(), roomId), true);
+
+		if (result != null) {
+			ret = Command.getResult(result);
+		}
+		return ret;
+
 	}
 
 	private void broadcastReleaseIdentity(Command cmd) {
@@ -95,6 +116,16 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 
 	private boolean getLockIdentityResult(String identity) {
 		return connector.broadcastAndGetResult(ServerServerCmd.lockIdentityRq(Configuration.getServerId(), identity));
+	}
+
+	private void handleGetRoomLocation(Command cmd) {
+		String roomId = (String) cmd.getObj().get(Command.P_ROOM_ID);
+
+		String serverId = ChatRoomListController.getInstance().getRoomLocation(roomId);
+		if (serverId == null)
+			serverId = "";
+
+		response(cmd.getSocket(), ServerServerCmd.getRoomLocationRs(roomId, serverId));
 	}
 
 	private void handleDeleteRoom(Command cmd) {
@@ -114,7 +145,7 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 		String coPort = (String) cmd.getObj().get(Command.P_COORDINATE_PORT);
 		String clPort = (String) cmd.getObj().get(Command.P_CLIENT_PORT);
 
-		if (verifyServer(pwd)) {
+		if (verifyServer(pwd) && !ServerListController.getInstance().isExists(serverId)) {
 			ArrayList<String> currentServerList = ServerListController.getInstance().getStringList();
 
 			// TODO after heartbeat remove below block
@@ -130,6 +161,7 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 			}
 
 			ServerListController.getInstance().addServer(new ServerConfig(serverId, host, coPort, clPort));
+			ChatRoomListController.getInstance().addRoom(ChatRoomListController.getMainHall(serverId), serverId, null);
 			sendApproveServer(cmd.getSocket(), serverId, currentServerList);
 		} else {
 			sendDisapproveServer(cmd.getSocket(), serverId);

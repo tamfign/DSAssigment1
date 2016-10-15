@@ -8,6 +8,8 @@ import java.util.HashMap;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
+import org.json.simple.JSONObject;
+
 import com.mindplus.command.Command;
 import com.mindplus.command.CoordinateCmdHandler;
 import com.mindplus.command.ServerServerCmd;
@@ -16,7 +18,6 @@ import com.mindplus.configuration.ServerConfig;
 import com.mindplus.listener.CommandListener;
 import com.mindplus.listener.CoordinateListener;
 import com.mindplus.messagequeue.MessageQueue;
-import com.mindplus.model.ChatRoomListController;
 import com.mindplus.model.ServerListController;
 
 public class CoordinateConnector extends Connector implements Runnable {
@@ -70,8 +71,6 @@ public class CoordinateConnector extends Connector implements Runnable {
 				}
 				// TODO heartbeat remove from list?
 				addBroadcastList(server.getId(), another);
-				ChatRoomListController.getInstance().addRoom(ChatRoomListController.getMainHall(server.getId()),
-						server.getId(), null);
 			} else {
 				close(another);
 			}
@@ -115,7 +114,7 @@ public class CoordinateConnector extends Connector implements Runnable {
 		getController().requestClient(command);
 	}
 
-	public boolean requestRouter(String cmd, boolean needResponse) {
+	public JSONObject requestRouter(String cmd, boolean needResponse) {
 		return getController().requestRouter(cmd, needResponse);
 	}
 }

@@ -22,6 +22,16 @@ public class ChatRoomListController {
 		return _instance;
 	}
 
+	public synchronized String getRoomLocation(String roomId) {
+		String ret = null;
+		ChatRoom room = roomList.get(roomId);
+
+		if (room != null) {
+			ret = room.getServerId();
+		}
+		return ret;
+	}
+
 	public synchronized void addRoom(String roomId, String serverId, String owner) {
 		ChatRoom newRoom = new ChatRoom(roomId, serverId, owner);
 		newRoom.addMember(owner);

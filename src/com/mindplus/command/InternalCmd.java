@@ -23,6 +23,11 @@ public class InternalCmd extends Command {
 		return new InternalCmd(oldCmd, obj);
 	}
 
+	public static Command getInternRoomResultCmd(Command oldCmd, String cmd, JSONObject obj) {
+		obj.put(CMD, cmd);
+		return new InternalCmd(oldCmd, obj);
+	}
+
 	public static Command getInternIdCmd(Command oldCmd, String cmd, String identity) {
 		JSONObject obj = new JSONObject();
 		obj.put(Command.CMD, cmd);

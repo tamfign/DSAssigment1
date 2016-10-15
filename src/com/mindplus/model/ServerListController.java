@@ -57,6 +57,10 @@ public class ServerListController {
 		return this.serverList;
 	}
 
+	public synchronized boolean isExists(String serverId) {
+		return get(serverId) != null;
+	}
+
 	public ServerConfig get(String serverId) {
 		ServerConfig ret = null;
 		for (ServerConfig config : serverList) {

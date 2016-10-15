@@ -36,6 +36,7 @@ public class Command {
 
 	protected final static String TYPE_SERVER_ON = "server_on";
 	protected final static String TYPE_NEW_SERVER = "new_server";
+	protected final static String TYPE_GET_CHATROOM_LOCATION = "get_chatroom_location";
 
 	protected final static String P_IDENTITY = "identity";
 	protected final static String P_PWD = "pwd";
@@ -60,6 +61,7 @@ public class Command {
 	protected final static String CMD_LOCK_ROOM = "CMD_LOCK_ROOM";
 	protected final static String CMD_RELEASE_ROOM = "CMD_RELEASE_ROOM";
 	protected final static String CMD_DELETE_ROOM = "CMD_DELETE_ROOM";
+	protected final static String CMD_ROUTE_ROOM = "CMD_ROUTE_ROOM";
 
 	protected final static String CLIENT_AUTHORIZED = "IAMAUTHORIZED";
 
