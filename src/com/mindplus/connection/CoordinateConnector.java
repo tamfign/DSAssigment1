@@ -68,6 +68,7 @@ public class CoordinateConnector extends Connector implements Runnable {
 				} else {
 					ServerListController.getInstance().addServer(server);
 				}
+				// TODO heartbeat remove from list?
 				addBroadcastList(server.getId(), another);
 				ChatRoomListController.getInstance().addRoom(ChatRoomListController.getMainHall(server.getId()),
 						server.getId(), null);
@@ -112,5 +113,9 @@ public class CoordinateConnector extends Connector implements Runnable {
 
 	public void requestTheOther(Command command) {
 		getController().requestClient(command);
+	}
+
+	public boolean requestRouter(String cmd, boolean needResponse) {
+		return getController().requestRouter(cmd, needResponse);
 	}
 }

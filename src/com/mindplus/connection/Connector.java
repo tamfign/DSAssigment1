@@ -79,8 +79,7 @@ public abstract class Connector implements ConnectorInf {
 
 	private boolean readResult(Socket socket) throws ParseException, IOException {
 		boolean ret = false;
-		BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		String cmd = br.readLine();
+		String cmd = readCmd(socket);
 
 		// If read nothing back, consider it's false.
 		if (cmd != null && !"".equals(cmd)) {
@@ -95,7 +94,13 @@ public abstract class Connector implements ConnectorInf {
 	}
 
 	public void write(Socket socket, String cmd) {
+		if (!socket.isConnected()) {
+			System.out.println("Fail to send [Socket is closed].");
+			return;
+		}
+
 		try {
+			System.out.println("Sending: " + cmd);
 			PrintWriter os = new PrintWriter(socket.getOutputStream());
 			os.println(cmd);
 			os.flush();

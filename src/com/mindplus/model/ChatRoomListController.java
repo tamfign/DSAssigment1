@@ -22,83 +22,65 @@ public class ChatRoomListController {
 		return _instance;
 	}
 
-	public void addRoom(String roomId, String serverId, String owner) {
-		synchronized (this) {
-			ChatRoom newRoom = new ChatRoom(roomId, serverId, owner);
-			newRoom.addMember(owner);
-			roomList.put(roomId, newRoom);
-		}
+	public synchronized void addRoom(String roomId, String serverId, String owner) {
+		ChatRoom newRoom = new ChatRoom(roomId, serverId, owner);
+		newRoom.addMember(owner);
+		roomList.put(roomId, newRoom);
 	}
 
-	public void changeRoom(String former, String newRoom, String identity) {
-		synchronized (this) {
-			roomList.get(former).removeMember(identity);
-			roomList.get(newRoom).addMember(identity);
-		}
+	public synchronized void changeRoom(String former, String newRoom, String identity) {
+		roomList.get(former).removeMember(identity);
+		roomList.get(newRoom).addMember(identity);
 	}
 
-	public void deleteRoom(String roomId) {
-		synchronized (this) {
-			roomList.get(getLocalMainHall()).addMembers(roomList.get(roomId).getMemberList());
-			roomList.remove(roomId);
-		}
+	public synchronized void deleteRoom(String roomId) {
+		roomList.get(getLocalMainHall()).addMembers(roomList.get(roomId).getMemberList());
+		roomList.remove(roomId);
 	}
 
-	public void removeRoom(String roomId) {
-		synchronized (this) {
-			roomList.remove(roomId);
-		}
+	public synchronized void removeRoom(String roomId) {
+		roomList.remove(roomId);
 	}
 
-	public boolean isRoomExists(String roomId) {
-		synchronized (this) {
-			return roomList.containsKey(roomId);
-		}
-	}
+	public synchronized void removeRoomByServerId(String serverId) {
+		if (serverId == null || "".equals(serverId))
+			return;
 
-	public ArrayList<String> getList() {
-		synchronized (this) {
-			ArrayList<String> ret = new ArrayList<String>();
-			ret.addAll(roomList.keySet());
-			return ret;
-		}
-	}
-
-	public ChatRoom getChatRoom(String roomId) {
-		synchronized (this) {
-			return roomList.get(roomId);
-		}
-	}
-
-	public void addMember(String roomId, String identity) {
-		synchronized (this) {
-			if (roomList.get(roomId) != null) {
-				roomList.get(roomId).addMember(identity);
+		for (ChatRoom room : roomList.values()) {
+			if (serverId.equals(room.getServerId())) {
+				roomList.remove(room.getName());
 			}
 		}
 	}
 
-	public void removeMember(String roomId, String identity) {
-		synchronized (this) {
-			if (roomList.get(roomId) != null) {
-				roomList.get(roomId).removeMember(identity);
-			}
-		}
+	public synchronized boolean isRoomExists(String roomId) {
+		return roomList.containsKey(roomId);
 	}
 
-	public ArrayList<String> getMemberList(String roomId) {
-		synchronized (this) {
-			return roomList.get(roomId).getMemberList();
-		}
-	}
-
-	public boolean isOtherServer(String roomId) {
-		boolean ret = false;
-
-		if (roomList.get(roomId) != null && !Configuration.getServerId().equals(roomList.get(roomId).getServerId())) {
-			ret = true;
-		}
+	public synchronized ArrayList<String> getList() {
+		ArrayList<String> ret = new ArrayList<String>();
+		ret.addAll(roomList.keySet());
 		return ret;
+	}
+
+	public synchronized ChatRoom getChatRoom(String roomId) {
+		return roomList.get(roomId);
+	}
+
+	public synchronized void addMember(String roomId, String identity) {
+		if (roomList.get(roomId) != null) {
+			roomList.get(roomId).addMember(identity);
+		}
+	}
+
+	public synchronized void removeMember(String roomId, String identity) {
+		if (roomList.get(roomId) != null) {
+			roomList.get(roomId).removeMember(identity);
+		}
+	}
+
+	public synchronized ArrayList<String> getMemberList(String roomId) {
+		return roomList.get(roomId).getMemberList();
 	}
 
 	public static String getLocalMainHall() {

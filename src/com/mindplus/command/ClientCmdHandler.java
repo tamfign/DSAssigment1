@@ -258,7 +258,7 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 
 		if (!isOwnerOfRoom(cmd.getOwner()) && isRoomAvailable(roomId)) {
 			// Check whether this room belongs to this server.
-			if (ChatRoomListController.getInstance().isOtherServer(roomId)) {
+			if (!ChatRoomListController.getInstance().isRoomExists(roomId)) {
 				ServerConfig server = getServer(getRoomServerId(roomId));
 				routeClient(cmd.getOwner(), roomId, server, cmd.getSocket());
 			} else {

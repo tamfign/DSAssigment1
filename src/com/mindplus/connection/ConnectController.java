@@ -6,10 +6,12 @@ import com.mindplus.configuration.Configuration;
 public class ConnectController {
 	private ClientConnector clients = null;
 	private CoordinateConnector servers = null;
+	private RouterConnector router = null;
 
 	private ConnectController() {
 		this.clients = new ClientConnector(this);
 		this.servers = new CoordinateConnector(this);
+		this.router = new RouterConnector(this);
 	}
 
 	public static ConnectController getInstance() {
@@ -18,7 +20,7 @@ public class ConnectController {
 
 	public void run() throws Exception {
 		if (!Configuration.isRouter()) {
-			new RouterConnector(this).run();
+			this.router.contactRouter();
 			new Thread(this.servers).start();
 			this.servers.checkOtherServers();
 		} else {
@@ -34,5 +36,9 @@ public class ConnectController {
 
 	public void requestClient(Command cmd) {
 		clients.runInternalRequest(cmd);
+	}
+
+	public boolean requestRouter(String cmd, boolean needResponse) {
+		return router.runInternalRequest(cmd, needResponse);
 	}
 }

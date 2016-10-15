@@ -32,6 +32,18 @@ public class ServerListController {
 		}
 	}
 
+	public synchronized void removeServer(String id) {
+		if (id == null || "".equals(id))
+			return;
+
+		for (ServerConfig server : serverList) {
+			if (id.equals(server.getId())) {
+				System.out.println("Delete server");
+				serverList.remove(server);
+			}
+		}
+	}
+
 	public synchronized ArrayList<String> getStringList() {
 		ArrayList<String> ret = new ArrayList<String>();
 

@@ -1,6 +1,8 @@
 package com.mindplus.connection;
 
+import java.io.IOException;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
@@ -15,15 +17,21 @@ import com.mindplus.listener.CommandListener;
 import com.mindplus.model.ServerListController;
 
 public class RouterConnector extends Connector {
+	private RouterConfig config = Configuration.getRouterConfig();
 
 	protected RouterConnector(ConnectController controller) {
 		super(controller);
 	}
 
-	public void run() throws Exception {
-		JSONObject result = contactRouter(Configuration.getRouterConfig());
+	private Socket getRouterSocket() throws UnknownHostException, IOException {
+		SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+		return factory.createSocket(config.getHost(), config.getCoordinationPort());
+	}
+
+	public void contactRouter() throws Exception {
+		JSONObject result = sendAndGet(ServerServerCmd.getNewServerCmd());
 		if (result == null) {
-			throw new Exception("Router can not be reached yet.");
+			throw new Exception("Router can not be reached.");
 		}
 
 		boolean approved = Command.getResult(result);
@@ -33,21 +41,49 @@ public class RouterConnector extends Connector {
 		ServerListController.getInstance().addServers(Command.getServers(result));
 	}
 
-	private JSONObject contactRouter(RouterConfig router) {
+	private JSONObject sendAndGet(String cmd) {
 		JSONObject ret = null;
-		SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
 		SSLSocket rSocket = null;
 
 		try {
-			rSocket = (SSLSocket) factory.createSocket(router.getHost(), router.getCoordinationPort());
+			rSocket = (SSLSocket) getRouterSocket();
 			if (rSocket.isConnected()) {
-				write(rSocket, ServerServerCmd.getNewServerCmd());
+				write(rSocket, cmd);
 				ret = Command.getCmdObject(readCmd(rSocket));
 			}
 		} catch (Exception e) {
 			System.out.println("Fail to connect router");
 		} finally {
 			close(rSocket);
+		}
+		return ret;
+	}
+
+	private void sendOnly(String cmd) {
+		SSLSocket rSocket = null;
+
+		try {
+			rSocket = (SSLSocket) getRouterSocket();
+			if (rSocket.isConnected()) {
+				write(rSocket, cmd);
+			}
+		} catch (Exception e) {
+			System.out.println("Fail to connect router");
+		} finally {
+			close(rSocket);
+		}
+	}
+
+	public boolean runInternalRequest(String cmd, boolean needResponse) {
+		boolean ret = false;
+
+		if (needResponse) {
+			JSONObject result = sendAndGet(cmd);
+			if (result != null) {
+				ret = Command.getResult(result);
+			}
+		} else {
+			sendOnly(cmd);
 		}
 		return ret;
 	}

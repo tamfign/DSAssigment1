@@ -48,36 +48,39 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 			broadcastReleaseIdentity(cmd);
 			break;
 		case Command.CMD_LOCK_ROOM:
-			broadcastLockRoomId(cmd);
+			askRouterLockRoomId(cmd);
 			break;
 		case Command.CMD_DELETE_ROOM:
-			broadcastDeleteRoomId(cmd);
+			askRouterDeleteRoomId(cmd);
 			break;
 		case Command.CMD_RELEASE_ROOM:
-			broadcastReleaseRoomId(cmd);
+			askRouterReleaseRoomId(cmd);
 			break;
 		default:
 		}
 	}
 
-	private void broadcastReleaseRoomId(Command cmd) {
+	private void askRouterReleaseRoomId(Command cmd) {
 		String roomId = (String) cmd.getObj().get(Command.P_ROOM_ID);
 		boolean result = (boolean) cmd.getObj().get(Command.P_APPROVED);
-		connector.broadcast(ServerServerCmd.releaseRoom(Configuration.getServerId(), roomId, result));
+		((CoordinateConnector) connector)
+				.requestRouter(ServerServerCmd.releaseRoom(Configuration.getServerId(), roomId, result), false);
 	}
 
-	private void broadcastDeleteRoomId(Command cmd) {
+	private void askRouterDeleteRoomId(Command cmd) {
 		String roomId = (String) cmd.getObj().get(Command.P_ROOM_ID);
-		connector.broadcast(ServerServerCmd.deleteRoomBc(Configuration.getServerId(), roomId));
+		((CoordinateConnector) connector)
+				.requestRouter(ServerServerCmd.deleteRoomBc(Configuration.getServerId(), roomId), false);
 	}
 
-	private void broadcastLockRoomId(Command cmd) {
+	private void askRouterLockRoomId(Command cmd) {
 		String roomId = (String) cmd.getObj().get(Command.P_ROOM_ID);
 		connector.requestTheOther(InternalCmd.getLockRoomResultCmd(cmd, roomId, getLockRoomResult(roomId)));
 	}
 
 	private boolean getLockRoomResult(String roomId) {
-		return connector.broadcastAndGetResult(ServerServerCmd.lockRoomRq(Configuration.getServerId(), roomId));
+		return ((CoordinateConnector) connector)
+				.requestRouter(ServerServerCmd.lockRoomRq(Configuration.getServerId(), roomId), true);
 	}
 
 	private void broadcastReleaseIdentity(Command cmd) {
@@ -113,6 +116,19 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 
 		if (verifyServer(pwd)) {
 			ArrayList<String> currentServerList = ServerListController.getInstance().getStringList();
+
+			// TODO after heartbeat remove below block
+			if (currentServerList.size() > 0) {
+				int index = -1;
+				for (int i = 0; i < currentServerList.size(); i++) {
+					if (currentServerList.get(i).substring(0, 2).equals(serverId)) {
+						index = i;
+					}
+				}
+				if (index > 0)
+					currentServerList.remove(index);
+			}
+
 			ServerListController.getInstance().addServer(new ServerConfig(serverId, host, coPort, clPort));
 			sendApproveServer(cmd.getSocket(), serverId, currentServerList);
 		} else {

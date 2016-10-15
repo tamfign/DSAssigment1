@@ -118,7 +118,25 @@ public class Command {
 
 	public static boolean isNewId(JSONObject obj) {
 		String cmdType = (String) obj.get(Command.TYPE);
-		return TYPE_NEW_ID.equals(cmdType) || TYPE_MOVE_JOIN.equals(cmdType) || TYPE_JOIN_SERVER.equals(cmdType);
+		return TYPE_MOVE_JOIN.equals(cmdType) || TYPE_JOIN_SERVER.equals(cmdType);
+	}
+
+	public static boolean isWithServerId(JSONObject obj) {
+		boolean ret = false;
+
+		switch ((String) obj.get(Command.TYPE)) {
+		case TYPE_SERVER_ON:
+		case TYPE_LOCK_ROOM:
+		case TYPE_LOCK_ID:
+			ret = true;
+			break;
+		default:
+		}
+		return ret;
+	}
+
+	public static String getNewServerId(JSONObject obj) {
+		return (String) obj.get(P_SERVER_ID);
 	}
 
 	public static String getNewId(JSONObject obj) {
@@ -136,7 +154,7 @@ public class Command {
 		String cmdType = (String) obj.get(TYPE);
 		if (TYPE_JOIN.equals(cmdType)) {
 			String roomId = (String) obj.get(P_ROOM_ID);
-			ret = ChatRoomListController.getInstance().isOtherServer(roomId);
+			ret = !ChatRoomListController.getInstance().isRoomExists(roomId);
 		}
 		return ret;
 	}
