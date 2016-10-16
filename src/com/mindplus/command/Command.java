@@ -67,8 +67,6 @@ public class Command {
 	protected final static String CMD_ROUTE_ROOM = "CMD_ROUTE_ROOM";
 	protected final static String CMD_ROOM_LIST = "CMD_ROOM_LIST";
 
-	protected final static String CLIENT_AUTHORIZED = "IAMAUTHORIZED";
-
 	private String owner = null;
 	private JSONObject obj = null;
 	private Socket socket = null;

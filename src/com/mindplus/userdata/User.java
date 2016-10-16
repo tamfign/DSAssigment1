@@ -1,6 +1,6 @@
 package com.mindplus.userdata;
 
-import com.mindplus.security.PasswordVerification;
+import com.mindplus.security.UserVerification;
 
 public class User {
 	private String name = null;
@@ -26,8 +26,8 @@ public class User {
 		boolean ret = false;
 
 		if (pwd != null || this.pwd != null) {
-			ret = PasswordVerification.getInstance().decrypt(pwd)
-					.equals(PasswordVerification.getInstance().decrypt(this.pwd));
+			ret = UserVerification.getInstance().decrypt(pwd)
+					.equals(UserVerification.getInstance().decrypt(this.pwd));
 		}
 		return ret;
 	}

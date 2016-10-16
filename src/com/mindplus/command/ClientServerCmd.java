@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import com.mindplus.security.ServerVerification;
+import com.mindplus.security.UserVerification;
 
 @SuppressWarnings("unchecked")
 public class ClientServerCmd extends Command {
@@ -103,7 +103,7 @@ public class ClientServerCmd extends Command {
 			root.put(P_SERVER_ID, serverId);
 			root.put(P_HOST, host);
 			root.put(P_PORT, String.valueOf(port));
-			root.put(P_PWD, ServerVerification.getInstance().encrypt(CLIENT_AUTHORIZED));
+			root.put(P_PWD, UserVerification.getInstance().getTicket());
 		}
 		return root.toJSONString();
 	}

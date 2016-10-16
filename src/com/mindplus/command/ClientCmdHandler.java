@@ -13,7 +13,7 @@ import com.mindplus.model.ChatRoomListController;
 import com.mindplus.model.Client;
 import com.mindplus.model.ClientListController;
 import com.mindplus.model.ServerListController;
-import com.mindplus.security.ServerVerification;
+import com.mindplus.security.UserVerification;
 import com.mindplus.userdata.User;
 import com.mindplus.userdata.UserDataController;
 
@@ -100,7 +100,7 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 	}
 
 	private boolean isClientAuthorized(String ticket) {
-		return Command.CLIENT_AUTHORIZED.equals(ServerVerification.getInstance().decrypt(ticket));
+		return UserVerification.getInstance().verify(ticket);
 	}
 
 	private void lockIdentity(String identity, Command cmd) {
