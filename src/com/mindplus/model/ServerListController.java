@@ -8,11 +8,11 @@ import com.mindplus.configuration.ServerConfig;
 public class ServerListController {
 	private ArrayList<ServerConfig> serverList = null;
 	private static ServerListController _instance = null;
-	private HashMap<String, Integer> serverVolumeMap = null;
+	private HashMap<String, Long> serverVolumeMap = null;
 
 	private ServerListController() {
 		this.serverList = new ArrayList<ServerConfig>();
-		this.serverVolumeMap = new HashMap<String, Integer>();
+		this.serverVolumeMap = new HashMap<String, Long>();
 	}
 
 	public static ServerListController getInstance() {
@@ -22,7 +22,7 @@ public class ServerListController {
 		return _instance;
 	}
 
-	public void updateVolume(String serverId, int volume) {
+	public void updateVolume(String serverId, long volume) {
 		synchronized (serverVolumeMap) {
 			serverVolumeMap.put(serverId, volume);
 		}
@@ -30,13 +30,13 @@ public class ServerListController {
 
 	public ServerConfig getBestServer() {
 		synchronized (serverVolumeMap) {
-			ServerConfig ret = null;
-			int min = 0;
+			ServerConfig ret = serverList.get(0);
+			long min = 0;
 
 			for (ServerConfig server : serverList) {
 				if (serverVolumeMap.get(server.getId()) <= min) {
 					ret = server;
-					min = serverVolumeMap.get(server);
+					min = serverVolumeMap.get(server.getId());
 				}
 			}
 			return ret;
@@ -60,12 +60,14 @@ public class ServerListController {
 		if (id == null || "".equals(id))
 			return;
 
-		for (ServerConfig server : serverList) {
-			if (id.equals(server.getId())) {
-				System.out.println("Delete server");
-				serverList.remove(server);
+		int index = -1;
+		for (int i = 0; i < serverList.size(); i++) {
+			if (id.equals(serverList.get(i).getId())) {
+				index = i;
 			}
 		}
+		if (index >= 0)
+			serverList.remove(index);
 	}
 
 	public synchronized ArrayList<String> getStringList() {

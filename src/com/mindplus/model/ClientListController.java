@@ -40,7 +40,7 @@ public class ClientListController {
 		}
 	}
 
-	public synchronized int size() {
+	public synchronized long size() {
 		return clientList.size();
 	}
 }

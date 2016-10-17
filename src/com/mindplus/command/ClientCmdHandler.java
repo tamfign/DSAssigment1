@@ -149,9 +149,12 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 		}
 
 		if (isIdValid(id) && isClientAuthorised(cmd)) {
-			// TODO get usage of the servers
-			ServerConfig server = ServerListController.getInstance().getList().get(0);
-			approveNewIdentity(cmd.getSocket(), server);
+			ServerConfig server = ServerListController.getInstance().getBestServer();
+			if (server == null) {
+				disapproveNewIdentity(cmd.getSocket());
+			} else {
+				approveNewIdentity(cmd.getSocket(), server);
+			}
 		} else {
 			disapproveNewIdentity(cmd.getSocket());
 		}

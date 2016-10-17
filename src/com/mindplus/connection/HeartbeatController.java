@@ -12,11 +12,9 @@ public class HeartbeatController {
 
 	public void start() {
 		if (Configuration.isRouter()) {
-			System.out.println("Watchdog " + Configuration.getHeartbeatPort());
 			new Thread(new Watchdog(WATCH_DOG_INTERVAL, new ServerBeaterHandler(), Configuration.getHeartbeatPort()))
 					.start();
 		} else {
-			System.out.println("Heartbeat");
 			try {
 				new Heartbeat(Configuration.getRouterConfig().getHost(),
 						Configuration.getRouterConfig().getHeartbeatPort(), HEART_BEAT_INTERVAL,

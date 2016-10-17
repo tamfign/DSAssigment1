@@ -79,11 +79,14 @@ public class ChatRoomListController {
 		if (serverId == null || "".equals(serverId))
 			return;
 
+		ChatRoom tobeRemoved = null;
 		for (ChatRoom room : roomList.values()) {
 			if (serverId.equals(room.getServerId())) {
-				roomList.remove(room.getName());
+				tobeRemoved = room;
 			}
 		}
+		if (tobeRemoved != null)
+			roomList.remove(tobeRemoved.getName());
 	}
 
 	public synchronized boolean isRoomExists(String roomId) {

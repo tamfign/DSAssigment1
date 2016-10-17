@@ -8,6 +8,7 @@ public class Watchdog implements Runnable {
 	private int interval;
 	private int port;
 	private Callback callBack;
+	private String tobeRevmove = null;
 
 	public Watchdog(int interval, Callback callBack, int port) {
 		this.interval = interval;
@@ -37,6 +38,10 @@ public class Watchdog implements Runnable {
 						e.printStackTrace();
 					}
 				}
+				if (tobeRevmove != null) {
+					BeaterList.getInstance().remove(tobeRevmove);
+					tobeRevmove = null;
+				}
 			}
 			// Sleep half of the interval.
 			Thread.sleep(interval / 2);
@@ -50,7 +55,7 @@ public class Watchdog implements Runnable {
 			callBack.update(BeaterList.getInstance().getCmd(beater));
 		} else {
 			callBack.reportDown(beater);
-			BeaterList.getInstance().remove(beater);
+			tobeRevmove = beater;
 		}
 	}
 }

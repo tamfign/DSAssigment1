@@ -53,7 +53,7 @@ public class Heartbeat {
 			writer.write(msg + "\n");
 			writer.flush();
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("Fail to beat.");
 		} finally {
 			if (socket != null)
 				close(socket);
