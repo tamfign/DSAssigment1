@@ -11,11 +11,17 @@ public class RouterHeartbeatController {
 	private final int HEART_BEAT_INTERVAL = 5000;
 	private final int WATCH_DOG_INTERVAL = 6000;
 
+	private ConnectController cController = null;
+
+	public RouterHeartbeatController(ConnectController cController) {
+		this.cController = cController;
+	}
+
 	public void start() {
 		if (((RouterConfig) Configuration.getConfig()).isBackUp()) {
 			System.out.println("Backup Router is on");
-			new Thread(new Watchdog(WATCH_DOG_INTERVAL, new RouterBeaterHandler(), Configuration.getRouterBackupPort()))
-					.start();
+			new Thread(new Watchdog(WATCH_DOG_INTERVAL, new RouterBeaterHandler(this.cController),
+					Configuration.getRouterBackupPort())).start();
 		} else {
 			try {
 				new Heartbeat(Configuration.getHost(), Configuration.getRouterBackupPort(), HEART_BEAT_INTERVAL,

@@ -23,7 +23,7 @@ public class ConnectController {
 
 	public void run() throws Exception {
 		if (Configuration.isRouter()) {
-			new RouterHeartbeatController().start();
+			new RouterHeartbeatController(this).start();
 		}
 
 		if (!isBackupRouter()) {
@@ -45,6 +45,14 @@ public class ConnectController {
 
 	private boolean isBackupRouter() {
 		return Configuration.isRouter() && ((RouterConfig) Configuration.getConfig()).isBackUp();
+	}
+
+	public void takeover() {
+		System.out.println("Backup Router begins to takeover...");
+		new ServerHeartbeatController().start();
+		servers.updateChatRoomList();
+		new Thread(this.servers).start();
+		new Thread(this.clients).start();
 	}
 
 	public void requestServer(Command cmd) {
