@@ -24,10 +24,16 @@ public class Heartbeat {
 		this.timer = new Timer();
 		this.msg = msg;
 		this.beatTask = getTimerTask();
+		this.host = host;
+		this.port = port;
 	}
 
 	public void run() {
 		timer.schedule(beatTask, 0, interval);
+	}
+
+	public void cancel() {
+		this.timer.cancel();
 	}
 
 	private TimerTask getTimerTask() {
