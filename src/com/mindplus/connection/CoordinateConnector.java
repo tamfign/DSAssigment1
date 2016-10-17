@@ -17,7 +17,6 @@ import com.mindplus.configuration.ServerConfig;
 import com.mindplus.listener.CommandListener;
 import com.mindplus.listener.CoordinateListener;
 import com.mindplus.messagequeue.MessageQueue;
-import com.mindplus.model.ChatRoomListController;
 import com.mindplus.model.ServerListController;
 
 public class CoordinateConnector extends Connector implements Runnable {
@@ -39,33 +38,6 @@ public class CoordinateConnector extends Connector implements Runnable {
 			keepListenPortAndAcceptMultiClient(Configuration.getCoordinationPort());
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-	}
-
-	public void updateChatRoomList() {
-		System.out.println("Begin to refresh existing chat room list.");
-		SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
-		SSLSocket socket = null;
-
-		for (ServerConfig server : ServerListController.getInstance().getList()) {
-			try {
-				socket = (SSLSocket) factory.createSocket(server.getHost(), server.getCoordinationPort());
-				write(socket, ServerServerCmd.getRoomListStreamRq());
-				updateChatRoomList(readCmd(socket));
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				close(socket);
-			}
-		}
-	}
-
-	private void updateChatRoomList(String cmd) {
-		if (cmd == null || "".equals(cmd))
-			return;
-		JSONObject obj = Command.getCmdObject(cmd);
-		if (obj != null && Command.isRoomLisStream(obj)) {
-			ChatRoomListController.getInstance().addRooms(Command.getRooms(obj));
 		}
 	}
 

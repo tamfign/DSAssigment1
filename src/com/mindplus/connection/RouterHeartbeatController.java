@@ -13,6 +13,7 @@ public class RouterHeartbeatController {
 
 	public void start() {
 		if (((RouterConfig) Configuration.getConfig()).isBackUp()) {
+			System.out.println("Backup Router is on");
 			new Thread(new Watchdog(WATCH_DOG_INTERVAL, new RouterBeaterHandler(), Configuration.getRouterBackupPort()))
 					.start();
 		} else {

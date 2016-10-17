@@ -169,10 +169,6 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 		String clPort = (String) cmd.getObj().get(Command.P_CLIENT_PORT);
 
 		if (verifyServer(pwd) && !ServerListController.getInstance().isExists(serverId)) {
-			/**
-			 * TODO current server list should only have the servers really
-			 * /*online.
-			 */
 			ArrayList<String> currentServerList = ServerListController.getInstance().getStringList();
 			ServerListController.getInstance().addServer(new ServerConfig(serverId, host, coPort, clPort));
 			ChatRoomListController.getInstance().addRoom(ChatRoomListController.getMainHall(serverId), serverId, null);

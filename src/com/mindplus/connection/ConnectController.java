@@ -47,12 +47,6 @@ public class ConnectController {
 		return Configuration.isRouter() && ((RouterConfig) Configuration.getConfig()).isBackUp();
 	}
 
-	// TODO heartbeat before takeover
-	private void takeover() {
-		System.out.println("Backup Router begins to takeover...");
-		servers.updateChatRoomList();
-	}
-
 	public void requestServer(Command cmd) {
 		servers.runInternalRequest(cmd);
 	}
