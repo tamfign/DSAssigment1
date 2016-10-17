@@ -17,36 +17,30 @@ public class ClientListController {
 		return _instance;
 	}
 
-	public void addIndentity(String id, String serverId, String roomId) {
-		synchronized (this) {
-			clientList.put(id, new Client(id, serverId, roomId));
-		}
+	public synchronized void addIndentity(String id, String serverId, String roomId) {
+		clientList.put(id, new Client(id, serverId, roomId));
 	}
 
-	public void removeIndentity(String id) {
-		synchronized (this) {
+	public synchronized void removeIndentity(String id) {
+		clientList.remove(id);
+	}
+
+	public synchronized boolean isIdentityExist(String id) {
+		return clientList.containsKey(id);
+	}
+
+	public synchronized Client getClient(String id) {
+		return clientList.get(id);
+	}
+
+	public synchronized void releaseId(String serverId, String id) {
+		// Release only if it's the same as the lock one
+		if (serverId != null && serverId.equals(clientList.get(id).getServerId())) {
 			clientList.remove(id);
 		}
 	}
 
-	public boolean isIdentityExist(String id) {
-		synchronized (this) {
-			return clientList.containsKey(id);
-		}
-	}
-
-	public Client getClient(String id) {
-		synchronized (this) {
-			return clientList.get(id);
-		}
-	}
-
-	public void releaseId(String serverId, String id) {
-		synchronized (this) {
-			// Release only if it's the same as the lock one
-			if (serverId != null && serverId.equals(clientList.get(id).getServerId())) {
-				clientList.remove(id);
-			}
-		}
+	public synchronized int size() {
+		return clientList.size();
 	}
 }
