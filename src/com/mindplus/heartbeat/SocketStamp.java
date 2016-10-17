@@ -12,11 +12,11 @@ class SocketStamp {
 		this.timestamp = timestamp;
 	}
 
-	Date getSocketStamp() {
+	Date getTimeStamp() {
 		return this.timestamp;
 	}
 
-	void setSocketStamp(Date timestamp) {
+	void setTimeStamp(Date timestamp) {
 		this.timestamp = timestamp;
 	}
 

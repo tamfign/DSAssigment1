@@ -7,42 +7,46 @@ import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.util.Timer;
 import java.util.TimerTask;
-import org.json.simple.JSONObject;
 
 public class Heartbeat {
 	private int interval;
 	private Timer timer;
-	private JSONObject msg;
-	private BufferedWriter writer;
+	private String msg;
 	private TimerTask beatTask;
+	private Socket socket;
 
-	public Heartbeat(Socket socket, int interval, JSONObject msg) throws UnsupportedEncodingException, IOException {
+	public Heartbeat(Socket socket, int interval, String msg) throws UnsupportedEncodingException, IOException {
 		this.interval = interval;
 		this.timer = new Timer();
 		this.msg = msg;
-		this.writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"));
+		this.socket = socket;
 		this.beatTask = getTimerTask();
 	}
 
 	public void run() {
-		timer.schedule(beatTask, interval);
+		timer.schedule(beatTask, 0, interval);
 	}
 
 	private TimerTask getTimerTask() {
 		return new TimerTask() {
 			@Override
 			public void run() {
-				String msgS = msg.toJSONString();
-				write(msgS);
+				write(msg);
 			}
 		};
 	}
 
 	private void write(String msg) {
 		try {
-			writer.write(msg + "\n");
-			writer.flush();
+			if (socket.isConnected()) {
+				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"));
+				writer.write(msg + "\n");
+				writer.flush();
+			} else {
+				socket.close();
+			}
 		} catch (IOException e) {
+			timer.cancel();
 			e.printStackTrace();
 		}
 	}
