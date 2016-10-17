@@ -1,13 +1,8 @@
 package com.mindplus.heartbeat;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Socket;
 import java.util.Date;
 import java.util.Set;
-
-import com.mindplus.command.Command;
 
 public class Watchdog implements Runnable {
 	private int interval;
@@ -49,17 +44,12 @@ public class Watchdog implements Runnable {
 	}
 
 	private void checkBeater(String beater) throws IOException {
-		Socket bsocket = BeaterList.getInstance().getSocket(beater);
 		Date bsstamp = BeaterList.getInstance().getTimeStamp(beater);
-		BufferedReader reader = new BufferedReader(new InputStreamReader(bsocket.getInputStream(), "UTF-8"));
 
-		if (reader.ready()) {
-			String cmd = reader.readLine();
-			callBack.update(Command.getCmdObject(cmd));
-			BeaterList.getInstance().setTimeStamp(beater, new Date(System.currentTimeMillis()));
+		if (System.currentTimeMillis() - bsstamp.getTime() > interval) {
+			callBack.update(BeaterList.getInstance().getCmd(beater));
 		} else if (System.currentTimeMillis() - bsstamp.getTime() > interval) {
 			callBack.reportDown(beater);
-			bsocket.close();
 			BeaterList.getInstance().remove(beater);
 		}
 	}

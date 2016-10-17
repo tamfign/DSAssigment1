@@ -14,7 +14,8 @@ public class ConfigurationHandler extends DefaultHandler {
 	private static final String CER_PATH = "cer_path";
 	private static final String CER_PWD = "cer_pwd";
 	private static final String USER_DATA = "user_data";
-	private static final String IS_MAIN = "is_backup";
+	private static final String IS_BACKUP = "is_backup";
+	private static final String HEARTBEAT_PORT = "heartbeat_port";
 
 	private String tag = null;
 	private ServerConfig config = null;
@@ -33,7 +34,7 @@ public class ConfigurationHandler extends DefaultHandler {
 			this.config.setClientPort(Integer.parseInt(data));
 		} else if (COODINATE_PORT.equalsIgnoreCase(this.tag)) {
 			this.config.setCoordinationPort(Integer.parseInt(data));
-		} else if (IS_MAIN.equalsIgnoreCase(this.tag)) {
+		} else if (IS_BACKUP.equalsIgnoreCase(this.tag)) {
 			((RouterConfig) this.config).setBackUp(Boolean.parseBoolean(data));
 		} else if (CER_PATH.equalsIgnoreCase(this.tag)) {
 			this.config.setCerPath(data);
@@ -41,6 +42,8 @@ public class ConfigurationHandler extends DefaultHandler {
 			this.config.setCerPwd(data);
 		} else if (USER_DATA.equalsIgnoreCase(this.tag)) {
 			((RouterConfig) this.config).setUserDataPath(data);
+		} else if (HEARTBEAT_PORT.equalsIgnoreCase(this.tag)) {
+			((RouterConfig) this.config).setHeartbeatPort(Integer.parseInt(data));
 		}
 	}
 
@@ -72,8 +75,8 @@ public class ConfigurationHandler extends DefaultHandler {
 		case CER_PWD:
 		case CER_PATH:
 		case USER_DATA:
-		case IS_MAIN:
-
+		case IS_BACKUP:
+		case HEARTBEAT_PORT:
 			this.tag = qName;
 			break;
 		default:

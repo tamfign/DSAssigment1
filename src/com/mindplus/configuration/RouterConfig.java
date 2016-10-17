@@ -3,6 +3,15 @@ package com.mindplus.configuration;
 public class RouterConfig extends ServerConfig {
 	private boolean isBackUp = false;
 	private String userDataPath = null;
+	private int heartbeatPort;
+
+	public int getHeartbeatPort() {
+		return heartbeatPort;
+	}
+
+	public void setHeartbeatPort(int heartbeatPort) {
+		this.heartbeatPort = heartbeatPort;
+	}
 
 	public String getUserDataPath() {
 		return userDataPath;

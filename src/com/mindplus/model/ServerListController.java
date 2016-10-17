@@ -1,15 +1,18 @@
 package com.mindplus.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.mindplus.configuration.ServerConfig;
 
 public class ServerListController {
 	private ArrayList<ServerConfig> serverList = null;
 	private static ServerListController _instance = null;
+	private HashMap<String, Integer> serverVolumeMap = null;
 
 	private ServerListController() {
 		this.serverList = new ArrayList<ServerConfig>();
+		this.serverVolumeMap = new HashMap<String, Integer>();
 	}
 
 	public static ServerListController getInstance() {
@@ -17,6 +20,27 @@ public class ServerListController {
 			_instance = new ServerListController();
 		}
 		return _instance;
+	}
+
+	public void updateVolume(String serverId, int volume) {
+		synchronized (serverVolumeMap) {
+			serverVolumeMap.put(serverId, volume);
+		}
+	}
+
+	public ServerConfig getBestServer() {
+		synchronized (serverVolumeMap) {
+			ServerConfig ret = null;
+			int min = 0;
+
+			for (ServerConfig server : serverList) {
+				if (serverVolumeMap.get(server.getId()) <= min) {
+					ret = server;
+					min = serverVolumeMap.get(server);
+				}
+			}
+			return ret;
+		}
 	}
 
 	public synchronized void addServer(ServerConfig server) {

@@ -41,14 +41,12 @@ public class BeatAccepter implements Runnable {
 		while (true) {
 			try {
 				socket = server.accept();
-				System.out.println("Accept one");
 				reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
 
 				String msg = reader.readLine();
-				System.out.println(msg);
+				System.out.println("First connect :" + msg);
 				JSONObject comingJsonObj = Command.getCmdObject(msg);
-				BeaterList.getInstance().add(Command.getServerId(comingJsonObj),
-						new SocketStamp(socket, new Date(System.currentTimeMillis())));
+				BeaterList.getInstance().add(Command.getServerId(comingJsonObj), new TimeStampAndCmd(new Date(System.currentTimeMillis()), comingJsonObj));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

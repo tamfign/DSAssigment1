@@ -36,6 +36,8 @@ public class ConnectController {
 			takeover();
 		}
 
+		new HeartbeatController().start();
+
 		if (!Configuration.isRouter()) {
 			this.router.contactRouter();
 			new Thread(this.servers).start();

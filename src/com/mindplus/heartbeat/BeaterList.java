@@ -1,18 +1,19 @@
 package com.mindplus.heartbeat;
 
-import java.net.Socket;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import org.json.simple.JSONObject;
+
 class BeaterList {
 	private ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
-	private HashMap<String, SocketStamp> socketMap;
+	private HashMap<String, TimeStampAndCmd> beaterMap;
 	private static BeaterList _instance = null;
 
 	private BeaterList() {
-		this.socketMap = new HashMap<String, SocketStamp>();
+		this.beaterMap = new HashMap<String, TimeStampAndCmd>();
 	}
 
 	protected static BeaterList getInstance() {
@@ -25,7 +26,7 @@ class BeaterList {
 	protected boolean isEmpty() {
 		boolean ret = false;
 		rwl.readLock().lock();
-		ret = socketMap.isEmpty();
+		ret = beaterMap.isEmpty();
 		rwl.readLock().unlock();
 		return ret;
 	}
@@ -33,42 +34,36 @@ class BeaterList {
 	protected Set<String> getKeySet() {
 		Set<String> ret = null;
 		rwl.readLock().lock();
-		ret = socketMap.keySet();
+		ret = beaterMap.keySet();
 		rwl.readLock().unlock();
 		return ret;
 	}
 
-	protected void add(String beater, SocketStamp ss) {
+	protected void add(String beater, TimeStampAndCmd ss) {
 		rwl.writeLock().lock();
-		socketMap.put(beater, ss);
+		beaterMap.put(beater, ss);
 		rwl.writeLock().unlock();
 	}
 
-	protected Socket getSocket(String beater) {
-		Socket ret = null;
+	protected JSONObject getCmd(String beater) {
+		JSONObject ret = null;
 		rwl.readLock().lock();
-		ret = socketMap.get(beater).getSocket();
+		ret = beaterMap.get(beater).getCmd();
 		rwl.readLock().unlock();
 		return ret;
-	}
-
-	protected void setTimeStamp(String beater, Date timestamp) {
-		rwl.writeLock().lock();
-		socketMap.get(beater).setTimeStamp(timestamp);
-		rwl.writeLock().unlock();
 	}
 
 	protected Date getTimeStamp(String beater) {
 		Date ret = null;
 		rwl.readLock().lock();
-		ret = socketMap.get(beater).getTimeStamp();
+		ret = beaterMap.get(beater).getTimeStamp();
 		rwl.readLock().unlock();
 		return ret;
 	}
 
 	protected void remove(String beater) {
 		rwl.writeLock().lock();
-		socketMap.remove(beater);
+		beaterMap.remove(beater);
 		rwl.writeLock().unlock();
 	}
 }
