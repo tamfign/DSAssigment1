@@ -46,9 +46,9 @@ public class Watchdog implements Runnable {
 	private void checkBeater(String beater) throws IOException {
 		Date bsstamp = BeaterList.getInstance().getTimeStamp(beater);
 
-		if (System.currentTimeMillis() - bsstamp.getTime() > interval) {
+		if (System.currentTimeMillis() - bsstamp.getTime() <= interval) {
 			callBack.update(BeaterList.getInstance().getCmd(beater));
-		} else if (System.currentTimeMillis() - bsstamp.getTime() > interval) {
+		} else {
 			callBack.reportDown(beater);
 			BeaterList.getInstance().remove(beater);
 		}
