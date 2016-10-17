@@ -39,6 +39,7 @@ public class Main {
 			System.err.println(e.getMessage());
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
+			System.exit(0);
 		}
 	}
 
