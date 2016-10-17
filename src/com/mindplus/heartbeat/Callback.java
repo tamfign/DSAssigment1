@@ -1,5 +1,7 @@
-package au.edu.unimelb.Heartbeat;
+package com.mindplus.heartbeat;
 
 public interface Callback {
-    public abstract void Call(Object obj);
+	public abstract void reportDown(Object obj);
+
+	public abstract void update(Object obj);
 }

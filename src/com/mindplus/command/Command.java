@@ -41,6 +41,8 @@ public class Command {
 	protected final static String TYPE_GET_CHATROOM_LOCATION = "get_chatroom_location";
 	protected final static String TYPE_GET_FULL_ROOM_LIST = "get_full_room_list";
 
+	protected final static String TYPE_HEART_BEAT = "heart_beat";
+
 	protected final static String P_IDENTITY = "identity";
 	protected final static String P_PWD = "pwd";
 	protected final static String P_SERVER_ID = "serverid";
@@ -58,6 +60,7 @@ public class Command {
 	protected final static String P_SERVER = "server";
 	protected final static String P_SERVERS = "servers";
 	protected final static String P_CONTENT = "content";
+	protected final static String P_CLIENT_VOLUME = "client_volume";
 
 	protected final static String CMD_LOCK_IDENTITY = "CMD_LOCK_IDENTITY";
 	protected final static String CMD_RELEASE_IDENTITY = "CMD_RELEASE_IDENTITY";
@@ -134,6 +137,10 @@ public class Command {
 
 	public static String getNewId(JSONObject obj) {
 		return (String) obj.get(P_IDENTITY);
+	}
+
+	public static String getServerId(JSONObject obj) {
+		return (String) obj.get(P_SERVER_ID);
 	}
 
 	public static boolean isClosing(JSONObject obj) {

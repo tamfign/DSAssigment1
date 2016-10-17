@@ -7,6 +7,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.mindplus.configuration.Configuration;
+import com.mindplus.model.ClientListController;
 import com.mindplus.security.ServerVerification;
 
 @SuppressWarnings("unchecked")
@@ -149,6 +150,18 @@ public class ServerServerCmd extends Command {
 		obj.put(TYPE, TYPE_ROOM_LIST_STREAM);
 		jRoomList.addAll(roomList);
 		obj.put(P_ROOMS, jRoomList);
+		return obj.toJSONString();
+	}
+
+	public static String getHeartBeat() {
+		JSONObject obj = new JSONObject();
+		obj.put(TYPE, TYPE_HEART_BEAT);
+		obj.put(P_SERVER_ID, Configuration.getServerId());
+
+		// If server includes client volume.
+		if (!Configuration.isRouter()) {
+			obj.put(P_CLIENT_VOLUME, ClientListController.getInstance().size());
+		}
 		return obj.toJSONString();
 	}
 }
