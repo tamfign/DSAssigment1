@@ -16,6 +16,7 @@ public class ConfigurationHandler extends DefaultHandler {
 	private static final String USER_DATA = "user_data";
 	private static final String IS_BACKUP = "is_backup";
 	private static final String HEARTBEAT_PORT = "heartbeat_port";
+	private static final String ROUTER_BACKUP_PORT = "router_backup_port";
 
 	private String tag = null;
 	private ServerConfig config = null;
@@ -44,6 +45,8 @@ public class ConfigurationHandler extends DefaultHandler {
 			((RouterConfig) this.config).setUserDataPath(data);
 		} else if (HEARTBEAT_PORT.equalsIgnoreCase(this.tag)) {
 			((RouterConfig) this.config).setHeartbeatPort(Integer.parseInt(data));
+		} else if (ROUTER_BACKUP_PORT.equalsIgnoreCase(this.tag)) {
+			((RouterConfig) this.config).setRouterBackupPort(Integer.parseInt(data));
 		}
 	}
 
@@ -77,6 +80,7 @@ public class ConfigurationHandler extends DefaultHandler {
 		case USER_DATA:
 		case IS_BACKUP:
 		case HEARTBEAT_PORT:
+		case ROUTER_BACKUP_PORT:
 			this.tag = qName;
 			break;
 		default:

@@ -73,9 +73,13 @@ public class Configuration {
 	public static int getCoordinationPort() {
 		return _instance.itself.getCoordinationPort();
 	}
-	
+
 	public static int getHeartbeatPort() {
 		return ((RouterConfig) _instance.itself).getHeartbeatPort();
+	}
+
+	public static int getRouterBackupPort() {
+		return ((RouterConfig) _instance.itself).getRouterBackupPort();
 	}
 
 	public static Configuration init(ServerArguments arguments) throws IOException {

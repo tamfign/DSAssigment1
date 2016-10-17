@@ -8,6 +8,7 @@ import org.json.simple.JSONObject;
 
 import com.mindplus.configuration.Configuration;
 import com.mindplus.model.ClientListController;
+import com.mindplus.model.ServerListController;
 import com.mindplus.security.ServerVerification;
 
 @SuppressWarnings("unchecked")
@@ -163,5 +164,16 @@ public class ServerServerCmd extends Command {
 			obj.put(P_CLIENT_VOLUME, ClientListController.getInstance().size());
 		}
 		return obj.toJSONString();
+	}
+
+	public static String getRouterBeat() {
+		JSONObject root = new JSONObject();
+		root.put(TYPE, TYPE_HEART_BEAT);
+		root.put(P_SERVER_ID, Configuration.getServerId());
+
+		JSONArray jList = new JSONArray();
+		jList.addAll(ServerListController.getInstance().getStringList());
+		root.put(P_SERVERS, jList);
+		return root.toJSONString();
 	}
 }

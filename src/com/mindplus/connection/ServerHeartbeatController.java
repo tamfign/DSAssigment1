@@ -6,7 +6,7 @@ import com.mindplus.configuration.Configuration;
 import com.mindplus.heartbeat.Heartbeat;
 import com.mindplus.heartbeat.Watchdog;
 
-public class HeartbeatController {
+public class ServerHeartbeatController {
 	private final int HEART_BEAT_INTERVAL = 5000;
 	private final int WATCH_DOG_INTERVAL = 6000;
 

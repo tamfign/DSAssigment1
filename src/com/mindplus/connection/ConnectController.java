@@ -1,13 +1,10 @@
 package com.mindplus.connection;
 
-import java.util.ArrayList;
-
 import org.json.simple.JSONObject;
 
 import com.mindplus.command.Command;
 import com.mindplus.configuration.Configuration;
 import com.mindplus.configuration.RouterConfig;
-import com.mindplus.model.ServerListController;
 
 public class ConnectController {
 	private ClientConnector clients = null;
@@ -25,28 +22,25 @@ public class ConnectController {
 	}
 
 	public void run() throws Exception {
-		if (isBackupRouter()) {
-			// TODO remove just for testing.
-			ArrayList<String> list = new ArrayList<String>();
-			list.add("s1|13.73.115.93|5557|4445");
-			list.add("s2|13.73.115.93|5558|4446");
-			list.add("s3|13.73.115.93|5559|4447");
-			ServerListController.getInstance().addServers(list);
-
-			takeover();
+		if (Configuration.isRouter()) {
+			new RouterHeartbeatController().start();
 		}
 
-		new HeartbeatController().start();
+		if (!isBackupRouter()) {
+			new ServerHeartbeatController().start();
+		}
 
 		if (!Configuration.isRouter()) {
 			this.router.contactRouter();
 			new Thread(this.servers).start();
 			this.servers.checkOtherServers();
-		} else {
+		} else if (!isBackupRouter()) {
 			new Thread(this.servers).start();
 		}
 
-		new Thread(this.clients).start();
+		if (!isBackupRouter()) {
+			new Thread(this.clients).start();
+		}
 	}
 
 	private boolean isBackupRouter() {

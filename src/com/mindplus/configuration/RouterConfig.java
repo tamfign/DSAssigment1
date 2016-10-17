@@ -4,6 +4,7 @@ public class RouterConfig extends ServerConfig {
 	private boolean isBackUp = false;
 	private String userDataPath = null;
 	private int heartbeatPort;
+	private int routerBackupPort;
 
 	public int getHeartbeatPort() {
 		return heartbeatPort;
@@ -27,5 +28,13 @@ public class RouterConfig extends ServerConfig {
 
 	public void setBackUp(boolean isMain) {
 		this.isBackUp = isMain;
+	}
+
+	public int getRouterBackupPort() {
+		return routerBackupPort;
+	}
+
+	public void setRouterBackupPort(int routerBackupPort) {
+		this.routerBackupPort = routerBackupPort;
 	}
 }
