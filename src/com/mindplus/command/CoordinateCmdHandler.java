@@ -86,10 +86,9 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 				true);
 
 		if (responseObj == null) {
-			connector.requestTheOther(new InternalCmd(cmd, Command.getMaintenance()));
-		} else {
-			connector.requestTheOther(InternalCmd.getInternRoomResultCmd(cmd, Command.CMD_ROOM_LIST, responseObj));
+			responseObj = ServerServerCmd.getRoomListObjRs(ChatRoomListController.getInstance().getList());
 		}
+		connector.requestTheOther(InternalCmd.getInternRoomResultCmd(cmd, Command.CMD_ROOM_LIST, responseObj));
 	}
 
 	private void handlGetFullRoomList(Command cmd) {
