@@ -49,7 +49,7 @@ public class Watchdog implements Runnable {
 				}
 			}
 			// Sleep half of the interval.
-			Thread.sleep(interval / 2);
+			Thread.sleep(interval);
 		}
 	}
 

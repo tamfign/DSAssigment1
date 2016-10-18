@@ -8,8 +8,8 @@ import com.mindplus.heartbeat.Heartbeat;
 import com.mindplus.heartbeat.Watchdog;
 
 public class RouterHeartbeatController implements HeartbeatController {
-	private final int HEART_BEAT_INTERVAL = 5000;
-	private final int WATCH_DOG_INTERVAL = 6000;
+	private final int HEART_BEAT_INTERVAL = 10000;
+	private final int WATCH_DOG_INTERVAL = 11000;
 
 	private ConnectController cController = null;
 	private Watchdog routerDog = null;
