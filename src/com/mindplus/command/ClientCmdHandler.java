@@ -144,7 +144,7 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 
 		String id = (String) cmd.getObj().get(Command.P_IDENTITY);
 		if (ServerListController.getInstance().size() <= 0) {
-			sendDisapproveJoinServer(cmd.getSocket(), id);
+			disapproveNewIdentity(cmd.getSocket());
 			return;
 		}
 
