@@ -156,6 +156,7 @@ public class CoordinateConnector extends Connector implements Runnable {
 	private void updateChatRoomList(String cmd) {
 		if (cmd == null || "".equals(cmd))
 			return;
+		System.out.println("Updating chat room list: " + cmd);
 		JSONObject obj = Command.getCmdObject(cmd);
 		if (obj != null && Command.isRoomLisStream(obj)) {
 			ChatRoomListController.getInstance().addRooms(Command.getRooms(obj));

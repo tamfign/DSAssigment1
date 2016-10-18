@@ -11,18 +11,21 @@ import java.util.TimerTask;
 
 import javax.net.ssl.SSLSocketFactory;
 
+import com.mindplus.connection.HeartbeatController;
+
 public class Heartbeat {
 	private int interval;
 	private Timer timer;
-	private String msg;
+	private HeartbeatController controller;
 	private TimerTask beatTask;
 	private String host;
 	private int port;
 
-	public Heartbeat(String host, int port, int interval, String msg) throws UnsupportedEncodingException, IOException {
+	public Heartbeat(String host, int port, int interval, HeartbeatController controller)
+			throws UnsupportedEncodingException, IOException {
 		this.interval = interval;
 		this.timer = new Timer();
-		this.msg = msg;
+		this.controller = controller;
 		this.beatTask = getTimerTask();
 		this.host = host;
 		this.port = port;
@@ -40,7 +43,7 @@ public class Heartbeat {
 		return new TimerTask() {
 			@Override
 			public void run() {
-				write(msg);
+				write(controller.getHeartBeatMsg());
 			}
 		};
 	}

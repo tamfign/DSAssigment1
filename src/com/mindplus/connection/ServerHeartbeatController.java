@@ -6,7 +6,7 @@ import com.mindplus.configuration.Configuration;
 import com.mindplus.heartbeat.Heartbeat;
 import com.mindplus.heartbeat.Watchdog;
 
-public class ServerHeartbeatController {
+public class ServerHeartbeatController implements HeartbeatController {
 	private final int HEART_BEAT_INTERVAL = 5000;
 	private final int WATCH_DOG_INTERVAL = 6000;
 
@@ -17,11 +17,15 @@ public class ServerHeartbeatController {
 		} else {
 			try {
 				new Heartbeat(Configuration.getRouterConfig().getHost(),
-						Configuration.getRouterConfig().getHeartbeatPort(), HEART_BEAT_INTERVAL,
-						ServerServerCmd.getHeartBeat()).run();
+						Configuration.getRouterConfig().getHeartbeatPort(), HEART_BEAT_INTERVAL, this).run();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	@Override
+	public String getHeartBeatMsg() {
+		return ServerServerCmd.getHeartBeat();
 	}
 }

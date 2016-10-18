@@ -9,6 +9,7 @@ public class Watchdog implements Runnable {
 	private int port;
 	private Callback callBack;
 	private String tobeRevmove = null;
+	private boolean isOn = true;
 
 	public Watchdog(int interval, Callback callBack, int port) {
 		this.interval = interval;
@@ -26,8 +27,12 @@ public class Watchdog implements Runnable {
 		}
 	}
 
+	public void cancel() {
+		this.isOn = false;
+	}
+
 	private void checkBeaters() throws InterruptedException {
-		while (true) {
+		while (isOn) {
 			if (!BeaterList.getInstance().isEmpty()) {
 				Set<String> beaters = BeaterList.getInstance().getKeySet();
 

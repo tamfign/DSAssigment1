@@ -10,6 +10,7 @@ public class ConnectController {
 	private ClientConnector clients = null;
 	private CoordinateConnector servers = null;
 	private RouterConnector router = null;
+	private RouterHeartbeatController rHeatbeat = null;
 
 	private ConnectController() {
 		this.clients = new ClientConnector(this);
@@ -21,9 +22,11 @@ public class ConnectController {
 		return new ConnectController();
 	}
 
+	// TODO refractor sometime
 	public void run() throws Exception {
 		if (Configuration.isRouter()) {
-			new RouterHeartbeatController(this).start();
+			rHeatbeat = new RouterHeartbeatController(this);
+			rHeatbeat.start();
 		}
 
 		if (!isBackupRouter()) {
@@ -49,9 +52,10 @@ public class ConnectController {
 
 	public void takeover() {
 		System.out.println("Backup Router begins to takeover...");
+		rHeatbeat.cancel();
+		new Thread(this.servers).start();
 		new ServerHeartbeatController().start();
 		servers.updateChatRoomList();
-		new Thread(this.servers).start();
 		new Thread(this.clients).start();
 	}
 

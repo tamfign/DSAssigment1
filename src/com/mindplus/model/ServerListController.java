@@ -52,7 +52,17 @@ public class ServerListController {
 			return;
 
 		for (String stream : list) {
-			serverList.add(new ServerConfig(stream));
+			boolean notExist = false;
+			ServerConfig newServer = new ServerConfig(stream);
+
+			for (ServerConfig server : serverList) {
+				if (server.getId().equals(newServer.getId())) {
+					notExist = true;
+				}
+			}
+			if (!notExist) {
+				serverList.add(newServer);
+			}
 		}
 	}
 
