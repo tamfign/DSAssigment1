@@ -42,6 +42,7 @@ public class Command {
 	protected final static String TYPE_GET_FULL_ROOM_LIST = "get_full_room_list";
 
 	protected final static String TYPE_HEART_BEAT = "heart_beat";
+	protected final static String TYPE_MAINTENANCE = "maintenance";
 
 	protected final static String P_IDENTITY = "identity";
 	protected final static String P_PWD = "pwd";
@@ -168,5 +169,11 @@ public class Command {
 		}
 
 		return ret;
+	}
+
+	public static JSONObject getMaintenance() {
+		JSONObject root = new JSONObject();
+		root.put(TYPE, TYPE_MAINTENANCE);
+		return root;
 	}
 }

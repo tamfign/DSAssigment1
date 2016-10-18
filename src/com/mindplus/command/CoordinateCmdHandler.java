@@ -82,8 +82,14 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 	}
 
 	private void askRouterFullRooomList(Command cmd) {
-		connector.requestTheOther(InternalCmd.getInternRoomResultCmd(cmd, Command.CMD_ROOM_LIST,
-				((CoordinateConnector) connector).requestRouter(ServerServerCmd.getRoomListCmdRq(), true)));
+		JSONObject responseObj = ((CoordinateConnector) connector).requestRouter(ServerServerCmd.getRoomListCmdRq(),
+				true);
+
+		if (responseObj == null) {
+			connector.requestTheOther(new InternalCmd(cmd, Command.getMaintenance()));
+		} else {
+			connector.requestTheOther(InternalCmd.getInternRoomResultCmd(cmd, Command.CMD_ROOM_LIST, responseObj));
+		}
 	}
 
 	private void handlGetFullRoomList(Command cmd) {
@@ -92,8 +98,14 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 
 	private void askRouterRoomServerId(Command cmd) {
 		String roomId = (String) cmd.getObj().get(Command.P_ROOM_ID);
-		connector.requestTheOther(InternalCmd.getInternRoomResultCmd(cmd, Command.CMD_ROUTE_ROOM,
-				((CoordinateConnector) connector).requestRouter(ServerServerCmd.getRoomLocationRq(roomId), true)));
+		JSONObject responseObj = ((CoordinateConnector) connector)
+				.requestRouter(ServerServerCmd.getRoomLocationRq(roomId), true);
+
+		if (responseObj == null) {
+			connector.requestTheOther(new InternalCmd(cmd, Command.getMaintenance()));
+		} else {
+			connector.requestTheOther(InternalCmd.getInternRoomResultCmd(cmd, Command.CMD_ROUTE_ROOM, responseObj));
+		}
 	}
 
 	private void askRouterReleaseRoomId(Command cmd) {
@@ -111,19 +123,25 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 
 	private void askRouterLockRoomId(Command cmd) {
 		String roomId = (String) cmd.getObj().get(Command.P_ROOM_ID);
-		connector.requestTheOther(InternalCmd.getLockRoomResultCmd(cmd, roomId, getLockRoomResult(roomId)));
+
+		try {
+			connector.requestTheOther(InternalCmd.getLockRoomResultCmd(cmd, roomId, getLockRoomResult(roomId)));
+		} catch (Exception e) {
+			connector.requestTheOther(new InternalCmd(cmd, Command.getMaintenance()));
+		}
 	}
 
-	private boolean getLockRoomResult(String roomId) {
+	private boolean getLockRoomResult(String roomId) throws Exception {
 		boolean ret = false;
 		JSONObject result = ((CoordinateConnector) connector)
 				.requestRouter(ServerServerCmd.lockRoomRq(Configuration.getServerId(), roomId), true);
 
 		if (result != null) {
 			ret = Command.getResult(result);
+		} else {
+			throw new Exception("Lock room failed.");
 		}
 		return ret;
-
 	}
 
 	private void broadcastReleaseIdentity(Command cmd) {

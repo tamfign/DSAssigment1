@@ -47,9 +47,14 @@ public class RouterConnector extends Connector {
 
 		try {
 			rSocket = (SSLSocket) getRouterSocket();
+			rSocket.setSoTimeout(2000);
 			if (rSocket.isConnected()) {
 				write(rSocket, cmd);
-				ret = Command.getCmdObject(readCmd(rSocket));
+
+				String response = readCmd(rSocket);
+				if (response != null) {
+					ret = Command.getCmdObject(response);
+				}
 			}
 		} catch (Exception e) {
 			System.out.println("Fail to connect router");
