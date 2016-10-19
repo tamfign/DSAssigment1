@@ -43,8 +43,19 @@ public class ServerListController {
 		}
 	}
 
-	public synchronized void addServer(ServerConfig server) {
-		serverList.add(server);
+	public synchronized void addServer(ServerConfig newServer) {
+		if (newServer == null)
+			return;
+
+		boolean notExist = false;
+		for (ServerConfig server : serverList) {
+			if (server.getId().equals(newServer.getId())) {
+				notExist = true;
+			}
+		}
+		if (!notExist) {
+			serverList.add(newServer);
+		}
 	}
 
 	public synchronized void addServers(ArrayList<String> list) {
