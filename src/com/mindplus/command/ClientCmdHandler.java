@@ -227,8 +227,13 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 	}
 
 	private void handleWho(Command cmd) {
+		if (Configuration.isRouter()) {
+			return;
+		}
 		ChatRoom room = ChatRoomListController.getInstance().getChatRoom(getCurrentRoomId(cmd.getOwner()));
-		response(cmd.getSocket(), ClientServerCmd.whoRs(room.getName(), room.getMemberList(), room.getOwner()));
+		if (room != null) {
+			response(cmd.getSocket(), ClientServerCmd.whoRs(room.getName(), room.getMemberList(), room.getOwner()));
+		}
 	}
 
 	private void routeClient(String clientId, String roomId, ServerConfig server, Socket socket) {
