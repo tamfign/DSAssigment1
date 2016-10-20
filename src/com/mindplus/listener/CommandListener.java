@@ -25,6 +25,7 @@ public abstract class CommandListener implements Runnable {
 					handleRequest(cmd);
 				}
 			}
+			handleDisconnect();
 		} catch (IOException e) {
 			handleDisconnect();
 		} finally {
