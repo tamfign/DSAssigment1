@@ -24,6 +24,7 @@ public abstract class CommandListener implements Runnable {
 				if (cmd != null && !"".equals(cmd)) {
 					handleRequest(cmd);
 				}
+			handleDisconnect();
 			}
 		} catch (IOException e) {
 			handleDisconnect();
