@@ -58,13 +58,13 @@ public class CoordinateConnector extends Connector implements Runnable {
 		for (ServerConfig server : ServerListController.getInstance().getList()) {
 			try {
 				socket = (SSLSocket) factory.createSocket(server.getHost(), server.getCoordinationPort());
-				write(socket, cmd);
-				if (needResult)
-					ret &= readResult(socket);
+				if (socket.isConnected()) {
+					write(socket, cmd);
+					if (needResult)
+						ret &= readResult(socket);
+				}
 			} catch (Exception e) {
-				// If any exception happens, consider it's false.
-				ret = false;
-				e.printStackTrace();
+			//	e.printStackTrace();
 			} finally {
 				close(socket);
 			}
