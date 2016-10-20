@@ -273,7 +273,7 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 	private void handleJoinRoom(Command cmd) {
 		String roomId = (String) cmd.getObj().get(Command.P_ROOM_ID);
 
-		if (!isOwnerOfRoom(cmd.getOwner())) {
+		if (!isOwnerOfRoom(cmd.getOwner()) && !isJoiningTheSameRoom(cmd.getOwner(), roomId)) {
 			// Check whether this room belongs to this server.
 			if (!ChatRoomListController.getInstance().isRoomExists(roomId)) {
 				connector.requestTheOther(InternalCmd.getInternRoomCmd(cmd, Command.CMD_ROUTE_ROOM, roomId));
@@ -283,6 +283,16 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 		} else {
 			disapproveJoin(cmd.getSocket(), cmd.getOwner(), roomId);
 		}
+	}
+
+	private boolean isJoiningTheSameRoom(String identity, String newRoom) {
+		boolean ret = false;
+		String roomId = ClientListController.getInstance().getClient(identity).getRoomId();
+
+		if (roomId != null && roomId.equals(newRoom)) {
+			ret = true;
+		}
+		return ret;
 	}
 
 	private void handleRouteRoom(Command cmd) {

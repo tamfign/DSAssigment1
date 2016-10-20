@@ -33,11 +33,15 @@ public class ServerListController {
 			ServerConfig ret = serverList.get(0);
 			long min = 0;
 
-			for (ServerConfig server : serverList) {
-				if (serverVolumeMap.get(server.getId()) <= min) {
-					ret = server;
-					min = serverVolumeMap.get(server.getId());
+			try {
+				for (ServerConfig server : serverList) {
+					if (serverVolumeMap.get(server.getId()) <= min) {
+						ret = server;
+						min = serverVolumeMap.get(server.getId());
+					}
 				}
+			} catch (Exception ex) {
+
 			}
 			return ret;
 		}
