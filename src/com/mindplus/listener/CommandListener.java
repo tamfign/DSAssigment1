@@ -1,6 +1,5 @@
 package com.mindplus.listener;
 
-import java.io.IOException;
 import java.net.Socket;
 
 import com.mindplus.connection.Connector;
@@ -25,8 +24,8 @@ public abstract class CommandListener implements Runnable {
 					handleRequest(cmd);
 				}
 			}
-			handleDisconnect();
-		} catch (IOException e) {
+			throw new Exception("Socket closed.");
+		} catch (Exception e) {
 			handleDisconnect();
 		} finally {
 			getConnector().close(socket);
