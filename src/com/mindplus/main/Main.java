@@ -14,6 +14,8 @@ import org.xml.sax.SAXException;
 
 import com.mindplus.configuration.Configuration;
 import com.mindplus.connection.ConnectController;
+import com.mindplus.connection.RouterController;
+import com.mindplus.connection.ServerController;
 import com.mindplus.userdata.UserData;
 
 public class Main {
@@ -29,9 +31,10 @@ public class Main {
 
 			if (Configuration.isRouter()) {
 				readUserData();
+				controller = RouterController.getInstance();
+			} else {
+				controller = ServerController.getInstance();
 			}
-
-			controller = ConnectController.getInstance();
 			controller.run();
 		} catch (CmdLineException e) {
 			System.err.println("Example: java -jar server.jar [-r] -l server_config");
