@@ -10,7 +10,7 @@ import com.mindplus.command.ClientCmdHandler;
 import com.mindplus.command.Command;
 import com.mindplus.configuration.Configuration;
 import com.mindplus.listener.ClientListener;
-import com.mindplus.listener.CommandListener;
+import com.mindplus.listener.MsgListener;
 import com.mindplus.messagequeue.MessageQueue;
 import com.mindplus.model.ChatRoomListController;
 
@@ -37,7 +37,7 @@ public class ClientConnector extends Connector implements Runnable {
 	}
 
 	@Override
-	protected CommandListener getListener(Socket socket) {
+	protected MsgListener getListener(Socket socket) {
 		return new ClientListener(this, socket);
 	}
 

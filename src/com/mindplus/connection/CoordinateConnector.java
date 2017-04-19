@@ -14,7 +14,8 @@ import com.mindplus.command.CoordinateCmdHandler;
 import com.mindplus.command.ServerServerCmd;
 import com.mindplus.configuration.Configuration;
 import com.mindplus.configuration.ServerConfig;
-import com.mindplus.listener.CommandListener;
+import com.mindplus.listener.MsgListener;
+import com.mindplus.message.Message;
 import com.mindplus.listener.CoordinateListener;
 import com.mindplus.messagequeue.MessageQueue;
 import com.mindplus.model.ChatRoomListController;
@@ -78,7 +79,7 @@ public class CoordinateConnector extends Connector implements Runnable {
 
 		// If read nothing back, consider it's false.
 		if (cmd != null && !"".equals(cmd)) {
-			ret = Command.getResult(Command.getCmdObject((cmd)));
+			ret = Command.getResult(Message.getObject((cmd)));
 		}
 		return ret;
 	}
@@ -115,7 +116,7 @@ public class CoordinateConnector extends Connector implements Runnable {
 	}
 
 	@Override
-	protected CommandListener getListener(Socket socket) {
+	protected MsgListener getListener(Socket socket) {
 		return new CoordinateListener(this, socket);
 	}
 
@@ -157,7 +158,7 @@ public class CoordinateConnector extends Connector implements Runnable {
 		if (cmd == null || "".equals(cmd))
 			return;
 		System.out.println("Updating chat room list: " + cmd);
-		JSONObject obj = Command.getCmdObject(cmd);
+		JSONObject obj = Message.getObject(cmd);
 		if (obj != null && Command.isRoomLisStream(obj)) {
 			ChatRoomListController.getInstance().addRooms(Command.getRooms(obj));
 		}

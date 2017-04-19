@@ -4,8 +4,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import com.mindplus.model.ChatRoomListController;
 
@@ -81,12 +79,6 @@ public class Command {
 		this.obj = cmd;
 	}
 
-	public Command(Socket socket, String cmd, String owner) {
-		this.owner = owner;
-		this.socket = socket;
-		this.obj = getCmdObject(cmd);
-	}
-
 	public Command(Command oldCmd, JSONObject obj) {
 		this.owner = oldCmd.getOwner();
 		this.socket = oldCmd.getSocket();
@@ -157,17 +149,6 @@ public class Command {
 			String roomId = (String) obj.get(P_ROOM_ID);
 			ret = !ChatRoomListController.getInstance().isRoomExists(roomId);
 		}
-		return ret;
-	}
-
-	public static JSONObject getCmdObject(String cmd) {
-		JSONObject ret = null;
-		try {
-			ret = (JSONObject) new JSONParser().parse(cmd);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-
 		return ret;
 	}
 

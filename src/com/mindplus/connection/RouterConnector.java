@@ -13,7 +13,8 @@ import com.mindplus.command.Command;
 import com.mindplus.command.ServerServerCmd;
 import com.mindplus.configuration.Configuration;
 import com.mindplus.configuration.RouterConfig;
-import com.mindplus.listener.CommandListener;
+import com.mindplus.listener.MsgListener;
+import com.mindplus.message.Message;
 import com.mindplus.model.ServerListController;
 
 public class RouterConnector extends Connector {
@@ -53,7 +54,7 @@ public class RouterConnector extends Connector {
 
 				String response = readCmd(rSocket);
 				if (response != null) {
-					ret = Command.getCmdObject(response);
+					ret = Message.getObject(response);
 				}
 			}
 		} catch (Exception e) {
@@ -99,7 +100,7 @@ public class RouterConnector extends Connector {
 	}
 
 	@Override
-	protected CommandListener getListener(Socket socket) {
+	protected MsgListener getListener(Socket socket) {
 		return null;
 	}
 }

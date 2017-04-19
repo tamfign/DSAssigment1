@@ -12,6 +12,7 @@ import javax.net.ssl.SSLServerSocketFactory;
 import org.json.simple.JSONObject;
 
 import com.mindplus.command.Command;
+import com.mindplus.message.Message;
 
 public class BeatAccepter implements Runnable {
 	private int port;
@@ -44,7 +45,7 @@ public class BeatAccepter implements Runnable {
 				reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
 
 				String msg = reader.readLine();
-				JSONObject comingJsonObj = Command.getCmdObject(msg);
+				JSONObject comingJsonObj = Message.getObject(msg);
 				BeaterList.getInstance().add(Command.getServerId(comingJsonObj),
 						new TimeStampAndCmd(new Date(System.currentTimeMillis()), comingJsonObj));
 			} catch (IOException e) {

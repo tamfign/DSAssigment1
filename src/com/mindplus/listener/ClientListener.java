@@ -7,8 +7,9 @@ import org.json.simple.JSONObject;
 import com.mindplus.command.ClientServerCmd;
 import com.mindplus.command.Command;
 import com.mindplus.connection.ClientConnector;
+import com.mindplus.message.Message;
 
-public class ClientListener extends CommandListener {
+public class ClientListener extends MsgListener {
 	private String clientId = null;
 	private boolean mayAboutClosed = false;
 
@@ -46,9 +47,10 @@ public class ClientListener extends CommandListener {
 	@Override
 	protected void handleRequest(String cmdLine) {
 		System.out.println(cmdLine);
-		JSONObject cmdObject = Command.getCmdObject(cmdLine);
-		catchClientId(cmdObject);
-		checkIfClosing(cmdObject);
-		((ClientConnector) getConnector()).getMQ().addCmd(new Command(getSocket(), cmdObject, clientId));
+		Message msg = new Message(cmdLine);
+
+		catchClientId(msg.getCMDObj());
+		checkIfClosing(msg.getCMDObj());
+		((ClientConnector) getConnector()).getMQ().addCmd(new Command(getSocket(), msg.getCMDObj(), clientId));
 	}
 }

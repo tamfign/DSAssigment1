@@ -10,7 +10,7 @@ import java.util.List;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
-import com.mindplus.listener.CommandListener;
+import com.mindplus.listener.MsgListener;
 
 public abstract class Connector implements ConnectorInf {
 
@@ -24,7 +24,7 @@ public abstract class Connector implements ConnectorInf {
 		return this.controller;
 	}
 
-	protected abstract CommandListener getListener(Socket socket);
+	protected abstract MsgListener getListener(Socket socket);
 
 	private SSLServerSocket generateSSLServerSocket(int port) throws Exception {
 		SSLServerSocketFactory factory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
