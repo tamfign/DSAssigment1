@@ -6,6 +6,7 @@ import com.mindplus.configuration.Configuration;
 import com.mindplus.configuration.RouterConfig;
 import com.mindplus.heartbeat.Heartbeat;
 import com.mindplus.heartbeat.Watchdog;
+import com.mindplus.message.Message;
 
 public class RouterHeartbeatController implements HeartbeatController {
 	private final int HEART_BEAT_INTERVAL = 10000;
@@ -40,6 +41,6 @@ public class RouterHeartbeatController implements HeartbeatController {
 
 	@Override
 	public String getHeartBeatMsg() {
-		return ServerServerCmd.getRouterBeat();
+		return new Message(ServerServerCmd.getRouterBeat()).toString();
 	}
 }

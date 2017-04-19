@@ -18,89 +18,89 @@ public class ServerServerCmd extends Command {
 		super(socket, cmd, owner);
 	}
 
-	public static String lockRoomRq(String serverId, String roomId) {
+	public static JSONObject lockRoomRq(String serverId, String roomId) {
 		JSONObject root = new JSONObject();
 		root.put(TYPE, TYPE_LOCK_ROOM);
 		root.put(P_SERVER_ID, serverId);
 		root.put(P_ROOM_ID, roomId);
-		return root.toJSONString();
+		return root;
 	}
 
-	public static String lockRoomRs(String serverId, String roomId, boolean result) {
+	public static JSONObject lockRoomRs(String serverId, String roomId, boolean result) {
 		JSONObject root = new JSONObject();
 		root.put(TYPE, TYPE_LOCK_ROOM);
 		root.put(P_SERVER_ID, serverId);
 		root.put(P_ROOM_ID, roomId);
 		root.put(P_LOCKED, Boolean.toString(result));
-		return root.toJSONString();
+		return root;
 	}
 
-	public static String deleteRoomBc(String serverId, String roomId) {
+	public static JSONObject deleteRoomBc(String serverId, String roomId) {
 		JSONObject root = new JSONObject();
 		root.put(TYPE, TYPE_DELETE_ROOM);
 		root.put(P_SERVER_ID, serverId);
 		root.put(P_ROOM_ID, roomId);
-		return root.toJSONString();
+		return root;
 	}
 
-	public static String releaseRoom(String serverId, String roomId, boolean result) {
+	public static JSONObject releaseRoom(String serverId, String roomId, boolean result) {
 		JSONObject root = new JSONObject();
 		root.put(TYPE, TYPE_RELEASE_ROOM);
 		root.put(P_SERVER_ID, serverId);
 		root.put(P_ROOM_ID, roomId);
 		root.put(P_APPROVED, Boolean.toString(result));
-		return root.toJSONString();
+		return root;
 	}
 
-	public static String getRoomLocationRq(String roomId) {
+	public static JSONObject getRoomLocationRq(String roomId) {
 		JSONObject root = new JSONObject();
 		root.put(TYPE, TYPE_GET_CHATROOM_LOCATION);
 		root.put(P_ROOM_ID, roomId);
-		return root.toJSONString();
+		return root;
 	}
 
-	public static String getRoomLocationRs(String roomId, String serverId) {
+	public static JSONObject getRoomLocationRs(String roomId, String serverId) {
 		JSONObject root = new JSONObject();
 		root.put(TYPE, TYPE_GET_CHATROOM_LOCATION);
 		root.put(P_SERVER_ID, serverId);
 		root.put(P_ROOM_ID, roomId);
-		return root.toJSONString();
+		return root;
 	}
 
-	public static String lockIdentityRq(String serverId, String identity) {
+	public static JSONObject lockIdentityRq(String serverId, String identity) {
 		JSONObject root = new JSONObject();
 		root.put(TYPE, TYPE_LOCK_ID);
 		root.put(P_SERVER_ID, serverId);
 		root.put(P_IDENTITY, identity);
-		return root.toJSONString();
+		return root;
 	}
 
-	public static String lockIdentityRs(String serverId, String identity, boolean result) {
+	public static JSONObject lockIdentityRs(String serverId, String identity, boolean result) {
 		JSONObject root = new JSONObject();
 		root.put(TYPE, TYPE_LOCK_ID);
 		root.put(P_SERVER_ID, serverId);
 		root.put(P_IDENTITY, identity);
 		root.put(P_LOCKED, Boolean.toString(result));
-		return root.toJSONString();
+		return root;
 	}
 
-	public static String releaseIdentityRq(String serverId, String identity) {
+	public static JSONObject releaseIdentityRq(String serverId, String identity) {
 		JSONObject root = new JSONObject();
 		root.put(TYPE, TYPE_RELEASE_ID);
 		root.put(P_SERVER_ID, serverId);
 		root.put(P_IDENTITY, identity);
-		return root.toJSONString();
+		return root;
 	}
 
-	public static String getServerOnCmd() {
+	public static JSONObject getServerOnCmd() {
 		JSONObject obj = new JSONObject();
 		obj.put(TYPE, TYPE_SERVER_ON);
 		obj.put(P_SERVER_ID, Configuration.getServerId());
 		obj.put(P_SERVER, Configuration.getConfig().toString());
-		return obj.toJSONString();
+		return obj;
 	}
 
-	public static String getNewServerCmd() {
+	public static JSONObject getNewServerCmd() {
 		JSONObject obj = new JSONObject();
 		obj.put(TYPE, TYPE_NEW_SERVER);
 		obj.put(P_SERVER_ID, Configuration.getServerId());
@@ -108,10 +108,10 @@ public class ServerServerCmd extends Command {
 		obj.put(P_HOST, Configuration.getHost());
 		obj.put(P_COORDINATE_PORT, String.valueOf(Configuration.getCoordinationPort()));
 		obj.put(P_CLIENT_PORT, String.valueOf(Configuration.getClientPort()));
-		return obj.toJSONString();
+		return obj;
 	}
 
-	public static String newServerRs(String serverId, boolean result, ArrayList<String> serverList) {
+	public static JSONObject newServerRs(String serverId, boolean result, ArrayList<String> serverList) {
 		JSONObject root = new JSONObject();
 		root.put(TYPE, TYPE_NEW_SERVER);
 		root.put(P_APPROVED, Boolean.toString(result));
@@ -121,22 +121,22 @@ public class ServerServerCmd extends Command {
 			jList.addAll(serverList);
 			root.put(P_SERVERS, jList);
 		}
-		return root.toJSONString();
+		return root;
 	}
 
-	public static String getRoomListCmdRq() {
+	public static JSONObject getRoomListCmdRq() {
 		JSONObject obj = new JSONObject();
 		obj.put(TYPE, TYPE_GET_FULL_ROOM_LIST);
-		return obj.toJSONString();
+		return obj;
 	}
 
-	public static String getRoomListCmdRs(ArrayList<String> roomList) {
+	public static JSONObject getRoomListCmdRs(ArrayList<String> roomList) {
 		JSONArray jRoomList = new JSONArray();
 		JSONObject obj = new JSONObject();
 		obj.put(TYPE, TYPE_GET_FULL_ROOM_LIST);
 		jRoomList.addAll(roomList);
 		obj.put(P_ROOMS, jRoomList);
-		return obj.toJSONString();
+		return obj;
 	}
 
 	public static JSONObject getRoomListObjRs(ArrayList<String> roomList) {
@@ -148,22 +148,22 @@ public class ServerServerCmd extends Command {
 		return obj;
 	}
 
-	public static String getRoomListStreamRq() {
+	public static JSONObject getRoomListStreamRq() {
 		JSONObject obj = new JSONObject();
 		obj.put(TYPE, TYPE_ROOM_LIST_STREAM);
-		return obj.toJSONString();
+		return obj;
 	}
 
-	public static String getRoomListStreamRs(ArrayList<String> roomList) {
+	public static JSONObject getRoomListStreamRs(ArrayList<String> roomList) {
 		JSONArray jRoomList = new JSONArray();
 		JSONObject obj = new JSONObject();
 		obj.put(TYPE, TYPE_ROOM_LIST_STREAM);
 		jRoomList.addAll(roomList);
 		obj.put(P_ROOMS, jRoomList);
-		return obj.toJSONString();
+		return obj;
 	}
 
-	public static String getHeartBeat() {
+	public static JSONObject getHeartBeat() {
 		JSONObject obj = new JSONObject();
 		obj.put(TYPE, TYPE_HEART_BEAT);
 		obj.put(P_SERVER_ID, Configuration.getServerId());
@@ -172,10 +172,10 @@ public class ServerServerCmd extends Command {
 		if (!Configuration.isRouter()) {
 			obj.put(P_CLIENT_VOLUME, ClientListController.getInstance().size());
 		}
-		return obj.toJSONString();
+		return obj;
 	}
 
-	public static String getRouterBeat() {
+	public static JSONObject getRouterBeat() {
 		JSONObject root = new JSONObject();
 		root.put(TYPE, TYPE_HEART_BEAT);
 		root.put(P_SERVER_ID, Configuration.getServerId());
@@ -183,6 +183,6 @@ public class ServerServerCmd extends Command {
 		JSONArray jList = new JSONArray();
 		jList.addAll(ServerListController.getInstance().getStringList());
 		root.put(P_SERVERS, jList);
-		return root.toJSONString();
+		return root;
 	}
 }

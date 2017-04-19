@@ -44,13 +44,16 @@ public class ClientListener extends MsgListener {
 		}
 	}
 
+	private void handleRequest(JSONObject cmdObj) {
+		catchClientId(cmdObj);
+		checkIfClosing(cmdObj);
+		((ClientConnector) getConnector()).getMQ().addCmd(new Command(getSocket(), cmdObj, clientId));
+	}
+
 	@Override
 	protected void handleRequest(String cmdLine) {
 		System.out.println(cmdLine);
 		Message msg = new Message(cmdLine);
-
-		catchClientId(msg.getCMDObj());
-		checkIfClosing(msg.getCMDObj());
-		((ClientConnector) getConnector()).getMQ().addCmd(new Command(getSocket(), msg.getCMDObj(), clientId));
+		handleRequest(msg.getCMDObj());
 	}
 }

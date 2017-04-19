@@ -35,7 +35,12 @@ public class VectorClock {
 		tick();
 	}
 
-	public String toString() {
-		return processMap.toString();
+	@SuppressWarnings("unchecked")
+	public JSONObject toJSON() {
+		JSONObject obj = new JSONObject();
+		for (Map.Entry<String, Integer> entry : this.processMap.entrySet()) {
+			obj.put(entry.getKey(), entry.getValue());
+		}
+		return obj;
 	}
 }

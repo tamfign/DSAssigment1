@@ -43,29 +43,31 @@ public class CoordinateConnector extends Connector implements Runnable {
 		}
 	}
 
-	public boolean broadcastAndGetResult(String cmd) {
+	public boolean broadcastAndGetResult(JSONObject cmd) {
 		return broadcastAndGetResult(cmd, true);
 	}
 
-	public void broadcast(String cmd) {
+	public void broadcast(JSONObject cmd) {
 		broadcastAndGetResult(cmd, false);
 	}
 
-	private boolean broadcastAndGetResult(String cmd, boolean needResult) {
+	private boolean broadcastAndGetResult(JSONObject cmd, boolean needResult) {
 		SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
 		SSLSocket socket = null;
+		Message msg = null;
 		boolean ret = true;
 
 		for (ServerConfig server : ServerListController.getInstance().getList()) {
 			try {
+				msg = new Message(cmd);
 				socket = (SSLSocket) factory.createSocket(server.getHost(), server.getCoordinationPort());
 				if (socket.isConnected()) {
-					write(socket, cmd);
+					write(socket, msg.toString());
 					if (needResult)
 						ret &= readResult(socket);
 				}
 			} catch (Exception e) {
-			//	e.printStackTrace();
+				// e.printStackTrace();
 			} finally {
 				close(socket);
 			}
@@ -110,9 +112,12 @@ public class CoordinateConnector extends Connector implements Runnable {
 	}
 
 	private void sendOutOwnId(Socket socket) throws IOException {
+		Message msg = null;
 		if (socket == null || socket.isClosed())
 			return;
-		write(socket, ServerServerCmd.getServerOnCmd());
+
+		msg = new Message(ServerServerCmd.getServerOnCmd());
+		write(socket, msg.toString());
 	}
 
 	@Override
@@ -132,7 +137,7 @@ public class CoordinateConnector extends Connector implements Runnable {
 		getController().requestClient(command);
 	}
 
-	public JSONObject requestRouter(String cmd, boolean needResponse) {
+	public JSONObject requestRouter(JSONObject cmd, boolean needResponse) {
 		return getController().requestRouter(cmd, needResponse);
 	}
 
@@ -140,11 +145,13 @@ public class CoordinateConnector extends Connector implements Runnable {
 		System.out.println("Begin to refresh existing chat room list.");
 		SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
 		SSLSocket socket = null;
+		Message msg = null;
 
 		for (ServerConfig server : ServerListController.getInstance().getList()) {
 			try {
+				msg = new Message(ServerServerCmd.getRoomListStreamRq());
 				socket = (SSLSocket) factory.createSocket(server.getHost(), server.getCoordinationPort());
-				write(socket, ServerServerCmd.getRoomListStreamRq());
+				write(socket, msg.toString());
 				updateChatRoomList(readCmd(socket));
 			} catch (Exception e) {
 				e.printStackTrace();

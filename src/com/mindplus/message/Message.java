@@ -4,6 +4,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import com.mindplus.clock.VCFactory;
 import com.mindplus.clock.VectorClock;
 
 public class Message {
@@ -18,6 +19,11 @@ public class Message {
 
 		this.cmdObj = (JSONObject) obj.get(MSG_COMMAND);
 		this.vc = new VectorClock((JSONObject) obj.get(MSG_VC));
+	}
+
+	public Message(JSONObject cmdObj) {
+		this.cmdObj = cmdObj;
+		this.vc = VCFactory.getVectorClock();
 	}
 
 	public static JSONObject getObject(String cmd) {
@@ -37,5 +43,13 @@ public class Message {
 
 	public VectorClock getVC() {
 		return this.vc;
+	}
+
+	@SuppressWarnings("unchecked")
+	public String toString() {
+		JSONObject obj = new JSONObject();
+		obj.put(MSG_COMMAND, this.cmdObj);
+		obj.put(MSG_VC, vc.toJSON());
+		return obj.toJSONString();
 	}
 }

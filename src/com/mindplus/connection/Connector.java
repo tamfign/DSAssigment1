@@ -10,7 +10,11 @@ import java.util.List;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
+
+import org.json.simple.JSONObject;
+
 import com.mindplus.listener.MsgListener;
+import com.mindplus.message.Message;
 
 public abstract class Connector implements ConnectorInf {
 
@@ -48,10 +52,11 @@ public abstract class Connector implements ConnectorInf {
 		}
 	}
 
-	protected void broadcast(List<Socket> listenerList, String cmd) {
+	protected void broadcast(List<Socket> listenerList, JSONObject cmd) {
+		Message msg = new Message(cmd);
 		if (listenerList != null) {
 			for (Socket socket : listenerList) {
-				write(socket, cmd);
+				write(socket, msg.toString());
 			}
 		}
 	}

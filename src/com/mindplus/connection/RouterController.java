@@ -54,7 +54,7 @@ public class RouterController implements ConnectController {
 		clients.runInternalRequest(cmd);
 	}
 
-	public JSONObject requestRouter(String cmd, boolean needResponse) {
+	public JSONObject requestRouter(JSONObject cmd, boolean needResponse) {
 		return router.runInternalRequest(cmd, needResponse);
 	}
 }

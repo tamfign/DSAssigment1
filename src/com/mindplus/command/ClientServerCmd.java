@@ -15,54 +15,54 @@ public class ClientServerCmd extends Command {
 		super(socket, cmd, owner);
 	}
 
-	public static String joinServerRs(String identity, boolean result) {
+	public static JSONObject joinServerRs(String identity, boolean result) {
 		JSONObject root = new JSONObject();
 		root.put(TYPE, TYPE_JOIN_SERVER);
 		root.put(P_APPROVED, Boolean.toString(result));
-		return root.toJSONString();
+		return root;
 	}
 
-	public static String createRoomRs(String roomId, boolean result) {
+	public static JSONObject createRoomRs(String roomId, boolean result) {
 		JSONObject root = new JSONObject();
 		root.put(TYPE, TYPE_CREATE_ROOM);
 		root.put(P_ROOM_ID, roomId);
 		root.put(P_APPROVED, Boolean.toString(result));
-		return root.toJSONString();
+		return root;
 	}
 
-	public static String deleteRoomRs(String roomId, boolean result) {
+	public static JSONObject deleteRoomRs(String roomId, boolean result) {
 		JSONObject root = new JSONObject();
 		root.put(TYPE, TYPE_DELETE_ROOM);
 		root.put(P_ROOM_ID, roomId);
 		root.put(P_APPROVED, Boolean.toString(result));
-		return root.toJSONString();
+		return root;
 	}
 
-	public static String roomChangeRq(String identity, String former, String newRoom) {
+	public static JSONObject roomChangeRq(String identity, String former, String newRoom) {
 		JSONObject root = new JSONObject();
 		root.put(TYPE, TYPE_CHANGE_ROOM);
 		root.put(P_IDENTITY, identity);
 		root.put(P_FORMER, former);
 		root.put(P_ROOM_ID, newRoom);
-		return root.toJSONString();
+		return root;
 	}
 
-	public static String serverChangeRs(boolean result, String serverId) {
+	public static JSONObject serverChangeRs(boolean result, String serverId) {
 		JSONObject root = new JSONObject();
 		root.put(TYPE, TYPE_SERVER_CHANGE);
 		root.put(P_APPROVED, Boolean.toString(result));
 		root.put(P_SERVER_ID, serverId);
-		return root.toJSONString();
+		return root;
 	}
 
-	public static String listRs(JSONObject obj) {
+	public static JSONObject listRs(JSONObject obj) {
 		JSONObject root = new JSONObject();
 		root.put(TYPE, TYPE_ROOM_LIST);
 		root.put(P_ROOMS, obj.get(P_ROOMS));
-		return root.toJSONString();
+		return root;
 	}
 
-	public static String whoRs(String roomId, ArrayList<String> idList, String owner) {
+	public static JSONObject whoRs(String roomId, ArrayList<String> idList, String owner) {
 		JSONObject root = new JSONObject();
 		JSONArray jList = new JSONArray();
 		for (String member : idList) {
@@ -75,27 +75,27 @@ public class ClientServerCmd extends Command {
 		root.put(P_ROOM_ID, roomId);
 		root.put(P_IDENTITIES, jList);
 		root.put(P_OWNER, owner == null ? "" : owner);
-		return root.toJSONString();
+		return root;
 	}
 
-	public static String messageCmd(String id, String content) {
+	public static JSONObject messageCmd(String id, String content) {
 		JSONObject root = new JSONObject();
 		root.put(TYPE, TYPE_MESSAGE);
 		root.put(P_IDENTITY, id);
 		root.put(P_CONTENT, content);
-		return root.toJSONString();
+		return root;
 	}
 
-	public static String routeRq(String roomId, String host, int port) {
+	public static JSONObject routeRq(String roomId, String host, int port) {
 		JSONObject root = new JSONObject();
 		root.put(TYPE, TYPE_ROUTE);
 		root.put(P_ROOM_ID, roomId);
 		root.put(P_HOST, host);
 		root.put(P_PORT, String.valueOf(port));
-		return root.toJSONString();
+		return root;
 	}
 
-	public static String newIdentityRq(boolean result, String serverId, String host, int port) {
+	public static JSONObject newIdentityRq(boolean result, String serverId, String host, int port) {
 		JSONObject root = new JSONObject();
 		root.put(TYPE, TYPE_NEW_ID);
 		root.put(P_APPROVED, Boolean.toString(result));
@@ -105,12 +105,12 @@ public class ClientServerCmd extends Command {
 			root.put(P_PORT, String.valueOf(port));
 			root.put(P_PWD, UserVerification.getInstance().getTicket());
 		}
-		return root.toJSONString();
+		return root;
 	}
 
-	public static String quit() {
+	public static JSONObject quit() {
 		JSONObject root = new JSONObject();
 		root.put(TYPE, TYPE_QUIT);
-		return root.toJSONString();
+		return root;
 	}
 }

@@ -3,11 +3,13 @@ package com.mindplus.connection;
 import java.io.IOException;
 import java.net.Socket;
 
+import org.json.simple.JSONObject;
+
 import com.mindplus.command.Command;
 
 public interface ConnectorInf {
 
-	public abstract void broadcast(String cmd);
+	public abstract void broadcast(JSONObject cmd);
 
 	public abstract String readCmd(Socket socket) throws IOException;
 

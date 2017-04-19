@@ -42,15 +42,17 @@ public class RouterConnector extends Connector {
 		ServerListController.getInstance().addServers(Command.getServers(result));
 	}
 
-	private JSONObject sendAndGet(String cmd) {
+	private JSONObject sendAndGet(JSONObject cmd) {
 		JSONObject ret = null;
 		SSLSocket rSocket = null;
+		Message msg = null;
 
 		try {
+			msg = new Message(cmd);
 			rSocket = (SSLSocket) getRouterSocket();
 			rSocket.setSoTimeout(2000);
 			if (rSocket.isConnected()) {
-				write(rSocket, cmd);
+				write(rSocket, msg.toString());
 
 				String response = readCmd(rSocket);
 				if (response != null) {
@@ -65,13 +67,15 @@ public class RouterConnector extends Connector {
 		return ret;
 	}
 
-	private void sendOnly(String cmd) {
+	private void sendOnly(JSONObject cmd) {
 		SSLSocket rSocket = null;
+		Message msg = null;
 
 		try {
+			msg = new Message(cmd);
 			rSocket = (SSLSocket) getRouterSocket();
 			if (rSocket.isConnected()) {
-				write(rSocket, cmd);
+				write(rSocket, msg.toString());
 			}
 		} catch (Exception e) {
 			System.out.println("Fail to connect router");
@@ -80,7 +84,7 @@ public class RouterConnector extends Connector {
 		}
 	}
 
-	public JSONObject runInternalRequest(String cmd, boolean needResponse) {
+	public JSONObject runInternalRequest(JSONObject cmd, boolean needResponse) {
 		JSONObject ret = null;
 
 		if (needResponse) {
@@ -92,7 +96,7 @@ public class RouterConnector extends Connector {
 	}
 
 	@Override
-	public void broadcast(String cmd) {
+	public void broadcast(JSONObject cmd) {
 	}
 
 	@Override

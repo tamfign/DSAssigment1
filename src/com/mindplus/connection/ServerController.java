@@ -32,7 +32,7 @@ public class ServerController implements ConnectController {
 	}
 
 	@Override
-	public JSONObject requestRouter(String cmd, boolean needResponse) {
+	public JSONObject requestRouter(JSONObject cmd, boolean needResponse) {
 		return null;
 	}
 

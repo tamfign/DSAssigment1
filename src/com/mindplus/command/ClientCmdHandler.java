@@ -472,6 +472,6 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 	}
 
 	private void handleMaintenance(Command cmd) {
-		response(cmd.getSocket(), cmd.getObj().toJSONString());
+		response(cmd.getSocket(), cmd.getObj());
 	}
 }

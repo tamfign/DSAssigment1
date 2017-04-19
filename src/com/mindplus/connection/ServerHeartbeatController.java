@@ -5,6 +5,7 @@ import com.mindplus.command.ServerServerCmd;
 import com.mindplus.configuration.Configuration;
 import com.mindplus.heartbeat.Heartbeat;
 import com.mindplus.heartbeat.Watchdog;
+import com.mindplus.message.Message;
 
 public class ServerHeartbeatController implements HeartbeatController {
 	private final int HEART_BEAT_INTERVAL = 10000;
@@ -26,6 +27,6 @@ public class ServerHeartbeatController implements HeartbeatController {
 
 	@Override
 	public String getHeartBeatMsg() {
-		return ServerServerCmd.getHeartBeat();
+		return new Message(ServerServerCmd.getHeartBeat()).toString();
 	}
 }

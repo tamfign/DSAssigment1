@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
+import org.json.simple.JSONObject;
+
 import com.mindplus.command.ClientCmdHandler;
 import com.mindplus.command.Command;
 import com.mindplus.configuration.Configuration;
@@ -45,11 +47,11 @@ public class ClientConnector extends Connector implements Runnable {
 		getController().requestServer(command);
 	}
 
-	public void broadcast(String cmd) {
+	public void broadcast(JSONObject cmd) {
 		broadcast(new ArrayList<Socket>(clientSocketsList.values()), cmd);
 	}
 
-	public void broadcastWithinRoom(String former, String roomId, String cmd) {
+	public void broadcastWithinRoom(String former, String roomId, JSONObject cmd) {
 		ArrayList<Socket> list = new ArrayList<Socket>();
 		ArrayList<String> memberList = new ArrayList<String>();
 
