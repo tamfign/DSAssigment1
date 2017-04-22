@@ -10,12 +10,10 @@ import javax.net.ssl.SSLSocketFactory;
 import org.json.simple.JSONObject;
 
 import com.mindplus.command.Command;
-import com.mindplus.command.ServerServerCmd;
 import com.mindplus.configuration.Configuration;
 import com.mindplus.configuration.RouterConfig;
 import com.mindplus.listener.MsgListener;
 import com.mindplus.message.Message;
-import com.mindplus.model.ServerListController;
 
 public class RouterConnector extends Connector {
 	private RouterConfig config = Configuration.getRouterConfig();
@@ -29,20 +27,7 @@ public class RouterConnector extends Connector {
 		return factory.createSocket(config.getHost(), config.getCoordinationPort());
 	}
 
-	public void contactRouter() throws Exception {
-		JSONObject result = sendAndGet(ServerServerCmd.getNewServerCmd());
-		if (result == null) {
-			throw new Exception("Router can not be reached.");
-		}
-
-		boolean approved = Command.getResult(result);
-		if (!approved) {
-			throw new Exception("Rejected by router.");
-		}
-		ServerListController.getInstance().addServers(Command.getServers(result));
-	}
-
-	private JSONObject sendAndGet(JSONObject cmd) {
+	public JSONObject sendAndGet(JSONObject cmd) {
 		JSONObject ret = null;
 		SSLSocket rSocket = null;
 		Message msg = null;
