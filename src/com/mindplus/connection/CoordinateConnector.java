@@ -81,7 +81,7 @@ public class CoordinateConnector extends Connector implements Runnable {
 
 		// If read nothing back, consider it's false.
 		if (cmd != null && !"".equals(cmd)) {
-			ret = Command.getResult(Message.getObject((cmd)));
+			ret = Command.getResult(new Message(cmd).getCMDObj());
 		}
 		return ret;
 	}
@@ -165,7 +165,7 @@ public class CoordinateConnector extends Connector implements Runnable {
 		if (cmd == null || "".equals(cmd))
 			return;
 		System.out.println("Updating chat room list: " + cmd);
-		JSONObject obj = Message.getObject(cmd);
+		JSONObject obj = new Message(cmd).getCMDObj();
 		if (obj != null && Command.isRoomLisStream(obj)) {
 			ChatRoomListController.getInstance().addRooms(Command.getRooms(obj));
 		}

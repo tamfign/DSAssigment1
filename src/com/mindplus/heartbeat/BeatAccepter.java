@@ -45,7 +45,8 @@ public class BeatAccepter implements Runnable {
 				reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
 
 				String msg = reader.readLine();
-				JSONObject comingJsonObj = Message.getObject(msg);
+				System.out.println(msg);
+				JSONObject comingJsonObj = new Message(msg).getCMDObj();
 				BeaterList.getInstance().add(Command.getServerId(comingJsonObj),
 						new TimeStampAndCmd(new Date(System.currentTimeMillis()), comingJsonObj));
 			} catch (IOException e) {

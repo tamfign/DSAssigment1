@@ -26,7 +26,7 @@ public class Message {
 		this.vc = VCFactory.getVectorClock();
 	}
 
-	public static JSONObject getObject(String cmd) {
+	private JSONObject getObject(String cmd) {
 		JSONObject ret = null;
 		try {
 			ret = (JSONObject) new JSONParser().parse(cmd);

@@ -41,7 +41,7 @@ public class RouterConnector extends Connector {
 
 				String response = readCmd(rSocket);
 				if (response != null) {
-					ret = Message.getObject(response);
+					ret = new Message(response).getCMDObj();
 				}
 			}
 		} catch (Exception e) {
