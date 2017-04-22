@@ -23,8 +23,8 @@ public class RouterController implements ConnectController {
 	}
 
 	public void run() throws Exception {
-		rHeatbeat = new RouterHeartbeatController(this);
-		rHeatbeat.start();
+		// rHeatbeat = new RouterHeartbeatController(this);
+		// rHeatbeat.start();
 
 		if (!isBackupRouter()) {
 			new ServerHeartbeatController().start();
