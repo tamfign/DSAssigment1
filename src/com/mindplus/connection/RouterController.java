@@ -9,13 +9,11 @@ import com.mindplus.configuration.RouterConfig;
 public class RouterController implements ConnectController {
 	private ClientConnector clients = null;
 	private CoordinateConnector servers = null;
-	private RouterConnector router = null;
 	private RouterHeartbeatController rHeatbeat = null;
 
 	private RouterController() {
 		this.clients = new ClientConnector(this);
 		this.servers = new CoordinateConnector(this);
-		this.router = new RouterConnector(this);
 	}
 
 	public static ConnectController getInstance() {
@@ -55,6 +53,6 @@ public class RouterController implements ConnectController {
 	}
 
 	public JSONObject requestRouter(JSONObject cmd, boolean needResponse) {
-		return router.runInternalRequest(cmd, needResponse);
+		return null;
 	}
 }

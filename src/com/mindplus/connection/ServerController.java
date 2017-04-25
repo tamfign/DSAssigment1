@@ -52,7 +52,7 @@ public class ServerController implements ConnectController {
 
 	@Override
 	public JSONObject requestRouter(JSONObject cmd, boolean needResponse) {
-		return null;
+		return router.runInternalRequest(cmd, needResponse);
 	}
 
 	@Override
