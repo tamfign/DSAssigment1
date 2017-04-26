@@ -15,7 +15,6 @@ public abstract class CmdHandler {
 	}
 
 	protected void response(Socket socket, JSONObject cmd) {
-		Message msg = new Message(cmd);
-		connector.write(socket, msg.toString());
+		connector.write(socket, new Message(cmd));
 	}
 }

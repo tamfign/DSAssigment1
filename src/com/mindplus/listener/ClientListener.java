@@ -51,9 +51,8 @@ public class ClientListener extends MsgListener {
 	}
 
 	@Override
-	protected void handleRequest(String cmdLine) {
-		System.out.println(cmdLine);
-		Message msg = new Message(cmdLine);
+	protected void handleRequest(Message msg) {
+		System.out.println(msg.toString());
 		handleRequest(msg.getCMDObj());
 	}
 }

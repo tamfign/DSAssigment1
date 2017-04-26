@@ -18,10 +18,8 @@ public class CoordinateListener extends MsgListener {
 	}
 
 	@Override
-	protected void handleRequest(String cmdLine) {
-		System.out.println("Server: " + cmdLine);
-		Message msg = new Message(cmdLine);
-
+	protected void handleRequest(Message msg) {
+		System.out.println("Server: " + msg.toString());
 		((CoordinateConnector) getConnector()).getMQ().addCmd(new Command(getSocket(), msg.getCMDObj(), null));
 	}
 }

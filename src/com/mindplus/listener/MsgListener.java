@@ -4,6 +4,7 @@ import java.net.Socket;
 
 import com.mindplus.connection.Connector;
 import com.mindplus.connection.ConnectorInf;
+import com.mindplus.message.Message;
 
 public abstract class MsgListener implements Runnable {
 	private Socket socket = null;
@@ -16,11 +17,11 @@ public abstract class MsgListener implements Runnable {
 
 	@Override
 	public void run() {
-		String cmd;
+		Message cmd;
 		try {
 			while (socket.isConnected()) {
 				cmd = getConnector().readCmd(socket);
-				if (cmd != null && !"".equals(cmd)) {
+				if (cmd != null) {
 					handleRequest(cmd);
 				}
 			}
@@ -34,7 +35,7 @@ public abstract class MsgListener implements Runnable {
 
 	protected abstract void handleDisconnect();
 
-	protected abstract void handleRequest(String cmd);
+	protected abstract void handleRequest(Message cmd);
 
 	protected Socket getSocket() {
 		return this.socket;

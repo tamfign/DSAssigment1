@@ -53,29 +53,34 @@ public abstract class Connector implements ConnectorInf {
 	}
 
 	protected void broadcast(List<Socket> listenerList, JSONObject cmd) {
-		Message msg = new Message(cmd);
 		if (listenerList != null) {
 			for (Socket socket : listenerList) {
-				write(socket, msg.toString());
+				write(socket, new Message(cmd));
 			}
 		}
 	}
 
-	public String readCmd(Socket socket) throws IOException {
+	public Message readCmd(Socket socket) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		return br.readLine();
+		String str = br.readLine();
+		Message msg = null;
+
+		if (str != null && !"".equals(str)) {
+			msg = new Message(str);
+		}
+		return msg;
 	}
 
-	public void write(Socket socket, String cmd) {
+	public void write(Socket socket, Message cmd) {
 		if (!socket.isConnected()) {
 			System.out.println("Fail to send [Socket is closed].");
 			return;
 		}
 
 		try {
-			System.out.println("Sending: " + cmd);
+			System.out.println("Sending: " + cmd.toString());
 			PrintWriter os = new PrintWriter(socket.getOutputStream());
-			os.println(cmd);
+			os.println(cmd.toString());
 			os.flush();
 		} catch (IOException e) {
 			e.printStackTrace();

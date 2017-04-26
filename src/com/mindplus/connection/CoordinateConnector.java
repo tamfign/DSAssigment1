@@ -54,15 +54,13 @@ public class CoordinateConnector extends Connector implements Runnable {
 	private boolean broadcastAndGetResult(JSONObject cmd, boolean needResult) {
 		SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
 		SSLSocket socket = null;
-		Message msg = null;
 		boolean ret = true;
 
 		for (ServerConfig server : ServerListController.getInstance().getList()) {
 			try {
-				msg = new Message(cmd);
 				socket = (SSLSocket) factory.createSocket(server.getHost(), server.getCoordinationPort());
 				if (socket.isConnected()) {
-					write(socket, msg.toString());
+					write(socket, new Message(cmd));
 					if (needResult)
 						ret &= readResult(socket);
 				}
@@ -77,11 +75,11 @@ public class CoordinateConnector extends Connector implements Runnable {
 
 	private boolean readResult(Socket socket) throws ParseException, IOException {
 		boolean ret = false;
-		String cmd = readCmd(socket);
+		Message cmd = readCmd(socket);
 
 		// If read nothing back, consider it's false.
-		if (cmd != null && !"".equals(cmd)) {
-			ret = Command.getResult(new Message(cmd).getCMDObj());
+		if (cmd != null) {
+			ret = Command.getResult(cmd.getCMDObj());
 		}
 		return ret;
 	}
@@ -112,12 +110,10 @@ public class CoordinateConnector extends Connector implements Runnable {
 	}
 
 	private void sendOutOwnId(Socket socket) throws IOException {
-		Message msg = null;
 		if (socket == null || socket.isClosed())
 			return;
 
-		msg = new Message(ServerServerCmd.getServerOnCmd());
-		write(socket, msg.toString());
+		write(socket, new Message(ServerServerCmd.getServerOnCmd()));
 	}
 
 	@Override
@@ -145,13 +141,11 @@ public class CoordinateConnector extends Connector implements Runnable {
 		System.out.println("Begin to refresh existing chat room list.");
 		SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
 		SSLSocket socket = null;
-		Message msg = null;
 
 		for (ServerConfig server : ServerListController.getInstance().getList()) {
 			try {
-				msg = new Message(ServerServerCmd.getRoomListStreamRq());
 				socket = (SSLSocket) factory.createSocket(server.getHost(), server.getCoordinationPort());
-				write(socket, msg.toString());
+				write(socket, new Message(ServerServerCmd.getRoomListStreamRq()));
 				updateChatRoomList(readCmd(socket));
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -161,11 +155,11 @@ public class CoordinateConnector extends Connector implements Runnable {
 		}
 	}
 
-	private void updateChatRoomList(String cmd) {
-		if (cmd == null || "".equals(cmd))
+	private void updateChatRoomList(Message cmd) {
+		if (cmd == null)
 			return;
 		System.out.println("Updating chat room list: " + cmd);
-		JSONObject obj = new Message(cmd).getCMDObj();
+		JSONObject obj = cmd.getCMDObj();
 		if (obj != null && Command.isRoomLisStream(obj)) {
 			ChatRoomListController.getInstance().addRooms(Command.getRooms(obj));
 		}

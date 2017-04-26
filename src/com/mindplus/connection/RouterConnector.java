@@ -30,18 +30,16 @@ public class RouterConnector extends Connector {
 	public JSONObject sendAndGet(JSONObject cmd) {
 		JSONObject ret = null;
 		SSLSocket rSocket = null;
-		Message msg = null;
 
 		try {
-			msg = new Message(cmd);
 			rSocket = (SSLSocket) getRouterSocket();
 			rSocket.setSoTimeout(2000);
 			if (rSocket.isConnected()) {
-				write(rSocket, msg.toString());
+				write(rSocket, new Message(cmd));
 
-				String response = readCmd(rSocket);
+				Message response = readCmd(rSocket);
 				if (response != null) {
-					ret = new Message(response).getCMDObj();
+					ret = response.getCMDObj();
 				}
 			}
 		} catch (Exception e) {
@@ -54,13 +52,11 @@ public class RouterConnector extends Connector {
 
 	private void sendOnly(JSONObject cmd) {
 		SSLSocket rSocket = null;
-		Message msg = null;
 
 		try {
-			msg = new Message(cmd);
 			rSocket = (SSLSocket) getRouterSocket();
 			if (rSocket.isConnected()) {
-				write(rSocket, msg.toString());
+				write(rSocket, new Message(cmd));
 			}
 		} catch (Exception e) {
 			System.out.println("Fail to connect router");
