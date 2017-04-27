@@ -20,9 +20,11 @@ import com.mindplus.message.Message;
 public abstract class Connector implements ConnectorInf {
 
 	private ConnectController controller = null;
+	private MessageBuffer msgBuf = null;
 
 	protected Connector(ConnectController controller) {
 		this.controller = controller;
+		this.msgBuf = new MessageBuffer();
 	}
 
 	protected ConnectController getController() {
@@ -73,10 +75,10 @@ public abstract class Connector implements ConnectorInf {
 	}
 
 	public Message readCmd(Socket socket) throws IOException {
-		MessageBuffer.getIntance().putMessage(readMessage(socket));
 		Message msg;
+		this.msgBuf.putMessage(readMessage(socket));
 		do {
-			msg = MessageBuffer.getIntance().getMessage();
+			msg = this.msgBuf.getMessage();
 		} while (msg == null);
 		return msg;
 	}

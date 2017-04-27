@@ -16,7 +16,7 @@ public class VectorClock {
 	protected VectorClock(String id) {
 		processMap = new HashMap<String, Long>();
 		this.id = id;
-		processMap.put(id, (long) 1);
+		processMap.put(id, (long) 0);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -37,15 +37,19 @@ public class VectorClock {
 	}
 
 	public void tick(VectorClock vc) {
-		for (Map.Entry<String, Long> entry : vc.processMap.entrySet()) {
-			if (!this.processMap.containsKey(entry.getKey())
-					|| this.processMap.get(entry.getKey()) < entry.getValue()) {
-				this.processMap.put(entry.getKey(), entry.getValue());
+		if (vc.getClk() == 0) {
+			this.processMap.put(vc.getOwnId(), (long) 0);
+		} else {
+			for (Map.Entry<String, Long> entry : vc.processMap.entrySet()) {
+				if (!this.processMap.containsKey(entry.getKey())
+						|| this.processMap.get(entry.getKey()) < entry.getValue()) {
+					this.processMap.put(entry.getKey(), entry.getValue());
+				}
 			}
 		}
 	}
 
-	protected long getOwnClk() {
+	protected long getClk() {
 		return processMap.get(id);
 	}
 
@@ -54,7 +58,7 @@ public class VectorClock {
 	}
 
 	public long compare(VectorClock vc) {
-		Long ret = vc.getOwnClk();
+		Long ret = vc.getClk();
 
 		if (this.processMap.containsKey(vc.getOwnId())) {
 			ret -= processMap.get(vc.getOwnId());

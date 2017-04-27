@@ -24,4 +24,12 @@ public class VCController {
 	public long compareVC(VectorClock vc) {
 		return this.vc.compare(vc);
 	}
+
+	public void tick() {
+		this.vc.tick();
+	}
+
+	public void tick(VectorClock vc) {
+		this.vc.tick(vc);
+	}
 }
