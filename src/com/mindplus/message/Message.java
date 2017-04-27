@@ -4,7 +4,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import com.mindplus.clock.VCFactory;
+import com.mindplus.clock.VCController;
 import com.mindplus.clock.VectorClock;
 
 public class Message {
@@ -23,7 +23,7 @@ public class Message {
 
 	public Message(JSONObject cmdObj) {
 		this.cmdObj = cmdObj;
-		this.vc = VCFactory.getVectorClock();
+		this.vc = VCController.getInstance().getVC();
 	}
 
 	private JSONObject getObject(String cmd) {

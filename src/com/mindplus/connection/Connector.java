@@ -13,6 +13,7 @@ import javax.net.ssl.SSLSocket;
 
 import org.json.simple.JSONObject;
 
+import com.mindplus.clock.MessageBuffer;
 import com.mindplus.listener.MsgListener;
 import com.mindplus.message.Message;
 
@@ -60,7 +61,7 @@ public abstract class Connector implements ConnectorInf {
 		}
 	}
 
-	public Message readCmd(Socket socket) throws IOException {
+	private Message readMessage(Socket socket) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		String str = br.readLine();
 		Message msg = null;
@@ -68,6 +69,15 @@ public abstract class Connector implements ConnectorInf {
 		if (str != null && !"".equals(str)) {
 			msg = new Message(str);
 		}
+		return msg;
+	}
+
+	public Message readCmd(Socket socket) throws IOException {
+		MessageBuffer.getIntance().putMessage(readMessage(socket));
+		Message msg;
+		do {
+			msg = MessageBuffer.getIntance().getMessage();
+		} while (msg == null);
 		return msg;
 	}
 
