@@ -57,6 +57,9 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 		case Command.CMD_RELEASE_ROOM:
 			broadcastReleaseRoomId(cmd);
 			break;
+		case Command.TYPE_ROOM_LIST:
+			updateRoomList(cmd);
+			break;
 		default:
 		}
 	}
@@ -137,13 +140,20 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 		return ServerVerification.getInstance().verify(contextWithSignature);
 	}
 
-	protected void handleServerOn(Command cmd) {
+	private void handleServerOn(Command cmd) {
 		String stream = (String) cmd.getObj().get(Command.P_SERVER);
 		String serverId = (String) cmd.getObj().get(Command.P_SERVER_ID);
 
 		ServerConfig sConfig = new ServerConfig(stream);
 		((CoordinateConnector) connector).tryConnectServer(sConfig, false);
 		ChatRoomListController.getInstance().addRoom(ChatRoomListController.getMainHall(serverId), serverId, null);
+	}
+
+	@SuppressWarnings("unchecked")
+	private void updateRoomList(Command cmd) {
+		ArrayList<String> rooms = (ArrayList<String>) cmd.getObj().get(Command.P_ROOMS);
+		if (rooms != null)
+			ChatRoomListController.getInstance().addRooms(rooms);
 	}
 
 	private void handleReleaseRoom(Command cmd) {

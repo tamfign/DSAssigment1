@@ -7,6 +7,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.mindplus.configuration.Configuration;
+import com.mindplus.model.ChatRoomListController;
 import com.mindplus.model.ClientListController;
 import com.mindplus.model.ServerListController;
 import com.mindplus.security.ServerVerification;
@@ -82,6 +83,16 @@ public class ServerServerCmd extends Command {
 		obj.put(TYPE, TYPE_SERVER_ON);
 		obj.put(P_SERVER_ID, Configuration.getServerId());
 		obj.put(P_SERVER, Configuration.getConfig().toString());
+		return obj;
+	}
+
+	public static JSONObject getRoomListCmd() {
+		JSONObject obj = new JSONObject();
+		obj.put(TYPE, TYPE_ROOM_LIST);
+
+		JSONArray jList = new JSONArray();
+		jList.addAll(ChatRoomListController.getInstance().getRooms());
+		obj.put(P_ROOMS, jList);
 		return obj;
 	}
 

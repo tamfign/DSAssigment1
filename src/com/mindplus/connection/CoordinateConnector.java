@@ -99,6 +99,7 @@ public class CoordinateConnector extends Connector implements Runnable {
 					sendOutOwnId(another);
 				} else {
 					ServerListController.getInstance().addServer(server);
+					sendOutRooms(another);
 				}
 			} else {
 				close(another);
@@ -106,6 +107,13 @@ public class CoordinateConnector extends Connector implements Runnable {
 		} catch (Exception e) {
 			System.out.println("Fail to connect server-" + server.getId());
 		}
+	}
+
+	private void sendOutRooms(Socket socket) throws IOException {
+		if (socket == null || socket.isClosed())
+			return;
+
+		write(socket, new Message(ServerServerCmd.getRoomListCmd()));
 	}
 
 	private void sendOutOwnId(Socket socket) throws IOException {
