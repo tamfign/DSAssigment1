@@ -58,7 +58,7 @@ public class VectorClock {
 	}
 
 	public long compare(VectorClock vc) {
-		Long ret = vc.getClk();
+		long ret = -1;
 
 		if (this.processMap.containsKey(vc.getOwnId())) {
 			ret -= processMap.get(vc.getOwnId());
