@@ -87,6 +87,7 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 
 	private void broadcastReleaseIdentity(Command cmd) {
 		String identity = (String) cmd.getObj().get(Command.P_IDENTITY);
+		VCController.getInstance().tick();
 		connector.broadcast(ServerServerCmd.releaseIdentityRq(Configuration.getServerId(), identity));
 	}
 
@@ -97,7 +98,6 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 	}
 
 	private boolean getLockIdentityResult(String identity) {
-		VCController.getInstance().tick();
 		return ((CoordinateConnector) connector)
 				.broadcastAndGetResult(ServerServerCmd.lockIdentityRq(Configuration.getServerId(), identity));
 	}
