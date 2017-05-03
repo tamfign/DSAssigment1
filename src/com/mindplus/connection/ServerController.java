@@ -54,9 +54,4 @@ public class ServerController implements ConnectController {
 	public JSONObject requestRouter(JSONObject cmd, boolean needResponse) {
 		return router.runInternalRequest(cmd, needResponse);
 	}
-
-	@Override
-	public void takeover() {
-		return;
-	}
 }

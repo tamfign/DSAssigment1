@@ -13,6 +13,4 @@ public interface ConnectController {
 	public abstract void requestClient(Command cmd);
 
 	public abstract JSONObject requestRouter(JSONObject cmd, boolean needResponse);
-
-	public abstract void takeover();
 }
