@@ -29,15 +29,12 @@ public class Command {
 	protected final static String TYPE_ROUTE = "route";
 	protected final static String TYPE_MOVE_JOIN = "movejoin";
 	protected final static String TYPE_SERVER_CHANGE = "serverchange";
-	protected final static String TYPE_ROOM_LIST_STREAM = "room_list_stream";
 
 	protected final static String TYPE_MESSAGE = "message";
 	protected final static String TYPE_QUIT = "quit";
 
 	protected final static String TYPE_SERVER_ON = "server_on";
 	protected final static String TYPE_NEW_SERVER = "new_server";
-	protected final static String TYPE_GET_CHATROOM_LOCATION = "get_chatroom_location";
-	protected final static String TYPE_GET_FULL_ROOM_LIST = "get_full_room_list";
 
 	protected final static String TYPE_HEART_BEAT = "heart_beat";
 	protected final static String TYPE_MAINTENANCE = "maintenance";
@@ -66,8 +63,6 @@ public class Command {
 	protected final static String CMD_LOCK_ROOM = "CMD_LOCK_ROOM";
 	protected final static String CMD_RELEASE_ROOM = "CMD_RELEASE_ROOM";
 	protected final static String CMD_DELETE_ROOM = "CMD_DELETE_ROOM";
-	protected final static String CMD_ROUTE_ROOM = "CMD_ROUTE_ROOM";
-	protected final static String CMD_ROOM_LIST = "CMD_ROOM_LIST";
 
 	private String owner = null;
 	private JSONObject obj = null;
@@ -109,10 +104,6 @@ public class Command {
 			ret = Boolean.parseBoolean((String) obj.get(P_APPROVED));
 		}
 		return ret;
-	}
-
-	public static boolean isRoomLisStream(JSONObject obj) {
-		return TYPE_ROOM_LIST_STREAM.equals((String) obj.get(TYPE));
 	}
 
 	public static ArrayList<String> getRooms(JSONObject obj) {

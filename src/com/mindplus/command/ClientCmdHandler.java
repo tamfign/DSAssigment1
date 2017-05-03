@@ -44,9 +44,6 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 		case Command.TYPE_LIST:
 			handleList(cmd);
 			break;
-		case Command.CMD_ROOM_LIST:
-			handleRouterList(cmd);
-			break;
 		case Command.TYPE_WHO:
 			handleWho(cmd);
 			break;
@@ -61,9 +58,6 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 			break;
 		case Command.TYPE_JOIN:
 			handleJoinRoom(cmd);
-			break;
-		case Command.CMD_ROUTE_ROOM:
-			handleRouteRoom(cmd);
 			break;
 		case Command.TYPE_MOVE_JOIN:
 			handlerMoveJoin(cmd);
@@ -273,10 +267,10 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 	private void handleJoinRoom(Command cmd) {
 		String roomId = (String) cmd.getObj().get(Command.P_ROOM_ID);
 
-		if (!isOwnerOfRoom(cmd.getOwner()) && !isJoiningTheSameRoom(cmd.getOwner(), roomId)) {
-			// Check whether this room belongs to this server.
-			if (!ChatRoomListController.getInstance().isRoomExists(roomId)) {
-				connector.requestTheOther(InternalCmd.getInternRoomCmd(cmd, Command.CMD_ROUTE_ROOM, roomId));
+		if (!isOwnerOfRoom(cmd.getOwner()) && isRoomAvailable(roomId)) {
+			ServerConfig server = getServer(roomId);
+			if (!server.isItselft()) {
+				routeClient(cmd.getOwner(), roomId, server, cmd.getSocket());
 			} else {
 				approveJoin(cmd.getOwner(), roomId);
 			}
@@ -285,26 +279,16 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 		}
 	}
 
-	private boolean isJoiningTheSameRoom(String identity, String newRoom) {
-		boolean ret = false;
-		String roomId = ClientListController.getInstance().getClient(identity).getRoomId();
-
-		if (roomId != null && roomId.equals(newRoom)) {
-			ret = true;
-		}
-		return ret;
+	private ServerConfig getServer(String roomId) {
+		return ServerListController.getInstance().get(getRoomServerId(roomId));
 	}
 
-	private void handleRouteRoom(Command cmd) {
-		String roomId = (String) cmd.getObj().get(Command.P_ROOM_ID);
-		String serverId = (String) cmd.getObj().get(Command.P_SERVER_ID);
+	private String getRoomServerId(String roomId) {
+		return ChatRoomListController.getInstance().getChatRoom(roomId).getServerId();
+	}
 
-		if (serverId != null && !"".equals(serverId)) {
-			ServerConfig server = ServerListController.getInstance().get(serverId);
-			routeClient(cmd.getOwner(), roomId, server, cmd.getSocket());
-		} else {
-			disapproveJoin(cmd.getSocket(), cmd.getOwner(), roomId);
-		}
+	private boolean isRoomAvailable(String roomId) {
+		return (ChatRoomListController.getInstance().isRoomExists(roomId));
 	}
 
 	private void handleDeleteRoom(Command cmd) {
@@ -459,11 +443,7 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 	}
 
 	private void handleList(Command cmd) {
-		connector.requestTheOther(InternalCmd.getRoomListCmdRq(cmd));
-	}
-
-	private void handleRouterList(Command cmd) {
-		response(cmd.getSocket(), ClientServerCmd.listRs(cmd.getObj()));
+		response(cmd.getSocket(), ClientServerCmd.listRs(ChatRoomListController.getInstance().getList()));
 	}
 
 	private void broadcastRoomChange(String clientId, String former, String newRoom) {

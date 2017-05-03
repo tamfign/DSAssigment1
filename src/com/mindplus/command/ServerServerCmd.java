@@ -52,21 +52,6 @@ public class ServerServerCmd extends Command {
 		return root;
 	}
 
-	public static JSONObject getRoomLocationRq(String roomId) {
-		JSONObject root = new JSONObject();
-		root.put(TYPE, TYPE_GET_CHATROOM_LOCATION);
-		root.put(P_ROOM_ID, roomId);
-		return root;
-	}
-
-	public static JSONObject getRoomLocationRs(String roomId, String serverId) {
-		JSONObject root = new JSONObject();
-		root.put(TYPE, TYPE_GET_CHATROOM_LOCATION);
-		root.put(P_SERVER_ID, serverId);
-		root.put(P_ROOM_ID, roomId);
-		return root;
-	}
-
 	public static JSONObject lockIdentityRq(String serverId, String identity) {
 		JSONObject root = new JSONObject();
 		root.put(TYPE, TYPE_LOCK_ID);
@@ -122,45 +107,6 @@ public class ServerServerCmd extends Command {
 			root.put(P_SERVERS, jList);
 		}
 		return root;
-	}
-
-	public static JSONObject getRoomListCmdRq() {
-		JSONObject obj = new JSONObject();
-		obj.put(TYPE, TYPE_GET_FULL_ROOM_LIST);
-		return obj;
-	}
-
-	public static JSONObject getRoomListCmdRs(ArrayList<String> roomList) {
-		JSONArray jRoomList = new JSONArray();
-		JSONObject obj = new JSONObject();
-		obj.put(TYPE, TYPE_GET_FULL_ROOM_LIST);
-		jRoomList.addAll(roomList);
-		obj.put(P_ROOMS, jRoomList);
-		return obj;
-	}
-
-	public static JSONObject getRoomListObjRs(ArrayList<String> roomList) {
-		JSONArray jRoomList = new JSONArray();
-		JSONObject obj = new JSONObject();
-		obj.put(TYPE, TYPE_GET_FULL_ROOM_LIST);
-		jRoomList.addAll(roomList);
-		obj.put(P_ROOMS, jRoomList);
-		return obj;
-	}
-
-	public static JSONObject getRoomListStreamRq() {
-		JSONObject obj = new JSONObject();
-		obj.put(TYPE, TYPE_ROOM_LIST_STREAM);
-		return obj;
-	}
-
-	public static JSONObject getRoomListStreamRs(ArrayList<String> roomList) {
-		JSONArray jRoomList = new JSONArray();
-		JSONObject obj = new JSONObject();
-		obj.put(TYPE, TYPE_ROOM_LIST_STREAM);
-		jRoomList.addAll(roomList);
-		obj.put(P_ROOMS, jRoomList);
-		return obj;
 	}
 
 	public static JSONObject getHeartBeat() {
