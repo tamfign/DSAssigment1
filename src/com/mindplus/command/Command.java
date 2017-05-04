@@ -14,6 +14,7 @@ public class Command {
 	protected final static String TYPE_NEW_ID = "newidentity";
 	protected final static String TYPE_JOIN_SERVER = "join_server";
 	protected final static String TYPE_LOCK_ID = "lockidenity";
+	protected final static String TYPE_VOTE_ID = "vote_idenity";
 	protected final static String TYPE_RELEASE_ID = "releaseidentity";
 	protected final static String TYPE_WHO = "who";
 
@@ -23,6 +24,7 @@ public class Command {
 	protected final static String TYPE_ROOM_CONTENTS = "roomcontents";
 	protected final static String TYPE_CREATE_ROOM = "createroom";
 	protected final static String TYPE_LOCK_ROOM = "lockroomid";
+	protected final static String TYPE_VOTE_ROOM = "vote_roomid";
 	protected final static String TYPE_RELEASE_ROOM = "releaseroomid";
 	protected final static String TYPE_JOIN = "join";
 	protected final static String TYPE_DELETE_ROOM = "deleteroom";
@@ -96,8 +98,8 @@ public class Command {
 		boolean ret = false;
 
 		switch ((String) obj.get(TYPE)) {
-		case (TYPE_LOCK_ID):
-		case (TYPE_LOCK_ROOM):
+		case (TYPE_VOTE_ID):
+		case (TYPE_VOTE_ROOM):
 			ret = Boolean.parseBoolean((String) obj.get(P_LOCKED));
 			break;
 		default:

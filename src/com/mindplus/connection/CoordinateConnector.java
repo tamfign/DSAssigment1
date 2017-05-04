@@ -7,7 +7,6 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
 import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
 
 import com.mindplus.command.Command;
 import com.mindplus.command.CoordinateCmdHandler;
@@ -42,27 +41,15 @@ public class CoordinateConnector extends Connector implements Runnable {
 		}
 	}
 
-	public boolean broadcastAndGetResult(JSONObject cmd) {
-		return broadcastAndGetResult(cmd, true);
-	}
-
 	public void broadcast(JSONObject cmd) {
-		broadcastAndGetResult(cmd, false);
-	}
-
-	private boolean broadcastAndGetResult(JSONObject cmd, boolean needResult) {
 		SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
 		SSLSocket socket = null;
-		boolean ret = true;
 
 		for (ServerConfig server : ServerListController.getInstance().getList()) {
 			try {
 				socket = (SSLSocket) factory.createSocket(server.getHost(), server.getCoordinationPort());
 				if (socket.isConnected()) {
 					write(socket, new Message(cmd));
-					if (needResult) {
-						ret &= readResult(socket);
-					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -70,18 +57,6 @@ public class CoordinateConnector extends Connector implements Runnable {
 				close(socket);
 			}
 		}
-		return ret;
-	}
-
-	private boolean readResult(Socket socket) throws ParseException, IOException {
-		boolean ret = false;
-		Message cmd = readCmd(socket);
-
-		// If read nothing back, consider it's false.
-		if (cmd != null) {
-			ret = Command.getResult(cmd.getCMDObj());
-		}
-		return ret;
 	}
 
 	public void checkOtherServers() {
@@ -93,6 +68,7 @@ public class CoordinateConnector extends Connector implements Runnable {
 	public void tryConnectServer(ServerConfig server, boolean isNewServer) {
 		SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
 		SSLSocket another = null;
+
 		try {
 			another = (SSLSocket) factory.createSocket(server.getHost(), server.getCoordinationPort());
 			if (another.isConnected()) {
@@ -107,6 +83,25 @@ public class CoordinateConnector extends Connector implements Runnable {
 			}
 		} catch (Exception e) {
 			System.out.println("Fail to connect server-" + server.getId());
+		}
+	}
+
+	public void shortResponse(String serverId, JSONObject cmd) {
+		SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+		SSLSocket socket = null;
+		ServerConfig server = ServerListController.getInstance().get(serverId);
+
+		if (server != null) {
+			try {
+				socket = (SSLSocket) factory.createSocket(server.getHost(), server.getCoordinationPort());
+				if (socket.isConnected()) {
+					write(socket, new Message(cmd));
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				close(socket);
+			}
 		}
 	}
 

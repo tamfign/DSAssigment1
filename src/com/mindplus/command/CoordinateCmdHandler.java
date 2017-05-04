@@ -12,6 +12,7 @@ import com.mindplus.model.ChatRoomListController;
 import com.mindplus.model.ClientListController;
 import com.mindplus.model.ServerListController;
 import com.mindplus.security.ServerVerification;
+import com.mindplus.vote.VoteController;
 
 public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 
@@ -60,6 +61,12 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 		case Command.TYPE_ROOM_LIST:
 			updateRoomList(cmd);
 			break;
+		case Command.TYPE_VOTE_ROOM:
+			getLockRoomResult(cmd);
+			break;
+		case Command.TYPE_VOTE_ID:
+			getLockIdentityResult(cmd);
+			break;
 		default:
 		}
 	}
@@ -78,13 +85,20 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 
 	private void broadcastLockRoomId(Command cmd) {
 		String roomId = (String) cmd.getObj().get(Command.P_ROOM_ID);
+		VoteController.getInstance().startRoomVote(roomId, ServerListController.getInstance().getServerTotal());
+
 		VCController.getInstance().tick();
-		connector.requestTheOther(InternalCmd.getLockRoomResultCmd(cmd, roomId, getLockRoomResult(roomId)));
+		connector.broadcast(ServerServerCmd.lockRoomRq(Configuration.getServerId(), roomId));
 	}
 
-	private boolean getLockRoomResult(String roomId) {
-		return ((CoordinateConnector) connector)
-				.broadcastAndGetResult(ServerServerCmd.lockRoomRq(Configuration.getServerId(), roomId));
+	private void getLockRoomResult(Command cmd) {
+		String roomId = (String) cmd.getObj().get(Command.P_ROOM_ID);
+		boolean approved = Command.getResult(cmd.getObj());
+
+		if (VoteController.getInstance().voteRoom(roomId, approved)) {
+			connector.requestTheOther(
+					InternalCmd.getLockRoomResultCmd(cmd, roomId, VoteController.getInstance().getRoomResult(roomId)));
+		}
 	}
 
 	private void broadcastReleaseIdentity(Command cmd) {
@@ -95,13 +109,20 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 
 	private void broadcastLockIdentity(Command cmd) {
 		String identity = (String) cmd.getObj().get(Command.P_IDENTITY);
+		VoteController.getInstance().startIdVote(identity, ServerListController.getInstance().getServerTotal());
+
 		VCController.getInstance().tick();
-		connector.requestTheOther(InternalCmd.getLockIdentityResultCmd(cmd, getLockIdentityResult(identity)));
+		connector.broadcast(ServerServerCmd.lockIdentityRq(Configuration.getServerId(), identity));
 	}
 
-	private boolean getLockIdentityResult(String identity) {
-		return ((CoordinateConnector) connector)
-				.broadcastAndGetResult(ServerServerCmd.lockIdentityRq(Configuration.getServerId(), identity));
+	private void getLockIdentityResult(Command cmd) {
+		String identity = (String) cmd.getObj().get(Command.P_IDENTITY);
+		boolean approved = Command.getResult(cmd.getObj());
+
+		if (VoteController.getInstance().voteId(identity, approved)) {
+			connector.requestTheOther(
+					InternalCmd.getLockIdentityResultCmd(cmd, VoteController.getInstance().getIdResult(identity)));
+		}
 	}
 
 	private void handleDeleteRoom(Command cmd) {
@@ -178,18 +199,20 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 		String roomId = (String) cmd.getObj().get(Command.P_ROOM_ID);
 
 		if (checkLocalChatRoomList(serverId, roomId)) {
-			approveLockRoom(cmd.getSocket(), roomId);
+			approveLockRoom(serverId, roomId);
 		} else {
-			disapproveLockRoom(cmd.getSocket(), roomId);
+			disapproveLockRoom(serverId, roomId);
 		}
 	}
 
-	private void disapproveLockRoom(Socket socket, String roomId) {
-		response(socket, ServerServerCmd.lockRoomRs(Configuration.getServerId(), roomId, false));
+	private void disapproveLockRoom(String serverId, String roomId) {
+		((CoordinateConnector) connector).shortResponse(serverId,
+				ServerServerCmd.lockRoomRs(Configuration.getServerId(), roomId, false));
 	}
 
-	private void approveLockRoom(Socket socket, String roomId) {
-		response(socket, ServerServerCmd.lockRoomRs(Configuration.getServerId(), roomId, true));
+	private void approveLockRoom(String serverId, String roomId) {
+		((CoordinateConnector) connector).shortResponse(serverId,
+				ServerServerCmd.lockRoomRs(Configuration.getServerId(), roomId, true));
 	}
 
 	private boolean checkLocalChatRoomList(String serverId, String roomId) {
@@ -206,9 +229,9 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 		String identity = (String) cmd.getObj().get(Command.P_IDENTITY);
 
 		if (checkLocalIdentityList(serverId, identity)) {
-			approveLockId(cmd.getSocket(), identity);
+			approveLockId(serverId, identity);
 		} else {
-			disapproveLockId(cmd.getSocket(), identity);
+			disapproveLockId(serverId, identity);
 		}
 	}
 
@@ -221,12 +244,14 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 		}
 	}
 
-	private void disapproveLockId(Socket socket, String identity) {
-		response(socket, ServerServerCmd.lockIdentityRs(Configuration.getServerId(), identity, false));
+	private void disapproveLockId(String serverId, String identity) {
+		((CoordinateConnector) connector).shortResponse(serverId,
+				ServerServerCmd.lockIdentityRs(Configuration.getServerId(), identity, false));
 	}
 
-	private void approveLockId(Socket socket, String identity) {
-		response(socket, ServerServerCmd.lockIdentityRs(Configuration.getServerId(), identity, true));
+	private void approveLockId(String serverId, String identity) {
+		((CoordinateConnector) connector).shortResponse(serverId,
+				ServerServerCmd.lockIdentityRs(Configuration.getServerId(), identity, true));
 	}
 
 	private boolean checkLocalIdentityList(String serverId, String identity) {

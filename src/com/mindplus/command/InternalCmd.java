@@ -38,6 +38,7 @@ public class InternalCmd extends Command {
 	public static Command getLockIdentityResultCmd(Command oldCmd, boolean approved) {
 		JSONObject obj = new JSONObject();
 		obj.put(CMD, CMD_LOCK_IDENTITY);
+		obj.put(P_IDENTITY, oldCmd.getObj().get(Command.P_IDENTITY));
 		obj.put(P_APPROVED, approved);
 		return new InternalCmd(oldCmd, obj);
 	}

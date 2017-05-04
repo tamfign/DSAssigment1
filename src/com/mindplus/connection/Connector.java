@@ -39,7 +39,6 @@ public abstract class Connector implements ConnectorInf {
 	}
 
 	protected void keepListenPortAndAcceptMultiClient(int port) throws Exception {
-
 		SSLSocket socket = null;
 		SSLServerSocket server = generateSSLServerSocket(port);
 		try {
@@ -89,7 +88,6 @@ public abstract class Connector implements ConnectorInf {
 			return;
 		}
 
-		System.out.println(socket.getPort()); //TODO check why this line can avoid error.
 		try {
 			System.out.println("Sending: " + cmd.toString());
 			PrintWriter os = new PrintWriter(socket.getOutputStream());

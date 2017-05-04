@@ -108,6 +108,10 @@ public class ServerListController {
 		return this.serverList;
 	}
 
+	public synchronized int getServerTotal() {
+		return this.serverList.size();
+	}
+
 	public synchronized boolean isExists(String serverId) {
 		return get(serverId) != null;
 	}

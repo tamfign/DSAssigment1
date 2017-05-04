@@ -75,6 +75,9 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 
 	private void handleJoinServer(Command cmd) {
 		boolean approved = (Boolean) cmd.getObj().get(Command.P_APPROVED);
+		String identity = (String) cmd.getObj().get(Command.P_IDENTITY);
+
+		releaseIdentity(identity, cmd);
 		if (approved) {
 			createIdentity(cmd.getOwner(), cmd.getSocket(), ChatRoomListController.getLocalMainHall());
 			approveJoinServer(cmd.getSocket(), cmd.getOwner());
@@ -103,7 +106,6 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 	private void lockIdentity(String identity, Command cmd) {
 		if (!ClientListController.getInstance().isIdentityExist(identity)) {
 			connector.requestTheOther(InternalCmd.getInternIdCmd(cmd, Command.CMD_LOCK_IDENTITY, identity));
-			releaseIdentity(identity, cmd);
 		} else {
 			sendDisapproveJoinServer(cmd.getSocket(), identity);
 		}
