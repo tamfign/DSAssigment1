@@ -67,6 +67,7 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 	private void broadcastReleaseRoomId(Command cmd) {
 		String roomId = (String) cmd.getObj().get(Command.P_ROOM_ID);
 		boolean result = (boolean) cmd.getObj().get(Command.P_APPROVED);
+		VCController.getInstance().tick();
 		connector.broadcast(ServerServerCmd.releaseRoom(Configuration.getServerId(), roomId, result));
 	}
 
@@ -77,6 +78,7 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 
 	private void broadcastLockRoomId(Command cmd) {
 		String roomId = (String) cmd.getObj().get(Command.P_ROOM_ID);
+		VCController.getInstance().tick();
 		connector.requestTheOther(InternalCmd.getLockRoomResultCmd(cmd, roomId, getLockRoomResult(roomId)));
 	}
 
