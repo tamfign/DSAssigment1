@@ -60,11 +60,12 @@ public class CoordinateConnector extends Connector implements Runnable {
 				socket = (SSLSocket) factory.createSocket(server.getHost(), server.getCoordinationPort());
 				if (socket.isConnected()) {
 					write(socket, new Message(cmd));
-					if (needResult)
+					if (needResult) {
 						ret &= readResult(socket);
+					}
 				}
 			} catch (Exception e) {
-				// e.printStackTrace();
+				e.printStackTrace();
 			} finally {
 				close(socket);
 			}

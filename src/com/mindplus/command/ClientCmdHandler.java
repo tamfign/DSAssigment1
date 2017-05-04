@@ -269,6 +269,10 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 
 		if (!isOwnerOfRoom(cmd.getOwner()) && isRoomAvailable(roomId)) {
 			ServerConfig server = getServer(roomId);
+			if (server == null) {
+				disapproveJoin(cmd.getSocket(), cmd.getOwner(), roomId);
+				return;
+			}
 			if (!server.isItselft()) {
 				routeClient(cmd.getOwner(), roomId, server, cmd.getSocket());
 			} else {

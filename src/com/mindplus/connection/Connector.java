@@ -89,6 +89,7 @@ public abstract class Connector implements ConnectorInf {
 			return;
 		}
 
+		System.out.println(socket.getPort()); //TODO check why this line can avoid error.
 		try {
 			System.out.println("Sending: " + cmd.toString());
 			PrintWriter os = new PrintWriter(socket.getOutputStream());
