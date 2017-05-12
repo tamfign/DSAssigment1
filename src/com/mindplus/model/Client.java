@@ -1,5 +1,7 @@
 package com.mindplus.model;
 
+import org.json.simple.JSONObject;
+
 public class Client {
 	private String identity = null;
 	private String serverId = null;
@@ -10,6 +12,12 @@ public class Client {
 		this.identity = identity;
 		this.serverId = serverId;
 		this.roomId = roomId;
+	}
+
+	public Client(JSONObject obj) {
+		this.identity = (String) obj.get("identity");
+		this.serverId = (String) obj.get("serverId");
+		this.roomId = (String) obj.get("roomId");
 	}
 
 	public String getOwnRoom() {
@@ -34,5 +42,18 @@ public class Client {
 
 	public String getRoomId() {
 		return roomId;
+	}
+
+	@SuppressWarnings("unchecked")
+	public JSONObject toJSON() {
+		JSONObject ret = new JSONObject();
+		ret.put("identity", this.identity);
+		ret.put("serverId", this.serverId);
+		ret.put("roomId", this.roomId);
+
+		if (ownRoom != null) {
+			ret.put("ownRoom", this.ownRoom);
+		}
+		return ret;
 	}
 }

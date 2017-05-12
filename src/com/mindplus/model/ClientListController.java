@@ -2,12 +2,25 @@ package com.mindplus.model;
 
 import java.util.HashMap;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 public class ClientListController {
 	private HashMap<String, Client> clientList = null;
 	private static ClientListController _instance = null;
 
 	private ClientListController() {
 		this.clientList = new HashMap<String, Client>();
+	}
+
+	private ClientListController(JSONObject cmd) {
+		this.clientList = new HashMap<String, Client>();
+		JSONArray jList = (JSONArray) cmd.get("clients");
+
+		for (int i = 0; i < jList.size(); i++) {
+			JSONObject obj = (JSONObject) jList.get(i);
+			this.clientList.put((String) obj.get("identity"), new Client(obj));
+		}
 	}
 
 	public static ClientListController getInstance() {
@@ -42,5 +55,17 @@ public class ClientListController {
 
 	public synchronized long size() {
 		return clientList.size();
+	}
+
+	@SuppressWarnings("unchecked")
+	public synchronized JSONObject toJSON() {
+		JSONObject ret = new JSONObject();
+		JSONArray jList = new JSONArray();
+
+		for (Client client : clientList.values()) {
+			jList.add(client.toJSON());
+		}
+		ret.put("clients", jList);
+		return ret;
 	}
 }

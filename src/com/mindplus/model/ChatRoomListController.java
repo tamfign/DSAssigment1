@@ -3,6 +3,9 @@ package com.mindplus.model;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import com.mindplus.configuration.Configuration;
 
 public class ChatRoomListController {
@@ -16,6 +19,16 @@ public class ChatRoomListController {
 		// Router does not have chat room.
 		if (!Configuration.isRouter())
 			addRoom(getLocalMainHall(), Configuration.getServerId(), null);
+	}
+
+	private ChatRoomListController(JSONObject cmd) {
+		this.roomList = new HashMap<String, ChatRoom>();
+		JSONArray jList = (JSONArray) cmd.get("chatrooms");
+
+		for (int i = 0; i < jList.size(); i++) {
+			JSONObject obj = (JSONObject) jList.get(i);
+			roomList.put((String) obj.get("name"), new ChatRoom(obj));
+		}
 	}
 
 	public static ChatRoomListController getInstance() {
@@ -125,5 +138,17 @@ public class ChatRoomListController {
 
 	public static String getMainHall(String serverId) {
 		return MAIN_HALL + serverId;
+	}
+
+	@SuppressWarnings("unchecked")
+	public synchronized JSONObject toJSON() {
+		JSONObject ret = new JSONObject();
+		JSONArray jList = new JSONArray();
+		for (ChatRoom room : roomList.values()) {
+			jList.add(room.toJSON());
+		}
+
+		ret.put("chatrooms", jList);
+		return ret;
 	}
 }
