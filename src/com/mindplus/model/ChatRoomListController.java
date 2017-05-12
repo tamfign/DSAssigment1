@@ -141,14 +141,11 @@ public class ChatRoomListController {
 	}
 
 	@SuppressWarnings("unchecked")
-	public synchronized JSONObject toJSON() {
-		JSONObject ret = new JSONObject();
+	public synchronized JSONArray toJSON() {
 		JSONArray jList = new JSONArray();
 		for (ChatRoom room : roomList.values()) {
 			jList.add(room.toJSON());
 		}
-
-		ret.put("chatrooms", jList);
-		return ret;
+		return jList;
 	}
 }

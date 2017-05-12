@@ -142,4 +142,12 @@ public class ServerServerCmd extends Command {
 		root.put(P_SERVERS, jList);
 		return root;
 	}
+
+	public static JSONObject getMarker(String uuid) {
+		JSONObject root = new JSONObject();
+		root.put(TYPE, TYPE_MARKER);
+		root.put(P_SERVER_ID, Configuration.getServerId());
+		root.put(P_UUID, uuid);
+		return root;
+	}
 }

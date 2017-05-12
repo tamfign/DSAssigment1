@@ -41,9 +41,12 @@ public class Command {
 	protected final static String TYPE_HEART_BEAT = "heart_beat";
 	protected final static String TYPE_MAINTENANCE = "maintenance";
 
+	protected final static String TYPE_MARKER = "marker";
+
+	public final static String P_UUID = "uuid";
 	protected final static String P_IDENTITY = "identity";
 	protected final static String P_PWD = "pwd";
-	protected final static String P_SERVER_ID = "serverid";
+	public final static String P_SERVER_ID = "serverid";
 	protected final static String P_LOCKED = "locked";
 	protected final static String P_APPROVED = "approved";
 	protected final static String P_FORMER = "former";

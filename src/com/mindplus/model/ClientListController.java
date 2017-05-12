@@ -58,14 +58,12 @@ public class ClientListController {
 	}
 
 	@SuppressWarnings("unchecked")
-	public synchronized JSONObject toJSON() {
-		JSONObject ret = new JSONObject();
+	public synchronized JSONArray toJSON() {
 		JSONArray jList = new JSONArray();
 
 		for (Client client : clientList.values()) {
 			jList.add(client.toJSON());
 		}
-		ret.put("clients", jList);
-		return ret;
+		return jList;
 	}
 }

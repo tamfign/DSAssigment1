@@ -6,10 +6,13 @@ import com.mindplus.command.Command;
 import com.mindplus.connection.CoordinateConnector;
 import com.mindplus.message.Message;
 
+import SnapShot.SnapShotController;
+
 public class CoordinateListener extends MsgListener {
 
 	public CoordinateListener(CoordinateConnector connetor, Socket socket) {
 		super(connetor, socket);
+		SnapShotController.getInstance().setConnector(connetor);
 	}
 
 	@Override
