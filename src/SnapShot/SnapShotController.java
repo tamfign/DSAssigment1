@@ -31,7 +31,7 @@ public class SnapShotController {
 		String uuid = (String) msg.get(Command.P_UUID);
 
 		if (!isRecord()) {
-			this.currentRecord = new Record(uuid);
+			this.currentRecord = new Record(uuid, this);
 			this.currentRecord.recordState();
 			broadcastMarkerMsg(uuid);
 		}
@@ -50,12 +50,18 @@ public class SnapShotController {
 	}
 
 	public void recordMsg(JSONObject msg) {
-		// TODO
+		if (this.currentRecord != null)
+			this.currentRecord.recordMsg(msg);
+	}
+
+	protected void recordFinished() {
+		this.currentRecord = null;
 	}
 
 	public void startSnapShot() {
-		this.currentRecord = new Record(null);
+		String uuid = UUID.randomUUID().toString();
+		this.currentRecord = new Record(uuid, this);
 		this.currentRecord.recordState();
-		broadcastMarkerMsg(UUID.randomUUID().toString());
+		broadcastMarkerMsg(uuid);
 	}
 }

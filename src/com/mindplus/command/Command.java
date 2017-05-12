@@ -148,6 +148,11 @@ public class Command {
 		return ret;
 	}
 
+	public static boolean isMarker(JSONObject obj) {
+		String cmdType = (String) obj.get(TYPE);
+		return TYPE_MARKER.equals(cmdType);
+	}
+
 	public static JSONObject getMaintenance() {
 		JSONObject root = new JSONObject();
 		root.put(TYPE, TYPE_MAINTENANCE);
