@@ -23,6 +23,25 @@ public class CoordinateListener extends MsgListener {
 	@Override
 	protected void handleRequest(Message msg) {
 		System.out.println("Server: " + msg.toString());
-		((CoordinateConnector) getConnector()).getMQ().addCmd(new Command(getSocket(), msg.getCMDObj(), null));
+
+		//TODO refactory later.
+		if (SnapShotController.getInstance().isRecording()) {
+			if (Command.isMarker(msg.getCMDObj())) {
+				if (SnapShotController.getInstance().isCurrentRecord(msg.getCMDObj())) {
+					SnapShotController.getInstance().handleMarkerMsg(msg.getCMDObj());
+				} else {
+					SnapShotController.getInstance().recordMsg(msg.getCMDObj());
+				}
+			} else {
+				SnapShotController.getInstance().recordMsg(msg.getCMDObj());
+				((CoordinateConnector) getConnector()).getMQ().addCmd(new Command(getSocket(), msg.getCMDObj(), null));
+			}
+		} else {
+			if (Command.isMarker(msg.getCMDObj())) {
+				SnapShotController.getInstance().handleMarkerMsg(msg.getCMDObj());
+			}else {
+				((CoordinateConnector) getConnector()).getMQ().addCmd(new Command(getSocket(), msg.getCMDObj(), null));
+			}
+		}
 	}
 }

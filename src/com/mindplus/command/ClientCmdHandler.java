@@ -68,6 +68,9 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 		case Command.TYPE_MAINTENANCE:
 			handleMaintenance(cmd);
 			break;
+		case Command.TYPE_MARKER:
+			handleMarker(cmd);
+			break;
 		default:
 		}
 	}
@@ -468,5 +471,9 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 
 	private void handleMaintenance(Command cmd) {
 		response(cmd.getSocket(), cmd.getObj());
+	}
+
+	private void handleMarker(Command cmd) {
+		connector.requestTheOther(InternalCmd.getInternMarkerCmd(cmd, Command.CMD_MARKER));
 	}
 }

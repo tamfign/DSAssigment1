@@ -68,6 +68,7 @@ public class Command {
 	protected final static String CMD_LOCK_ROOM = "CMD_LOCK_ROOM";
 	protected final static String CMD_RELEASE_ROOM = "CMD_RELEASE_ROOM";
 	protected final static String CMD_DELETE_ROOM = "CMD_DELETE_ROOM";
+	protected final static String CMD_MARKER = "CMD_MARKER";
 
 	private String owner = null;
 	private JSONObject obj = null;

@@ -4,8 +4,15 @@ import org.json.simple.JSONObject;
 
 @SuppressWarnings("unchecked")
 public class InternalCmd extends Command {
+
 	public InternalCmd(Command oldCmd, JSONObject obj) {
 		super(oldCmd, obj);
+	}
+
+	public static Command getInternMarkerCmd(Command oldCmd, String cmd) {
+		JSONObject obj = new JSONObject();
+		obj.put(CMD, cmd);
+		return new InternalCmd(oldCmd, obj);
 	}
 
 	public static Command getInternRoomCmd(Command oldCmd, String cmd, String roomId) {

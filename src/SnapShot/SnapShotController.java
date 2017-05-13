@@ -30,7 +30,7 @@ public class SnapShotController {
 		String serverId = (String) msg.get(Command.P_SERVER_ID);
 		String uuid = (String) msg.get(Command.P_UUID);
 
-		if (!isRecord()) {
+		if (!isRecording()) {
 			this.currentRecord = new Record(uuid, this);
 			this.currentRecord.recordState();
 			broadcastMarkerMsg(uuid);
@@ -38,10 +38,19 @@ public class SnapShotController {
 		this.currentRecord.endChannelRecording(serverId);
 	}
 
-	private boolean isRecord() {
+	public boolean isRecording() {
 		boolean ret = false;
 		if (this.currentRecord != null)
 			ret = this.currentRecord.isRecording();
+		return ret;
+	}
+
+	public boolean isCurrentRecord(JSONObject msg) {
+		boolean ret = false;
+		String uuid = (String) msg.get(Command.P_UUID);
+		if (this.currentRecord != null) {
+			ret = this.currentRecord.uid().equals(uuid);
+		}
 		return ret;
 	}
 

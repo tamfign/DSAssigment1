@@ -14,6 +14,8 @@ import com.mindplus.model.ServerListController;
 import com.mindplus.security.ServerVerification;
 import com.mindplus.vote.VoteController;
 
+import SnapShot.SnapShotController;
+
 public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 
 	public CoordinateCmdHandler(CoordinateConnector connector) {
@@ -66,6 +68,9 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 			break;
 		case Command.TYPE_VOTE_ID:
 			getLockIdentityResult(cmd);
+			break;
+		case Command.CMD_MARKER:
+			startSnapShot(cmd);
 			break;
 		default:
 		}
@@ -261,5 +266,9 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 			ret = true;
 		}
 		return ret;
+	}
+
+	private void startSnapShot(Command cmd) {
+		SnapShotController.getInstance().startSnapShot();
 	}
 }
