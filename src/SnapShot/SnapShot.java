@@ -39,19 +39,20 @@ public class SnapShot {
 	}
 
 	public void recoverState() {
+		System.out.println("Recovering from last snap shot.");
 		recoverClients();
 		recoverChatRooms();
 	}
 
 	private void recoverChatRooms() {
-		JSONObject obj = (JSONObject) this.finalRecord.get("chatrooms");
+		JSONArray obj = (JSONArray) this.finalRecord.get("chatrooms");
 		if (obj != null) {
 			ChatRoomListController.getInstance().updata(obj);
 		}
 	}
 
 	private void recoverClients() {
-		JSONObject obj = (JSONObject) this.finalRecord.get("clients");
+		JSONArray obj = (JSONArray) this.finalRecord.get("clients");
 		if (obj != null) {
 			ClientListController.getInstance().update(obj);
 		}

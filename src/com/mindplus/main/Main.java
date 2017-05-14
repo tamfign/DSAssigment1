@@ -18,8 +18,6 @@ import com.mindplus.connection.RouterController;
 import com.mindplus.connection.ServerController;
 import com.mindplus.userdata.UserData;
 
-import SnapShot.Recovery;
-
 public class Main {
 
 	public static void main(String[] args) {
@@ -35,7 +33,6 @@ public class Main {
 				readUserData();
 				controller = RouterController.getInstance();
 			} else {
-				Recovery.getInstance().recoveryIfNeeded();
 				controller = ServerController.getInstance();
 			}
 			controller.run();

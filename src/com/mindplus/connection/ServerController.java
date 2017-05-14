@@ -6,6 +6,8 @@ import com.mindplus.command.Command;
 import com.mindplus.command.ServerServerCmd;
 import com.mindplus.model.ServerListController;
 
+import SnapShot.Recovery;
+
 public class ServerController implements ConnectController {
 	private ClientConnector clients = null;
 	private CoordinateConnector servers = null;
@@ -39,6 +41,7 @@ public class ServerController implements ConnectController {
 		if (!approved) {
 			throw new Exception("Rejected by router.");
 		}
+		Recovery.getInstance().recoveryIfNeeded();
 		ServerListController.getInstance().addServers(Command.getServers(result));
 	}
 

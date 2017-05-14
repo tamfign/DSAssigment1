@@ -28,8 +28,7 @@ public class ChatRoomListController {
 		return _instance;
 	}
 
-	public void updata(JSONObject cmd) {
-		JSONArray jList = (JSONArray) cmd.get("chatrooms");
+	public void updata(JSONArray jList) {
 		for (int i = 0; i < jList.size(); i++) {
 			JSONObject obj = (JSONObject) jList.get(i);
 			roomList.put((String) obj.get("name"), new ChatRoom(obj));

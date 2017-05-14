@@ -20,16 +20,20 @@ public class Recovery {
 	}
 
 	public void recoveryIfNeeded() {
-		if (new File(SnapShotController.RECORD_PATH).exists()) {
+		File file = new File(SnapShotController.RECORD_PATH);
+		if (file.exists()) {
 			SnapShot record = new SnapShot(readFile());
 			record.recoverState();
+			file.delete();
 		}
 	}
 
 	private JSONObject readFile() {
 		JSONObject obj = null;
 		try {
-			obj = (JSONObject) new JSONParser().parse(new FileReader(SnapShotController.RECORD_PATH));
+			FileReader reader = new FileReader(SnapShotController.RECORD_PATH);
+			obj = (JSONObject) new JSONParser().parse(reader);
+			reader.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -20,8 +20,7 @@ public class ClientListController {
 		return _instance;
 	}
 
-	public void update(JSONObject cmd) {
-		JSONArray jList = (JSONArray) cmd.get("clients");
+	public void update(JSONArray jList) {
 		for (int i = 0; i < jList.size(); i++) {
 			JSONObject obj = (JSONObject) jList.get(i);
 			this.clientList.put((String) obj.get("identity"), new Client(obj));
