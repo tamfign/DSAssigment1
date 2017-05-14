@@ -71,7 +71,7 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 		case Command.TYPE_MARKER:
 			handleMarker(cmd);
 			break;
-		case Command.TYPE_RELEASE_ID:
+		case Command.TYPE_RECONNECT:
 			handleReconnect(cmd);
 			break;
 		default:
