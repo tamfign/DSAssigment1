@@ -78,8 +78,12 @@ public class SnapShot {
 		}
 	}
 
+	public void saveLocalOnly() {
+		saveFile();
+	}
+
 	private void saveFile() {
-		try (FileWriter file = new FileWriter("test.json")) {
+		try (FileWriter file = new FileWriter(SnapShotController.RECORD_PATH)) {
 			file.write(this.finalRecord.toJSONString());
 			file.flush();
 		} catch (IOException e) {

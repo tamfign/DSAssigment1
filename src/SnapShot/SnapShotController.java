@@ -6,7 +6,9 @@ import org.json.simple.JSONObject;
 
 import com.mindplus.command.Command;
 import com.mindplus.command.ServerServerCmd;
+import com.mindplus.configuration.Configuration;
 import com.mindplus.connection.CoordinateConnector;
+import com.mindplus.model.ServerListController;
 
 public class SnapShotController {
 	// Chandy and Lamport’s Snapshot Algorithm
@@ -14,6 +16,7 @@ public class SnapShotController {
 	private SnapShot currentRecord = null;
 	private CoordinateConnector connector = null;
 	private static SnapShotController _instance = null;
+	public static final String RECORD_PATH = Configuration.getServerId() + "_SnapShot.json";
 
 	public static SnapShotController getInstance() {
 		if (_instance == null) {
@@ -31,6 +34,7 @@ public class SnapShotController {
 		String uuid = (String) msg.get(Command.P_UUID);
 
 		if (!isRecording()) {
+			System.out.println("Create Snapshot");
 			this.currentRecord = new SnapShot(uuid, this);
 			this.currentRecord.recordState();
 			broadcastMarkerMsg(uuid);
@@ -55,7 +59,8 @@ public class SnapShotController {
 	}
 
 	public void broadcastMarkerMsg(String uuid) {
-		connector.broadcast(ServerServerCmd.getMarker(uuid));
+		if (ServerListController.getInstance().size() > 0)
+			connector.broadcast(ServerServerCmd.getMarker(uuid));
 	}
 
 	public void recordMsg(JSONObject msg) {
@@ -68,9 +73,16 @@ public class SnapShotController {
 	}
 
 	public void startSnapShot() {
+		System.out.println("Start SnapShot");
 		String uuid = UUID.randomUUID().toString();
 		this.currentRecord = new SnapShot(uuid, this);
 		this.currentRecord.recordState();
-		broadcastMarkerMsg(uuid);
+
+		if (ServerListController.getInstance().size() > 0) {
+			broadcastMarkerMsg(uuid);
+		} else {
+			this.currentRecord.saveLocalOnly();
+			this.currentRecord = null;
+		}
 	}
 }

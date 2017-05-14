@@ -8,7 +8,6 @@ import org.json.simple.parser.JSONParser;
 
 public class Recovery {
 	private static Recovery _instance = null;
-	private static final String RECORD_PATH = "test.json";
 
 	private Recovery() {
 
@@ -21,7 +20,7 @@ public class Recovery {
 	}
 
 	public void recoveryIfNeeded() {
-		if (new File(RECORD_PATH).exists()) {
+		if (new File(SnapShotController.RECORD_PATH).exists()) {
 			SnapShot record = new SnapShot(readFile());
 			record.recoverState();
 		}
@@ -30,7 +29,7 @@ public class Recovery {
 	private JSONObject readFile() {
 		JSONObject obj = null;
 		try {
-			obj = (JSONObject) new JSONParser().parse(new FileReader(RECORD_PATH));
+			obj = (JSONObject) new JSONParser().parse(new FileReader(SnapShotController.RECORD_PATH));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
