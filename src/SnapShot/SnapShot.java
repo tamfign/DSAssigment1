@@ -12,7 +12,7 @@ import com.mindplus.model.ChatRoomListController;
 import com.mindplus.model.ClientListController;
 import com.mindplus.model.ServerListController;
 
-public class Record {
+public class SnapShot {
 
 	private String uid = null;
 	private JSONObject finalRecord = null;
@@ -22,7 +22,7 @@ public class Record {
 	private JSONArray msgRecord = null;
 	private SnapShotController callback = null;
 
-	public Record(String uid, SnapShotController callback) {
+	public SnapShot(String uid, SnapShotController callback) {
 		this.callback = callback;
 		this.uid = uid;
 		this.finalRecord = new JSONObject();
@@ -34,7 +34,7 @@ public class Record {
 		}
 	}
 
-	public Record(JSONObject obj) {
+	public SnapShot(JSONObject obj) {
 		this.finalRecord = obj;
 	}
 

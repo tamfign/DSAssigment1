@@ -22,7 +22,7 @@ public class Recovery {
 
 	public void recoveryIfNeeded() {
 		if (new File(RECORD_PATH).exists()) {
-			Record record = new Record(readFile());
+			SnapShot record = new SnapShot(readFile());
 			record.recoverState();
 		}
 	}

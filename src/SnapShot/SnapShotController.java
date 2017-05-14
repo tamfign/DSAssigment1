@@ -11,7 +11,7 @@ import com.mindplus.connection.CoordinateConnector;
 public class SnapShotController {
 	// Chandy and Lamport’s Snapshot Algorithm
 
-	private Record currentRecord = null;
+	private SnapShot currentRecord = null;
 	private CoordinateConnector connector = null;
 	private static SnapShotController _instance = null;
 
@@ -31,7 +31,7 @@ public class SnapShotController {
 		String uuid = (String) msg.get(Command.P_UUID);
 
 		if (!isRecording()) {
-			this.currentRecord = new Record(uuid, this);
+			this.currentRecord = new SnapShot(uuid, this);
 			this.currentRecord.recordState();
 			broadcastMarkerMsg(uuid);
 		}
@@ -69,7 +69,7 @@ public class SnapShotController {
 
 	public void startSnapShot() {
 		String uuid = UUID.randomUUID().toString();
-		this.currentRecord = new Record(uuid, this);
+		this.currentRecord = new SnapShot(uuid, this);
 		this.currentRecord.recordState();
 		broadcastMarkerMsg(uuid);
 	}
