@@ -24,7 +24,6 @@ public class Recovery {
 		if (file.exists()) {
 			SnapShot record = new SnapShot(readFile());
 			record.recoverState();
-			file.delete();
 		}
 	}
 
