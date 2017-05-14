@@ -32,6 +32,8 @@ public class Command {
 	protected final static String TYPE_MOVE_JOIN = "movejoin";
 	protected final static String TYPE_SERVER_CHANGE = "serverchange";
 
+	protected final static String TYPE_RECONNECT = "reconnect";
+
 	protected final static String TYPE_MESSAGE = "message";
 	protected final static String TYPE_QUIT = "quit";
 
@@ -122,7 +124,7 @@ public class Command {
 
 	public static boolean isNewId(JSONObject obj) {
 		String cmdType = (String) obj.get(TYPE);
-		return TYPE_MOVE_JOIN.equals(cmdType) || TYPE_JOIN_SERVER.equals(cmdType);
+		return TYPE_MOVE_JOIN.equals(cmdType) || TYPE_JOIN_SERVER.equals(cmdType) || TYPE_RECONNECT.equals(cmdType);
 	}
 
 	public static String getNewId(JSONObject obj) {

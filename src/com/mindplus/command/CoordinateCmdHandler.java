@@ -12,9 +12,8 @@ import com.mindplus.model.ChatRoomListController;
 import com.mindplus.model.ClientListController;
 import com.mindplus.model.ServerListController;
 import com.mindplus.security.ServerVerification;
+import com.mindplus.snapshot.SnapShotController;
 import com.mindplus.vote.VoteController;
-
-import SnapShot.SnapShotController;
 
 public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 

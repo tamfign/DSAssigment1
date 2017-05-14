@@ -1,4 +1,4 @@
-package SnapShot;
+package com.mindplus.snapshot;
 
 import java.io.FileWriter;
 import java.io.IOException;

@@ -5,8 +5,7 @@ import java.net.Socket;
 import com.mindplus.command.Command;
 import com.mindplus.connection.CoordinateConnector;
 import com.mindplus.message.Message;
-
-import SnapShot.SnapShotController;
+import com.mindplus.snapshot.SnapShotController;
 
 public class CoordinateListener extends MsgListener {
 
@@ -24,7 +23,7 @@ public class CoordinateListener extends MsgListener {
 	protected void handleRequest(Message msg) {
 		System.out.println("Server: " + msg.toString());
 
-		//TODO refactory later.
+		// TODO refactory later.
 		if (SnapShotController.getInstance().isRecording()) {
 			if (Command.isMarker(msg.getCMDObj())) {
 				if (SnapShotController.getInstance().isCurrentRecord(msg.getCMDObj())) {
@@ -39,7 +38,7 @@ public class CoordinateListener extends MsgListener {
 		} else {
 			if (Command.isMarker(msg.getCMDObj())) {
 				SnapShotController.getInstance().handleMarkerMsg(msg.getCMDObj());
-			}else {
+			} else {
 				((CoordinateConnector) getConnector()).getMQ().addCmd(new Command(getSocket(), msg.getCMDObj(), null));
 			}
 		}

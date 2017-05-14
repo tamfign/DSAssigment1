@@ -71,6 +71,9 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 		case Command.TYPE_MARKER:
 			handleMarker(cmd);
 			break;
+		case Command.TYPE_RELEASE_ID:
+			handleReconnect(cmd);
+			break;
 		default:
 		}
 	}
@@ -491,5 +494,9 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 
 	private void handleMarker(Command cmd) {
 		connector.requestTheOther(InternalCmd.getInternMarkerCmd(cmd, Command.CMD_MARKER));
+	}
+
+	private void handleReconnect(Command cmd) {
+		((ClientConnector) connector).addBroadcastList(cmd.getOwner(), cmd.getSocket());
 	}
 }

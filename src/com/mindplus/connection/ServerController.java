@@ -5,8 +5,7 @@ import org.json.simple.JSONObject;
 import com.mindplus.command.Command;
 import com.mindplus.command.ServerServerCmd;
 import com.mindplus.model.ServerListController;
-
-import SnapShot.Recovery;
+import com.mindplus.snapshot.Recovery;
 
 public class ServerController implements ConnectController {
 	private ClientConnector clients = null;
