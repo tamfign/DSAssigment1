@@ -99,11 +99,19 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 		String id = (String) cmd.getObj().get(Command.P_IDENTITY);
 		String ticket = (String) cmd.getObj().get(Command.P_PWD);
 
-		if (isClientAuthorized(ticket) && isIdValid(id)) {
-			tmpSocket = cmd.getSocket();
-			lockIdentity(id, cmd);
+		// Only one server
+		if (ServerListController.getInstance().size() < 1) {
+			createIdentity(id, cmd.getSocket(), ChatRoomListController.getLocalMainHall());
+			approveJoinServer(cmd.getSocket(), id);
+			((ClientConnector) connector).broadcastWithinRoom(null, ChatRoomListController.getLocalMainHall(),
+					ClientServerCmd.roomChangeRq(id, "", ChatRoomListController.getLocalMainHall()));
 		} else {
-			sendDisapproveJoinServer(cmd.getSocket(), id);
+			if (isClientAuthorized(ticket) && isIdValid(id)) {
+				tmpSocket = cmd.getSocket();
+				lockIdentity(id, cmd);
+			} else {
+				sendDisapproveJoinServer(cmd.getSocket(), id);
+			}
 		}
 	}
 
@@ -331,9 +339,17 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 
 		if (!isOwnerOfRoom(cmd.getOwner()) && isIdValid(roomId)
 				&& !ChatRoomListController.getInstance().isRoomExists(roomId)) {
-			connector.requestTheOther(InternalCmd.getInternRoomCmd(cmd, Command.CMD_LOCK_ROOM, roomId));
-			tmpSocket = cmd.getSocket();
-			tmpClientId = cmd.getOwner();
+			// Only one server
+			if (ServerListController.getInstance().size() < 1) {
+				String currentRoomId = getCurrentRoomId(cmd.getOwner());
+				createChatRoom(cmd.getOwner(), roomId);
+				approveChatRoom(cmd.getSocket(), roomId);
+				broadcastRoomChange(cmd.getOwner(), currentRoomId, roomId);
+			} else {
+				connector.requestTheOther(InternalCmd.getInternRoomCmd(cmd, Command.CMD_LOCK_ROOM, roomId));
+				tmpSocket = cmd.getSocket();
+				tmpClientId = cmd.getOwner();
+			}
 		} else {
 			disapproveChatRoom(cmd.getSocket(), roomId);
 		}
