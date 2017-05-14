@@ -34,6 +34,29 @@ public class Record {
 		}
 	}
 
+	public Record(JSONObject obj) {
+		this.finalRecord = obj;
+	}
+
+	public void recoverState() {
+		recoverClients();
+		recoverChatRooms();
+	}
+
+	private void recoverChatRooms() {
+		JSONObject obj = (JSONObject) this.finalRecord.get("chatrooms");
+		if (obj != null) {
+			ChatRoomListController.getInstance().updata(obj);
+		}
+	}
+
+	private void recoverClients() {
+		JSONObject obj = (JSONObject) this.finalRecord.get("clients");
+		if (obj != null) {
+			ClientListController.getInstance().update(obj);
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	public void recordState() {
 		this.finalRecord.put("clients", ClientListController.getInstance().toJSON());

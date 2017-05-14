@@ -13,21 +13,19 @@ public class ClientListController {
 		this.clientList = new HashMap<String, Client>();
 	}
 
-	private ClientListController(JSONObject cmd) {
-		this.clientList = new HashMap<String, Client>();
-		JSONArray jList = (JSONArray) cmd.get("clients");
-
-		for (int i = 0; i < jList.size(); i++) {
-			JSONObject obj = (JSONObject) jList.get(i);
-			this.clientList.put((String) obj.get("identity"), new Client(obj));
-		}
-	}
-
 	public static ClientListController getInstance() {
 		if (_instance == null) {
 			_instance = new ClientListController();
 		}
 		return _instance;
+	}
+
+	public void update(JSONObject cmd) {
+		JSONArray jList = (JSONArray) cmd.get("clients");
+		for (int i = 0; i < jList.size(); i++) {
+			JSONObject obj = (JSONObject) jList.get(i);
+			this.clientList.put((String) obj.get("identity"), new Client(obj));
+		}
 	}
 
 	public synchronized void addIndentity(String id, String serverId, String roomId) {

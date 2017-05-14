@@ -21,21 +21,19 @@ public class ChatRoomListController {
 			addRoom(getLocalMainHall(), Configuration.getServerId(), null);
 	}
 
-	private ChatRoomListController(JSONObject cmd) {
-		this.roomList = new HashMap<String, ChatRoom>();
-		JSONArray jList = (JSONArray) cmd.get("chatrooms");
-
-		for (int i = 0; i < jList.size(); i++) {
-			JSONObject obj = (JSONObject) jList.get(i);
-			roomList.put((String) obj.get("name"), new ChatRoom(obj));
-		}
-	}
-
 	public static ChatRoomListController getInstance() {
 		if (_instance == null) {
 			_instance = new ChatRoomListController();
 		}
 		return _instance;
+	}
+
+	public void updata(JSONObject cmd) {
+		JSONArray jList = (JSONArray) cmd.get("chatrooms");
+		for (int i = 0; i < jList.size(); i++) {
+			JSONObject obj = (JSONObject) jList.get(i);
+			roomList.put((String) obj.get("name"), new ChatRoom(obj));
+		}
 	}
 
 	public synchronized String getRoomLocation(String roomId) {
