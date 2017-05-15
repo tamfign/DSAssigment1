@@ -40,7 +40,7 @@ public class ServerController implements ConnectController {
 		if (!approved) {
 			throw new Exception("Rejected by router.");
 		}
-		Recovery.getInstance().recoveryIfNeeded();
+		Recovery.getInstance().recoveryIfNeeded(servers);
 		ServerListController.getInstance().addServers(Command.getServers(result));
 	}
 

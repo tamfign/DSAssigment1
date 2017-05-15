@@ -55,7 +55,9 @@ public class ChatRoomListController {
 		for (String stream : list) {
 			if (stream != null && !"".equals(stream)) {
 				ChatRoom room = new ChatRoom(stream);
-				roomList.put(room.getName(), room);
+				if (!roomList.containsKey(room.getName())) {
+					roomList.put(room.getName(), room);
+				}
 			}
 		}
 	}

@@ -28,8 +28,10 @@ public class ChatRoom {
 
 		this.members = new ArrayList<String>();
 		JSONArray jList = (JSONArray) obj.get("members");
-		for (int i = 0; i < jList.size(); i++) {
-			this.members.add((String) jList.get(i));
+		if (jList != null) {
+			for (int i = 0; i < jList.size(); i++) {
+				this.members.add((String) jList.get(i));
+			}
 		}
 	}
 
@@ -64,6 +66,7 @@ public class ChatRoom {
 	}
 
 	public ArrayList<String> getMemberList() {
+		System.out.println("getList" + this.members);
 		return this.members;
 	}
 
@@ -78,9 +81,11 @@ public class ChatRoom {
 		ret.put("serverId", this.serverId);
 		ret.put("owner", this.owner);
 
-		JSONArray jList = new JSONArray();
-		jList.addAll(this.members);
-		ret.put("members", jList);
+		if (this.members != null) {
+			JSONArray jList = new JSONArray();
+			jList.addAll(this.members);
+			ret.put("members", jList);
+		}
 
 		return ret;
 	}

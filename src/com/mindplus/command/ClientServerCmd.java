@@ -67,6 +67,7 @@ public class ClientServerCmd extends Command {
 	public static JSONObject whoRs(String roomId, ArrayList<String> idList, String owner) {
 		JSONObject root = new JSONObject();
 		JSONArray jList = new JSONArray();
+
 		for (String member : idList) {
 			if (member != null) {
 				jList.add(member);

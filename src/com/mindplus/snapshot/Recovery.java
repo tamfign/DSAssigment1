@@ -6,6 +6,8 @@ import java.io.FileReader;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import com.mindplus.connection.CoordinateConnector;
+
 public class Recovery {
 	private static Recovery _instance = null;
 
@@ -19,11 +21,11 @@ public class Recovery {
 		return _instance;
 	}
 
-	public void recoveryIfNeeded() {
+	public void recoveryIfNeeded(CoordinateConnector servers) {
 		File file = new File(SnapShotController.RECORD_PATH);
 		if (file.exists()) {
 			SnapShot record = new SnapShot(readFile());
-			record.recoverState();
+			record.recoverState(servers);
 		}
 	}
 

@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import com.mindplus.command.Command;
 import com.mindplus.configuration.ServerConfig;
+import com.mindplus.connection.CoordinateConnector;
 import com.mindplus.model.ChatRoomListController;
 import com.mindplus.model.ClientListController;
 import com.mindplus.model.ServerListController;
@@ -38,10 +40,21 @@ public class SnapShot {
 		this.finalRecord = obj;
 	}
 
-	public void recoverState() {
+	public void recoverState(CoordinateConnector servers) {
 		System.out.println("Recovering from last snap shot.");
 		recoverClients();
 		recoverChatRooms();
+		recoverMessages(servers);
+	}
+
+	private void recoverMessages(CoordinateConnector servers) {
+		JSONArray obj = (JSONArray) this.finalRecord.get("message");
+		if (obj != null) {
+			for (int i = 0; i < obj.size(); i++) {
+				// TODO
+				servers.getMQ().addCmd(new Command(null, (JSONObject) obj.get(i), null));
+			}
+		}
 	}
 
 	private void recoverChatRooms() {
