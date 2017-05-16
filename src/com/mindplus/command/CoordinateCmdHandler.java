@@ -22,6 +22,9 @@ public class CoordinateCmdHandler extends CmdHandler implements CmdHandlerInf {
 	}
 
 	public void cmdAnalysis(Command cmd) {
+		if (cmd.getSocket() == null)
+			return;
+
 		switch ((String) cmd.getObj().get(Command.TYPE)) {
 		case Command.TYPE_NEW_SERVER:
 			handleNewServer(cmd);

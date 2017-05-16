@@ -66,7 +66,6 @@ public class ChatRoom {
 	}
 
 	public ArrayList<String> getMemberList() {
-		System.out.println("getList" + this.members);
 		return this.members;
 	}
 

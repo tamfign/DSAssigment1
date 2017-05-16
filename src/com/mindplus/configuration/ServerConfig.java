@@ -5,7 +5,6 @@ public class ServerConfig {
 	private String host = null;
 	private int clientPort = 0;
 	private int coordinationPort = 0;
-	private boolean isItselft = false;
 	private boolean isActived = false;
 	private String cerPath = null;
 	private String cerPwd = null;
@@ -44,12 +43,8 @@ public class ServerConfig {
 		this.coordinationPort = coordinationPort;
 	}
 
-	public boolean isItselft() {
-		return isItselft;
-	}
-
-	public void setItselft(boolean isItselft) {
-		this.isItselft = isItselft;
+	public boolean isItselft(String id) {
+		return this.id.equals(id);
 	}
 
 	public String getId() {

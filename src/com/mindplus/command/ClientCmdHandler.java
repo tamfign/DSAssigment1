@@ -294,7 +294,7 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 				disapproveJoin(cmd.getSocket(), cmd.getOwner(), roomId);
 				return;
 			}
-			if (!server.isItselft()) {
+			if (!server.isItselft(Configuration.getServerId())) {
 				routeClient(cmd.getOwner(), roomId, server, cmd.getSocket());
 			} else {
 				approveJoin(cmd.getOwner(), roomId);
@@ -305,7 +305,13 @@ public class ClientCmdHandler extends CmdHandler implements CmdHandlerInf {
 	}
 
 	private ServerConfig getServer(String roomId) {
-		return ServerListController.getInstance().get(getRoomServerId(roomId));
+		String serverId = getRoomServerId(roomId);
+		ServerConfig ret = ServerListController.getInstance().get(serverId);
+		if (ret == null && Configuration.getConfig().isItselft(serverId)) {
+			ret = Configuration.getConfig();
+		}
+
+		return ret;
 	}
 
 	private String getRoomServerId(String roomId) {
